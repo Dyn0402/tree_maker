@@ -3,13 +3,14 @@ ClassImp(nsmEvent)
 
 nsmEvent::nsmEvent()
 {
-    vtx_x = 0.;
-    vtx_y = 0.;
-    vtx_z = 0.;
-    Nprim = 0;
-    run   = 0;
-    ref2  = 0;
-    psi   = 0;
+    vtx_x 		= 0.;
+    vtx_y 		= 0.;
+    vtx_z 		= 0.;
+    Nprim 		= 0;
+    run   		= 0;
+    ref2  		= 0;
+    psi   		= 0;
+    btof_multi 	= 0;
 }
 
 nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
