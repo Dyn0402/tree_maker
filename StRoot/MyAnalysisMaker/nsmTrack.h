@@ -26,7 +26,6 @@ public:
          Float_t mnsigma,
          Float_t mbeta,
          Float_t mcharge
-                       
 	     );
 
 

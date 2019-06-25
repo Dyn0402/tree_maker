@@ -9,9 +9,9 @@ nsmTrack::nsmTrack()
    phi = 0.;
    eta = 0.;
    dca = 0.;
-   nsigma=0;
-   beta=0;
-   charge=0;
+   nsigma=0.;
+   beta=0.;
+   charge=0.;
     
 }
 

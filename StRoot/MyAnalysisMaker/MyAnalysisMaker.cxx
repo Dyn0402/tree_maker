@@ -1,3 +1,5 @@
+//Dylan Edited 06/25/19
+
 #include "MyAnalysisMaker.h"
 #include <iostream>
 
@@ -85,8 +87,10 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     if( (vx < 1.e-5 && vx > -1.e-5) &&
        (vy < 1.e-5 && vy > -1.e-5) &&
        (vz < 1.e-5 && vz > -1.e-5)  ) {
-        return kTRUE;
+        return kTRUE; // Too close to zero?
     }
+
+    // Only accept events with good trigger.
 
     //Vpd-Zdc-mb & Vpd-Zdc-mb-protected  AuAu2011
     if(energy == 200) {
@@ -144,7 +148,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		}
     } else {
 		if(fabs(vz)>30.0) { // change to 50 for 7 GeV
-			return kTRUE;
+			return kTRUE; // Vertex within 30cm of detector center along beam pipe.
 		}
     }
     
@@ -152,7 +156,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.) //for 14 GeV
 			return kTRUE;
     } else if(sqrt(vx*vx+vy*vy)>2.0) {
-    	return kTRUE;
+    	return kTRUE; // Vertex within 2cm radially of detector center axis.
     }
 
     return kFALSE;
@@ -161,8 +165,6 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
 Int_t MyAnalysisMaker::Make()
 {
-//	cout << "Ran Make" << endl; //Dylan Edit
- 
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
     
     runnumber = muEvent->runId();
@@ -175,7 +177,7 @@ Int_t MyAnalysisMaker::Make()
     for(int iii=0; iii<1000; iii++)
     {
         if(BadRunList[iii]==0) break; //end of bad run list
-        if(runnumber==BadRunList[iii]) good = 2;
+        if(runnumber==BadRunList[iii]) good = 2; // Filter out events in bad runs.
     }
 
     if(good == 2) {
@@ -191,7 +193,8 @@ Int_t MyAnalysisMaker::Make()
     VertexZPos  =  muEvent-> primaryVertexPosition().z();
     VpdVzPos    =  muEvent-> vpdVz();
    
-    if(energy >= 39 && fabs(VpdVzPos-VertexZPos) < 3) return kStOK; // for 39 GeV +
+    // Filter out events with disagreement between vpd and vertex reconstruction.
+    if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39 GeV +
     
     //---------------------------------------------------------
     
@@ -215,33 +218,32 @@ Int_t MyAnalysisMaker::Make()
         nHitsFit =  track->nHitsFit();
         nHitsFit =  fabs(nHitsFit)+1;
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
-        if(ratio  < 0.52) continue;
+        if(ratio < 0.52) continue;
         if(ratio > 1.05) continue;
-        if(nHitsFit < 20) continue;
         
         nHitsDedx = track->nHitsDedx();
         if(nHitsDedx <= 5) continue;
         
         dca = track->dcaGlobal().mag();
-        eta = track->eta();
-        
-        phi = track->phi();
-        if(phi < 0) phi = phi + twoPi;
+		eta = track->eta();
+		pt = track->pt();
+		phi = track->phi();
+		if(phi < 0) phi = phi + twoPi;
+
+        if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmult2++;
+
+		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
+
+		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
         
         charge = track->charge();
-        if(fabs(charge)!=1) continue;
+        if(fabs(charge)!=1) continue; // Gets protons and anti-protons.
         
         p = track->p().mag();
         if (p < 0.15) continue;
         
-        pt = track->pt();
-        
-        if(nHitsFit >10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmult2++;
-        
-        if(nHitsFit > 15 && dca < 2. && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
-        
         nsigmapr = track->nSigmaProton();
-        if(fabs(nsigmapr) > 2.2) continue; // < 1 for 27 GeV
+        if(fabs(nsigmapr) > 2.2) continue; // > 1 for 27 GeV
         if(energy == 27 && fabs(nsigmapr) > 1) continue;
         
         if(fabs(eta) > 0.6) continue;
@@ -262,7 +264,7 @@ Int_t MyAnalysisMaker::Make()
     Qx = 0;
     Qy = 0;
     
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, EventPlane);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, EventPlane, muEvent->btofTrayMultiplicity());
     
     //fill tree
     nsmTree->Fill();
