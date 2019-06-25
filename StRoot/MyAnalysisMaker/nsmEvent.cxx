@@ -13,7 +13,7 @@ nsmEvent::nsmEvent()
 }
 
 nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                   UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt mbtof_multi
+                   UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt_t mbtof_multi
                    )
 {
     vtx_x = mvtx_x;
@@ -29,7 +29,7 @@ nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
 }
 
 void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt mbtof_multi
+                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt_t mbtof_multi
                             )
 {
     vtx_x = mvtx_x;
