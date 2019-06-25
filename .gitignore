@@ -1,0 +1,5 @@
+# Ignore auto-generated files/folders.
+*.zip
+*.session.xml
+*.dataset
+*.package/
