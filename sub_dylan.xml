@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE note [
-<!ENTITY energy "39">
+<!ENTITY energy "7">
 <!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
 ]>
-<job simulateSubmission ="false" maxFilesPerProcess="15"  fileListSyntax="xrootd">
+<job simulateSubmission ="false" maxFilesPerProcess="1"  fileListSyntax="xrootd">
   
   <command>
       starver dev
@@ -20,7 +20,7 @@
     </Package>
   </SandBox>
 
-<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=HPSS,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="all" />
+<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=HPSS,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="1" />
   <stderr URL="file:/gpfs01/star/pwg/dneff/scratch/log/&energy;GeV/err_&energy;GeV$JOBID.err"/>
   <stdout URL="file:/gpfs01/star/pwg/dneff/scratch/log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 
