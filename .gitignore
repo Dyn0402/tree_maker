@@ -3,6 +3,9 @@
 *.session.xml
 *.dataset
 *.package/
+.sl73_gcc485/
+temp_gccflags.c
+.consign
 
 .metadata
 bin/
