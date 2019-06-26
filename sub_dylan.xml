@@ -29,8 +29,8 @@
  
   <Generator>
     <Location>/gpfs01/star/pwg/dneff/scratch/log</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/script/39GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/scratch/list/39GeV/</ListLocation>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/script/7GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/scratch/list/7GeV/</ListLocation>
   </Generator>
   
 </job>
