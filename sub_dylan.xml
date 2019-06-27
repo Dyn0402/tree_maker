@@ -27,7 +27,7 @@
     <output fromScratch="*.log" toURL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/" />
  
   <Generator>
-    <Location>/gpfs01/star/pwg/dneff/scratch/trees/log</Location>
+    <Location>/gpfs01/star/pwg/dneff/scratch/trees/log/</Location>
     <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/7GeV/</ScriptLocation>
     <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/7GeV/</ListLocation>
   </Generator>
