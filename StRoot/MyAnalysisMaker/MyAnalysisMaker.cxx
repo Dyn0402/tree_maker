@@ -244,7 +244,7 @@ Int_t MyAnalysisMaker::Make()
         
         nsigmapr = track->nSigmaProton();
         if(fabs(nsigmapr) > 2.2) continue; // > 1 for 27 GeV
-        if(energy == 27 && fabs(nsigmapr) > 1) continue;
+        if(energy == 27 && fabs(nsigmapr) > 1.0) continue;
         
         if(fabs(eta) > 0.6) continue;
         if(dca < 0 || dca > 2.5) continue;
