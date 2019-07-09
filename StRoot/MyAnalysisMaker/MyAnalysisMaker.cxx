@@ -194,7 +194,7 @@ Int_t MyAnalysisMaker::Make()
     VpdVzPos    =  muEvent-> vpdVz();
    
     // Filter out events with disagreement between vpd and vertex reconstruction.
-    if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39 GeV +
+    if(energy >= 39 && fabs(VpdVzPos-VertexZPos) < 3) return kStOK; // for 39 GeV + Currently wrong sign for testing!!
     
     //---------------------------------------------------------
     
@@ -220,6 +220,7 @@ Int_t MyAnalysisMaker::Make()
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
         if(ratio > 1.05) continue;
+        if(nHitsFit < 20) continue; // Only here for testing purposes!!
         
         nHitsDedx = track->nHitsDedx();
         if(nHitsDedx <= 5) continue;
@@ -234,7 +235,7 @@ Int_t MyAnalysisMaker::Make()
 
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
 
-		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
+//		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
         
         charge = track->charge();
         if(fabs(charge)!=1) continue; // Gets protons and anti-protons.
