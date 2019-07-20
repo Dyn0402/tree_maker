@@ -14,17 +14,16 @@ private:
     UInt_t run;
     UInt_t ref2;
     
-    Float_t psi;
     UInt_t btof_multi;
     
 public:
     nsmEvent();
     nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-             UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt_t mbtof_multi
+             UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof_multi
              );
     
     void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, Float_t mpsi, UInt_t mbtof_multi
+                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof_multi
                       );
     
     Float_t VtxX() { return vtx_x; }
@@ -35,7 +34,6 @@ public:
     UInt_t Run() { return run; }
     UInt_t Refmult2() { return ref2; }
     
-    Float_t Psi() {return psi;}
     UInt_t Btof() {return btof_multi;}
     
     ClassDef(nsmEvent,1) //Lambda event class
