@@ -28,6 +28,8 @@ Release/
 #Settings folders
 .settings/
 
+.consign
+
 # External tool builders
 .externalToolBuilders/
 
