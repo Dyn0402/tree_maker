@@ -198,7 +198,7 @@ Int_t MyAnalysisMaker::Make()
     //---------------------------------------------------------
     
     
-    int nHitsFit, check, nHitsDedx;
+    int nHitsFit, nHitsDedx;
     float ratio, dca, eta, pt, nsigmapr, phi, charge;//, Qx, Qy;
     double beta, p;
 
@@ -212,8 +212,6 @@ Int_t MyAnalysisMaker::Make()
 
     while((track = (StMuTrack*)GetTracks.Next()))
     {
-        check = 0;
-        
         // Track quality cuts----------------------
         charge = track->charge();
 		if(fabs(charge)!=1) continue; // Eliminates neutral particles
