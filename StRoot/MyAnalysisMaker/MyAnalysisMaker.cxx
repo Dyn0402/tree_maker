@@ -214,14 +214,19 @@ Int_t MyAnalysisMaker::Make()
     {
         check = 0;
         
+        // Track quality cuts----------------------
+        charge = track->charge();
+		if(fabs(charge)!=1) continue; // Eliminates neutral particles
+
+		p = track->p().mag();
+		if (p < 0.15) continue;
+
         nHitsFit =  track->nHitsFit();
         nHitsFit =  fabs(nHitsFit)+1;
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
         if(ratio > 1.05) continue;
-        
-        nHitsDedx = track->nHitsDedx();
-        if(nHitsDedx <= 5) continue;
+        // Track quality cuts----------------------
         
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
@@ -233,27 +238,29 @@ Int_t MyAnalysisMaker::Make()
 
 //		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
 
-		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
-        
-        charge = track->charge();
+        // Cuts selecting relevant protons----------------------
+		if(nHitsFit < 20) continue;
+
+		nHitsDedx = track->nHitsDedx();
+		if(nHitsDedx <= 5) continue;
+
         if(charge!=1) continue; // Gets just protons
-        
-        p = track->p().mag();
-        if (p < 0.15) continue;
         
         nsigmapr = track->nSigmaProton();
         if(fabs(nsigmapr) > 2.2) continue; // > 1 for 27 GeV
         if(energy == 27 && fabs(nsigmapr) > 1.0) continue;
         
         if(fabs(eta) > 0.6) continue;
-        if(dca < 0 || dca > 2.5) continue;
+        if(dca < 0 || dca > 2.2) continue;
 
         if(pt < 0.3) continue;
         if(pt > 2.5) continue;
+        // Cuts selecting relevant protons----------------------
         
         beta = -999;
         beta = track->btofPidTraits().beta();
         
+
         new((*protonArr)[protonp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,beta,charge);
 
     }//==================track loop ends=========================
