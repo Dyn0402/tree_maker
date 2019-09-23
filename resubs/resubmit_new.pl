@@ -8,11 +8,11 @@ my $pre = "sched";
 my $suf = "auau\_";
 
 @jobDirs = (
-"//gpfs01/star/pwg/dneff/scratch/trees/script/62GeV/"
+"//gpfs01/star/pwg/dneff/scratch/trees/script/27GeV/"
 );
 
 @outputDirs = (
-"//gpfs01/star/pwg/dneff/scratch/trees/output/62GeV/"
+"//gpfs01/star/pwg/dneff/scratch/trees/output/27GeV/"
 );
 
 
