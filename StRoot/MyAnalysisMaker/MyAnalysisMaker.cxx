@@ -224,8 +224,13 @@ Int_t MyAnalysisMaker::Make()
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
         if(ratio > 1.05) continue;
-        // Track quality cuts----------------------
         
+        charge = track->charge();
+		if(charge!=1) continue; // Gets just charged particles
+
+		p = track->p().mag();
+		if (p < 0.15) continue;
+
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
 		pt = track->pt();
@@ -236,13 +241,9 @@ Int_t MyAnalysisMaker::Make()
 
 //		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
 
-        // Cuts selecting relevant protons----------------------
-		if(nHitsFit < 20) continue;
-
+		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
 		nHitsDedx = track->nHitsDedx();
 		if(nHitsDedx <= 5) continue;
-
-        if(charge!=1) continue; // Gets just protons
         
         nsigmapr = track->nSigmaProton();
         if(fabs(nsigmapr) > 2.2) continue; // > 1 for 27 GeV
