@@ -224,12 +224,6 @@ Int_t MyAnalysisMaker::Make()
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
         if(ratio > 1.05) continue;
-        
-        charge = track->charge();
-		if(charge!=1) continue; // Gets just charged particles
-
-		p = track->p().mag();
-		if (p < 0.15) continue;
 
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
