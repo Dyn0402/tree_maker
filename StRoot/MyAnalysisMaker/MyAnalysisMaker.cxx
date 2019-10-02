@@ -233,9 +233,9 @@ Int_t MyAnalysisMaker::Make()
 
         if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmult2++;
 
-//		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
+		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
 
-		if(nHitsFit < 20) continue; // This seems like a pretty strict cut?
+		if(nHitsFit < 20) continue;
 		nHitsDedx = track->nHitsDedx();
 		if(nHitsDedx <= 5) continue;
         
