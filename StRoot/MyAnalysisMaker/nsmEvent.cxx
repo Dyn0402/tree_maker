@@ -31,7 +31,7 @@ nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
 }
 
 void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, FLoat_t mevent_plane
+                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t mevent_plane
                             )
 {
     vtx_x = mvtx_x;
