@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE note [
-<!ENTITY energy "19">
-<!ENTITY prod "P11id">
+<!ENTITY energy "7">
+<!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10"  fileListSyntax="xrootd">
@@ -28,8 +28,8 @@
  
   <Generator>
     <Location>/gpfs01/star/pwg/dneff/scratch/trees/log/</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/19GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/19GeV/</ListLocation>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/7GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/7GeV/</ListLocation>
   </Generator>
   
 </job>
