@@ -16,14 +16,16 @@ private:
     
     UInt_t btof;
     
+    Float_t event_plane;
+
 public:
     nsmEvent();
     nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-             UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof
+             UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t event_plane
              );
     
     void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof
+                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t mevent_plane
                       );
     
     Float_t VtxX() { return vtx_x; }
@@ -34,7 +36,9 @@ public:
     UInt_t Run() { return run; }
     UInt_t Refmult2() { return ref2; }
     
-    UInt_t Btof() {return btof;}
+    UInt_t Btof() { return btof; }
+
+    Float_t EventPlane() { return event_plane; }
     
     ClassDef(nsmEvent,1) //Lambda event class
 };

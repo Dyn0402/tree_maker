@@ -64,6 +64,9 @@ Int_t MyAnalysisMaker::Init()
     levent = new nsmEvent();//                                                                                                                          
     nsmTree->Branch("Event", "nsmEvent", &levent, 256000, 99);//   
     
+    event_cut_hist = new TH1F("Event Cut Hist", "Event Cut Hist", 7, -0.5, 6.5);
+	track_cut_hist = new TH1F("Track Cut Hist", "Track Cut Hist", 12, -0.5, 11.5);
+
     VertexZPos = -100.0;
     VpdVzPos   = -100.0;
     
@@ -89,6 +92,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
        (vz < 1.e-5 && vz > -1.e-5)  ) {
         return kTRUE; // Too close to zero?
     }
+    event_cut_hist->Fill(2);
 
     // Only accept events with good trigger.
 
@@ -141,6 +145,8 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		return kTRUE;
     }
     
+    event_cut_hist->Fill(3);
+
     
     if(energy == 7) {
     	if(fabs(vz)>50.0) { // change to 50 for 7 GeV
@@ -152,12 +158,16 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		}
     }
     
+    event_cut_hist->Fill(4);
+
     if(energy == 14) {
 		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.) //for 14 GeV
 			return kTRUE;
     } else if(sqrt(vx*vx+vy*vy)>2.0) {
     	return kTRUE; // Vertex within 2cm radially of detector center axis.
     }
+
+    event_cut_hist->Fill(5);
 
     return kFALSE;
 }
@@ -166,6 +176,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 Int_t MyAnalysisMaker::Make()
 {
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
+    event_cut_hist->Fill(0);
     
     runnumber = muEvent->runId();
 
@@ -183,28 +194,31 @@ Int_t MyAnalysisMaker::Make()
     	return kStOK;
     }
     
+    event_cut_hist->Fill(1);
     
+
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
     	return           kStOK;
     }
     
     //----------------------------------------------------
     VertexZPos  =  muEvent-> primaryVertexPosition().z();
-    VpdVzPos    =  muEvent-> vpdVz();
+    VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz();
    
     // Filter out events with disagreement between vpd and vertex reconstruction.
     if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
     
     //---------------------------------------------------------
     
+    event_cut_hist->Fill(6);
     
     int nHitsFit, nHitsDedx;
-    float ratio, dca, eta, pt, nsigmapr, phi, charge;//, Qx, Qy;
+    float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
     double beta, p;
 
     int protonp = 0;
     refmult2 = 0;
-//    Qx = 0; Qy = 0;
+    Qx = 0; Qy = 0;
     
     TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ;    // Create a TObject array containing the primary tracks
     TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
@@ -212,18 +226,23 @@ Int_t MyAnalysisMaker::Make()
 
     while((track = (StMuTrack*)GetTracks.Next()))
     {
+    	track_cut_hist->Fill(0);
         // Track quality cuts----------------------
         charge = track->charge();
 		if(fabs(charge)!=1) continue; // Eliminates neutral particles
+		track_cut_hist->Fill(1);
 
 		p = track->p().mag();
 		if (p < 0.15) continue;
+		track_cut_hist->Fill(2);
 
         nHitsFit =  track->nHitsFit();
         nHitsFit =  fabs(nHitsFit)+1;
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
+        track_cut_hist->Fill(3);
         if(ratio > 1.05) continue;
+        track_cut_hist->Fill(4);
 
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
@@ -236,18 +255,25 @@ Int_t MyAnalysisMaker::Make()
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
 
 		if(nHitsFit < 20) continue;
+		track_cut_hist->Fill(5);
 		nHitsDedx = track->nHitsDedx();
 		if(nHitsDedx <= 5) continue;
+		track_cut_hist->Fill(6);
         
         nsigmapr = track->nSigmaProton();
-        if(fabs(nsigmapr) > 2.2) continue; // > 1 for 27 GeV
-        if(energy == 27 && fabs(nsigmapr) > 1.0) continue;
+        if(fabs(nsigmapr) > 2.2) continue; // > 1.2 for 27 GeV
+        if(energy == 27 && fabs(nsigmapr) > 1.2) continue;
+        track_cut_hist->Fill(7);
         
         if(fabs(eta) > 0.6) continue;
+        track_cut_hist->Fill(8);
         if(dca < 0 || dca > 2.2) continue;
+        track_cut_hist->Fill(9);
 
         if(pt < 0.3) continue;
+        track_cut_hist->Fill(10);
         if(pt > 2.5) continue;
+        track_cut_hist->Fill(11);
         // Cuts selecting relevant protons----------------------
         
         beta = -999;
@@ -258,12 +284,12 @@ Int_t MyAnalysisMaker::Make()
 
     }//==================track loop ends=========================
 
-//    TVector2 Q(Qx,Qy);
-//    double EventPlane = 0.5 * Q.Phi();
-//    Qx = 0;
-//    Qy = 0;
+    TVector2 Q(Qx,Qy);
+    double EventPlane = 0.5 * Q.Phi();
+    Qx = 0;
+    Qy = 0;
     
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, muEvent->btofTrayMultiplicity());
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, muEvent->btofTrayMultiplicity(), EventPlane);
     
     //fill tree
     nsmTree->Fill();

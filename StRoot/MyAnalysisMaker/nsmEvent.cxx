@@ -10,10 +10,11 @@ nsmEvent::nsmEvent()
     run   		= 0;
     ref2  		= 0;
     btof 	= 0;
+    event_plane = 0.;
 }
 
 nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                   UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof
+                   UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t mevent_plane
                    )
 {
     vtx_x = mvtx_x;
@@ -25,10 +26,12 @@ nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
     ref2 = mref2;
     
     btof = mbtof;
+
+    event_plane = mevent_plane;
 }
 
 void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof
+                            UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, FLoat_t mevent_plane
                             )
 {
     vtx_x = mvtx_x;
@@ -40,4 +43,6 @@ void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
     ref2 = mref2;
     
     btof = mbtof;
+
+    event_plane = mevent_plane;
 }
