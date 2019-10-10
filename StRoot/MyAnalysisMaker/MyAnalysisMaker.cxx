@@ -307,6 +307,9 @@ Int_t MyAnalysisMaker::Finish()
     cout << endl;
     cout << endl;
     
+    event_cut_hist->Write();
+    track_cut_hist->Write();
+
     histogram_output -> Write();
     histogram_output ->Close();
     
