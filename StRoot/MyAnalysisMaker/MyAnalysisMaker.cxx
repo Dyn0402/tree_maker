@@ -248,11 +248,16 @@ Int_t MyAnalysisMaker::Make()
 		eta = track->eta();
 		pt = track->pt();
 		phi = track->phi();
+		nsigmapr = track->nSigmaProton();
 		if(phi < 0) phi = phi + twoPi;
 
         if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmult2++;
 
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);}
+		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {
+			if(fabs(eta) > 0.5 || (energy == 27 && nsigmapr > 1.2) || (energy != 27 && nsigmapr > 2.2)) {
+				Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);
+			}
+		}
 
 		if(nHitsFit < 20) continue;
 		track_cut_hist->Fill(5);
@@ -260,12 +265,11 @@ Int_t MyAnalysisMaker::Make()
 		if(nHitsDedx <= 5) continue;
 		track_cut_hist->Fill(6);
         
-        nsigmapr = track->nSigmaProton();
         if(fabs(nsigmapr) > 2.2) continue; // > 1.2 for 27 GeV
         if(energy == 27 && fabs(nsigmapr) > 1.2) continue;
         track_cut_hist->Fill(7);
         
-        if(fabs(eta) > 0.6) continue;
+        if(fabs(eta) > 0.5) continue;
         track_cut_hist->Fill(8);
         if(dca < 0 || dca > 2.2) continue;
         track_cut_hist->Fill(9);
