@@ -9,7 +9,7 @@
   <command>
       starver dev
       root4star -l -b -q readMuDst.C\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;\)
- </command>
+  </command>
 
   
   <SandBox>
