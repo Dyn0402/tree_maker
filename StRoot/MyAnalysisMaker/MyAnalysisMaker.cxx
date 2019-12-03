@@ -112,7 +112,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
        (vz < 1.e-5 && vz > -1.e-5)  ) {
         return kTRUE; // Too close to zero?
     }
-    event_cut_hist->Fill("Vertex Non-Zero");
+    event_cut_hist->Fill("Vertex Non-Zero", 1);
 
     // Only accept events with good trigger.
 
@@ -165,7 +165,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		return kTRUE;
     }
     
-    event_cut_hist->Fill("Trigger");
+    event_cut_hist->Fill("Trigger", 1);
 
     
     if(energy == 7) {
@@ -178,7 +178,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		}
     }
     
-    event_cut_hist->Fill("Vertex z");
+    event_cut_hist->Fill("Vertex z", 1);
 
     if(energy == 14) {
 		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.) //for 14 GeV
@@ -187,7 +187,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     	return kTRUE; // Vertex within 2cm radially of detector center axis.
     }
 
-    event_cut_hist->Fill("Vertex r");
+    event_cut_hist->Fill("Vertex r", 1);
 
     return kFALSE;
 }
@@ -196,7 +196,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 Int_t MyAnalysisMaker::Make()
 {
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
-    event_cut_hist->Fill("Original");
+    event_cut_hist->Fill("Original", 1);
     
     runnumber = muEvent->runId();
 
@@ -214,7 +214,7 @@ Int_t MyAnalysisMaker::Make()
     	return kStOK;
     }
     
-    event_cut_hist->Fill("Bad Runs");
+    event_cut_hist->Fill("Bad Runs", 1);
     
 
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
@@ -230,7 +230,7 @@ Int_t MyAnalysisMaker::Make()
     
     //---------------------------------------------------------
     
-    event_cut_hist->Fill("VPD Vertex z");
+    event_cut_hist->Fill("VPD Vertex z", 1);
     
     int nHitsFit, nHitsDedx;
     float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
@@ -246,23 +246,23 @@ Int_t MyAnalysisMaker::Make()
 
     while((track = (StMuTrack*)GetTracks.Next()))
     {
-    	track_cut_hist->Fill("Original");
+    	track_cut_hist->Fill("Original", 1);
         // Track quality cuts----------------------
         charge = track->charge();
 		if(fabs(charge)!=1) continue; // Eliminates neutral particles
-		track_cut_hist->Fill("Charge");
+		track_cut_hist->Fill("Charge", 1);
 
 		p = track->p().mag();
 		if (p < 0.15) continue;
-		track_cut_hist->Fill("p_low");
+		track_cut_hist->Fill("p_low", 1);
 
         nHitsFit =  track->nHitsFit();
         nHitsFit =  fabs(nHitsFit)+1;
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
-        track_cut_hist->Fill("ratio_low");
+        track_cut_hist->Fill("ratio_low", 1);
         if(ratio > 1.05) continue;
-        track_cut_hist->Fill("ratio_high");
+        track_cut_hist->Fill("ratio_high", 1);
 
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
@@ -281,23 +281,23 @@ Int_t MyAnalysisMaker::Make()
 		}
 
 		if(nHitsFit < 20) continue;
-		track_cut_hist->Fill("nHitsFit");
+		track_cut_hist->Fill("nHitsFit", 1);
 		if(nHitsDedx <= 5) continue;
-		track_cut_hist->Fill("nHitsDedx");
+		track_cut_hist->Fill("nHitsDedx", 1);
         
         if(fabs(nsigmapr) > 2.2) continue; // > 1.2 for 27 GeV
         if(energy == 27 && fabs(nsigmapr) > 1.2) continue;
-        track_cut_hist->Fill("nsigmaproton");
+        track_cut_hist->Fill("nsigmaproton", 1);
         
         if(fabs(eta) > 0.5) continue;
-        track_cut_hist->Fill("eta");
+        track_cut_hist->Fill("eta", 1);
         if(dca < 0 || dca > 2.2) continue;
-        track_cut_hist->Fill("dca");
+        track_cut_hist->Fill("dca", 1);
 
         if(pt < 0.3) continue;
-        track_cut_hist->Fill("pt_low");
+        track_cut_hist->Fill("pt_low", 1);
         if(pt > 2.5) continue;
-        track_cut_hist->Fill("pt_high");
+        track_cut_hist->Fill("pt_high", 1);
         // Cuts selecting relevant protons----------------------
         
         beta = -999;
