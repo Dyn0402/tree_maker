@@ -65,27 +65,27 @@ Int_t MyAnalysisMaker::Init()
     nsmTree->Branch("Event", "nsmEvent", &levent, 256000, 99);//   
     
     event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 7, -0.5, 6.5);
-    event_cut_hist->GetXaxis()->SetBinLabel(0, "Original");
-    event_cut_hist->GetXaxis()->SetBinLabel(1, "Bad Runs");
-    event_cut_hist->GetXaxis()->SetBinLabel(2, "Vertex Non-Zero");
-    event_cut_hist->GetXaxis()->SetBinLabel(3, "Trigger");
-    event_cut_hist->GetXaxis()->SetBinLabel(4, "Vertex z");
-    event_cut_hist->GetXaxis()->SetBinLabel(5, "Vertex r");
-    event_cut_hist->GetXaxis()->SetBinLabel(6, "VPD Vertex z");
+    event_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
+    event_cut_hist->GetXaxis()->SetBinLabel(2, "Bad Runs");
+    event_cut_hist->GetXaxis()->SetBinLabel(3, "Vertex Non-Zero");
+    event_cut_hist->GetXaxis()->SetBinLabel(4, "Trigger");
+    event_cut_hist->GetXaxis()->SetBinLabel(5, "Vertex z");
+    event_cut_hist->GetXaxis()->SetBinLabel(6, "Vertex r");
+    event_cut_hist->GetXaxis()->SetBinLabel(7, "VPD Vertex z");
 
 	track_cut_hist = new TH1I("Track Cut Hist", "Track Cut Hist", 12, -0.5, 11.5);
-	track_cut_hist->GetXaxis()->SetBinLabel(0, "Original");
-	track_cut_hist->GetXaxis()->SetBinLabel(1, "Charge");
-	track_cut_hist->GetXaxis()->SetBinLabel(2, "p_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(3, "ratio_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(4, "ratio_high");
-	track_cut_hist->GetXaxis()->SetBinLabel(5, "nHitsFit");
-	track_cut_hist->GetXaxis()->SetBinLabel(6, "nHitsDedx");
-	track_cut_hist->GetXaxis()->SetBinLabel(7, "nsigmaproton");
-	track_cut_hist->GetXaxis()->SetBinLabel(8, "eta");
-	track_cut_hist->GetXaxis()->SetBinLabel(9, "dca");
-	track_cut_hist->GetXaxis()->SetBinLabel(10, "pt_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(11, "pt_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
+	track_cut_hist->GetXaxis()->SetBinLabel(2, "Charge");
+	track_cut_hist->GetXaxis()->SetBinLabel(3, "p_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(4, "ratio_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(5, "ratio_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(6, "nHitsFit");
+	track_cut_hist->GetXaxis()->SetBinLabel(7, "nHitsDedx");
+	track_cut_hist->GetXaxis()->SetBinLabel(8, "nsigmaproton");
+	track_cut_hist->GetXaxis()->SetBinLabel(9, "eta");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "dca");
+	track_cut_hist->GetXaxis()->SetBinLabel(11, "pt_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_high");
 
 	VertexZPos = -100.0;
     VpdVzPos   = -100.0;
