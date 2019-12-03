@@ -13,9 +13,7 @@
 
 class StMuDstMaker  ;
 class TFile         ;
-class TH1F          ;
-class TH2F          ;
-class TH3F          ;
+class TH1I          ;
 class TString       ;
 class TVector2      ;
 class TProfile      ;
@@ -57,8 +55,8 @@ private:
     TClonesArray* protonArr;
     nsmEvent* levent;
     TTree* nsmTree;
-    TH1F* event_cut_hist;
-	TH1F* track_cut_hist;
+    TH1I* event_cut_hist;
+	TH1I* track_cut_hist;
 
     
     UInt_t        mEventsProcessed;                   //  Number of Events read and processed

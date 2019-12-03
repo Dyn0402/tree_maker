@@ -64,10 +64,30 @@ Int_t MyAnalysisMaker::Init()
     levent = new nsmEvent();//                                                                                                                          
     nsmTree->Branch("Event", "nsmEvent", &levent, 256000, 99);//   
     
-    event_cut_hist = new TH1F("Event Cut Hist", "Event Cut Hist", 7, -0.5, 6.5);
-	track_cut_hist = new TH1F("Track Cut Hist", "Track Cut Hist", 12, -0.5, 11.5);
+    event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 7, -0.5, 6.5);
+    event_cut_hist->GetXaxis()->SetBinLabel(0, "Original");
+    event_cut_hist->GetXaxis()->SetBinLabel(1, "Bad Runs");
+    event_cut_hist->GetXaxis()->SetBinLabel(2, "Vertex Non-Zero");
+    event_cut_hist->GetXaxis()->SetBinLabel(3, "Trigger");
+    event_cut_hist->GetXaxis()->SetBinLabel(4, "Vertex z");
+    event_cut_hist->GetXaxis()->SetBinLabel(5, "Vertex r");
+    event_cut_hist->GetXaxis()->SetBinLabel(6, "VPD Vertex z");
 
-    VertexZPos = -100.0;
+	track_cut_hist = new TH1I("Track Cut Hist", "Track Cut Hist", 12, -0.5, 11.5);
+	track_cut_hist->GetXaxis()->SetBinLabel(0, "Original");
+	track_cut_hist->GetXaxis()->SetBinLabel(1, "Charge");
+	track_cut_hist->GetXaxis()->SetBinLabel(2, "p_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(3, "ratio_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(4, "ratio_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(5, "nHitsFit");
+	track_cut_hist->GetXaxis()->SetBinLabel(6, "nHitsDedx");
+	track_cut_hist->GetXaxis()->SetBinLabel(7, "nsigmaproton");
+	track_cut_hist->GetXaxis()->SetBinLabel(8, "eta");
+	track_cut_hist->GetXaxis()->SetBinLabel(9, "dca");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "pt_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(11, "pt_high");
+
+	VertexZPos = -100.0;
     VpdVzPos   = -100.0;
     
     return kStOK ;
@@ -92,7 +112,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
        (vz < 1.e-5 && vz > -1.e-5)  ) {
         return kTRUE; // Too close to zero?
     }
-    event_cut_hist->Fill(2);
+    event_cut_hist->Fill("Vertex Non-Zero");
 
     // Only accept events with good trigger.
 
@@ -145,7 +165,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		return kTRUE;
     }
     
-    event_cut_hist->Fill(3);
+    event_cut_hist->Fill("Trigger");
 
     
     if(energy == 7) {
@@ -158,7 +178,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 		}
     }
     
-    event_cut_hist->Fill(4);
+    event_cut_hist->Fill("Vertex z");
 
     if(energy == 14) {
 		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.) //for 14 GeV
@@ -167,7 +187,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     	return kTRUE; // Vertex within 2cm radially of detector center axis.
     }
 
-    event_cut_hist->Fill(5);
+    event_cut_hist->Fill("Vertex r");
 
     return kFALSE;
 }
@@ -176,7 +196,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 Int_t MyAnalysisMaker::Make()
 {
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
-    event_cut_hist->Fill(0);
+    event_cut_hist->Fill("Original");
     
     runnumber = muEvent->runId();
 
@@ -194,7 +214,7 @@ Int_t MyAnalysisMaker::Make()
     	return kStOK;
     }
     
-    event_cut_hist->Fill(1);
+    event_cut_hist->Fill("Bad Runs");
     
 
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
@@ -210,7 +230,7 @@ Int_t MyAnalysisMaker::Make()
     
     //---------------------------------------------------------
     
-    event_cut_hist->Fill(6);
+    event_cut_hist->Fill("VPD Vertex z");
     
     int nHitsFit, nHitsDedx;
     float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
@@ -226,58 +246,58 @@ Int_t MyAnalysisMaker::Make()
 
     while((track = (StMuTrack*)GetTracks.Next()))
     {
-    	track_cut_hist->Fill(0);
+    	track_cut_hist->Fill("Original");
         // Track quality cuts----------------------
         charge = track->charge();
 		if(fabs(charge)!=1) continue; // Eliminates neutral particles
-		track_cut_hist->Fill(1);
+		track_cut_hist->Fill("Charge");
 
 		p = track->p().mag();
 		if (p < 0.15) continue;
-		track_cut_hist->Fill(2);
+		track_cut_hist->Fill("p_low");
 
         nHitsFit =  track->nHitsFit();
         nHitsFit =  fabs(nHitsFit)+1;
         ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
         if(ratio < 0.52) continue;
-        track_cut_hist->Fill(3);
+        track_cut_hist->Fill("ratio_low");
         if(ratio > 1.05) continue;
-        track_cut_hist->Fill(4);
+        track_cut_hist->Fill("ratio_high");
 
         dca = track->dcaGlobal().mag();
 		eta = track->eta();
 		pt = track->pt();
 		phi = track->phi();
 		nsigmapr = track->nSigmaProton();
+		nHitsDedx = track->nHitsDedx();
 		if(phi < 0) phi = phi + twoPi;
 
         if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmult2++;
 
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1. && pt > 0.2 && pt < 2.) {
-			if(fabs(eta) > 0.5 || (energy == 27 && nsigmapr > 1.2) || (energy != 27 && nsigmapr > 2.2)) {
+			if(fabs(eta) > 0.5 || (energy == 27 && nsigmapr > 1.2) || (energy != 27 && nsigmapr > 2.2) || nHitsFit <= 5) {
 				Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);
 			}
 		}
 
 		if(nHitsFit < 20) continue;
-		track_cut_hist->Fill(5);
-		nHitsDedx = track->nHitsDedx();
+		track_cut_hist->Fill("nHitsFit");
 		if(nHitsDedx <= 5) continue;
-		track_cut_hist->Fill(6);
+		track_cut_hist->Fill("nHitsDedx");
         
         if(fabs(nsigmapr) > 2.2) continue; // > 1.2 for 27 GeV
         if(energy == 27 && fabs(nsigmapr) > 1.2) continue;
-        track_cut_hist->Fill(7);
+        track_cut_hist->Fill("nsigmaproton");
         
         if(fabs(eta) > 0.5) continue;
-        track_cut_hist->Fill(8);
+        track_cut_hist->Fill("eta");
         if(dca < 0 || dca > 2.2) continue;
-        track_cut_hist->Fill(9);
+        track_cut_hist->Fill("dca");
 
         if(pt < 0.3) continue;
-        track_cut_hist->Fill(10);
+        track_cut_hist->Fill("pt_low");
         if(pt > 2.5) continue;
-        track_cut_hist->Fill(11);
+        track_cut_hist->Fill("pt_high");
         // Cuts selecting relevant protons----------------------
         
         beta = -999;
