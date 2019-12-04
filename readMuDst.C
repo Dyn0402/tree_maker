@@ -46,9 +46,9 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     for(int i=0;i<nEvents;i++)
     {
 
-    	cout << "Pre chain->Make(" << i << ")" << endl;
+    	if(i > 51365) { cout << "Pre chain->Make(" << i << ")" << endl;	}
         iret = chain->Make(i);
-        cout << "Post chain->Make(" << i << ")" << endl;
+        if(i > 51365) { cout << "Post chain->Make(" << i << ")" << endl; }
         
         if(i%((int)nEvents/50)==0)
             cout<<" => Processing event# = "<<i<<" with return code = "<<iret<<endl;
