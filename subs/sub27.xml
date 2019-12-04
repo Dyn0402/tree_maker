@@ -2,7 +2,7 @@
 <!DOCTYPE note [
 <!ENTITY energy "27">
 <!ENTITY prod "P11id">
-<!ENTITY trig_sufix "">
+<!ENTITY trig_sufix "_2011">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10"  fileListSyntax="xrootd">
   
