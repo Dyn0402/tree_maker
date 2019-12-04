@@ -229,7 +229,8 @@ Int_t MyAnalysisMaker::Make()
     if(mEventsRead > 51365) cout << "Pre VertexZPos  =  muEvent-> primaryVertexPosition().z(); mEventsRead " << mEventsRead << endl;
     VertexZPos  =  muEvent-> primaryVertexPosition().z();
     if(mEventsRead > 51365) cout << "Pre VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz(); mEventsRead " << mEventsRead << endl;
-    VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz();
+    if(mMuDstMaker->muDst()->btofHeader()) { VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz(); }
+    else { VpdVzPos = VertexZPos + 4; }
    
     // Filter out events with disagreement between vpd and vertex reconstruction.
     if(mEventsRead > 51365) cout << "Pre if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; mEventsRead " << mEventsRead << endl;
