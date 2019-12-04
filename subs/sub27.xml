@@ -14,8 +14,8 @@
   
   <SandBox>
     <Package>
-      <File>file:./.sl73_gcc485</File>
-      <File>file:./readMuDst.C</File>
+      <File>file:../.sl73_gcc485</File>
+      <File>file:../readMuDst.C</File>
     </Package>
   </SandBox>
 
