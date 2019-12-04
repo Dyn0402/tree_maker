@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE note [
-<!ENTITY energy "11">
+<!ENTITY energy "7">
 <!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
 ]>
@@ -28,8 +28,8 @@
  
   <Generator>
     <Location>/gpfs01/star/pwg/dneff/scratch/trees/log/</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/11GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/11GeV/</ListLocation>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/7GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/7GeV/</ListLocation>
   </Generator>
   
 </job>
