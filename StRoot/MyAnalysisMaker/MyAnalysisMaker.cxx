@@ -212,6 +212,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
 Int_t MyAnalysisMaker::Make()
 {
+	cout << "At start of MyAnalysisMaker::Make() for mEventsRead " << mEventsRead << endl;
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
     ++mEventsRead;
     event_cut_hist->Fill("Original", 1);
