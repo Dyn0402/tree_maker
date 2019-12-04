@@ -58,7 +58,8 @@ private:
     TH1I* event_cut_hist;
 	TH1I* track_cut_hist;
 
-    
+
+	UInt_t        mEventsRead;                   //  Number of Events read
     UInt_t        mEventsProcessed;                   //  Number of Events read and processed
     TString         OutputFileName;                   //  Name of the histogram output file
     
