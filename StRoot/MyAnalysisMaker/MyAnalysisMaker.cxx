@@ -64,7 +64,7 @@ Int_t MyAnalysisMaker::Init()
     levent = new nsmEvent();//                                                                                                                          
     nsmTree->Branch("Event", "nsmEvent", &levent, 256000, 99);//   
     
-    event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 7, -0.5, 6.5);
+    event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 8, -0.5, 7.5);
     event_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
     event_cut_hist->GetXaxis()->SetBinLabel(2, "Is muEvent");
     event_cut_hist->GetXaxis()->SetBinLabel(3, "Good Trigger");
@@ -333,9 +333,6 @@ Int_t MyAnalysisMaker::Finish()
     cout<<" Inside Finish and writing histograms..."<<endl;
     cout << endl;
     cout << endl;
-    
-    event_cut_hist->Write();
-    track_cut_hist->Write();
 
     histogram_output -> Write();
     histogram_output ->Close();
