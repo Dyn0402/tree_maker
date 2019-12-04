@@ -212,36 +212,37 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
 Int_t MyAnalysisMaker::Make()
 {
-	if(mEventsRead > 51365) cout << "At start of MyAnalysisMaker::Make() for mEventsRead " << mEventsRead << endl;
+//	if(mEventsRead > 51365) cout << "At start of MyAnalysisMaker::Make() for mEventsRead " << mEventsRead << endl;
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
-    if(mEventsRead > 51365) cout << "read muEvent mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "read muEvent mEventsRead " << mEventsRead << endl;
     ++mEventsRead;
-    if(mEventsRead > 51365) cout << "Iterated mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Iterated mEventsRead " << mEventsRead << endl;
     event_cut_hist->Fill("Original", 1);
 
-    if(mEventsRead > 51365) cout << "Pre IsBadEvent mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre IsBadEvent mEventsRead " << mEventsRead << endl;
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
     	return           kStOK;
     }
-    if(mEventsRead > 51365) cout << "Post IsBadEvent mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Post IsBadEvent mEventsRead " << mEventsRead << endl;
 
     //----------------------------------------------------
-    if(mEventsRead > 51365) cout << "Pre VertexZPos  =  muEvent-> primaryVertexPosition().z(); mEventsRead " << mEventsRead << endl;
-    VertexZPos  =  muEvent-> primaryVertexPosition().z();
-    if(mEventsRead > 51365) cout << "Pre VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz(); mEventsRead " << mEventsRead << endl;
-    if(mMuDstMaker->muDst()->btofHeader()) { VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz(); }
-    else { VpdVzPos = VertexZPos + 4; }
-   
+
     // Filter out events with disagreement between vpd and vertex reconstruction.
-    if(mEventsRead > 51365) cout << "Pre if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; mEventsRead " << mEventsRead << endl;
-    if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
+//    if(mEventsRead > 51365) cout << "Pre if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; mEventsRead " << mEventsRead << endl;
+    if(energy >= 39) {
+    	if(mMuDstMaker->muDst()->btofHeader()) {
+    		VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz();
+    		VertexZPos  =  muEvent-> primaryVertexPosition().z();
+    		if(fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
+    	} else { return kStOK; }
+    }
     
     //---------------------------------------------------------
     
-    if(mEventsRead > 51365) cout << "Pre event_cut_hist->Fill(Good VPD Vz, 1); mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre event_cut_hist->Fill(Good VPD Vz, 1); mEventsRead " << mEventsRead << endl;
     event_cut_hist->Fill("Good VPD Vz", 1);
     
-    if(mEventsRead > 51365) cout << "Pre basic declarations mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre basic declarations mEventsRead " << mEventsRead << endl;
     int nHitsFit, nHitsDedx;
     float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
     double beta, p;
@@ -250,13 +251,13 @@ Int_t MyAnalysisMaker::Make()
     refmult2 = 0;
     Qx = 0; Qy = 0;
     
-    if(mEventsRead > 51365) cout << "Pre TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ; mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ; mEventsRead " << mEventsRead << endl;
     TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ;    // Create a TObject array containing the primary tracks
-    if(mEventsRead > 51365) cout << "Pre TObjArrayIter  GetTracks(tracks) ; mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre TObjArrayIter  GetTracks(tracks) ; mEventsRead " << mEventsRead << endl;
     TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
     StMuTrack*                 track ;                              // Pointer to a track
 
-    if(mEventsRead > 51365) cout << "Pre Track Loop mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre Track Loop mEventsRead " << mEventsRead << endl;
     while((track = (StMuTrack*)GetTracks.Next()))
     {
     	track_cut_hist->Fill("Original", 1);
@@ -321,7 +322,7 @@ Int_t MyAnalysisMaker::Make()
 
     }//==================track loop ends=========================
 
-    if(mEventsRead > 51365) cout << "Post Track Loop mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Post Track Loop mEventsRead " << mEventsRead << endl;
 
     TVector2 Q(Qx,Qy);
     double EventPlane = 0.5 * Q.Phi();
@@ -329,9 +330,9 @@ Int_t MyAnalysisMaker::Make()
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, muEvent->btofTrayMultiplicity(), EventPlane);
     
     //fill tree
-    if(mEventsRead > 51365) cout << "Pre fill tree mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre fill tree mEventsRead " << mEventsRead << endl;
     nsmTree->Fill();
-    if(mEventsRead > 51365) cout << "Pre protonArr delete mEventsRead " << mEventsRead << endl;
+//    if(mEventsRead > 51365) cout << "Pre protonArr delete mEventsRead " << mEventsRead << endl;
     protonArr->Delete();
  
     mEventsProcessed++ ;
