@@ -226,16 +226,21 @@ Int_t MyAnalysisMaker::Make()
     if(mEventsRead > 51365) cout << "Post IsBadEvent mEventsRead " << mEventsRead << endl;
 
     //----------------------------------------------------
+    if(mEventsRead > 51365) cout << "Pre VertexZPos  =  muEvent-> primaryVertexPosition().z(); mEventsRead " << mEventsRead << endl;
     VertexZPos  =  muEvent-> primaryVertexPosition().z();
+    if(mEventsRead > 51365) cout << "Pre VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz(); mEventsRead " << mEventsRead << endl;
     VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz();
    
     // Filter out events with disagreement between vpd and vertex reconstruction.
+    if(mEventsRead > 51365) cout << "Pre if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; mEventsRead " << mEventsRead << endl;
     if(energy >= 39 && fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
     
     //---------------------------------------------------------
     
+    if(mEventsRead > 51365) cout << "Pre event_cut_hist->Fill(Good VPD Vz, 1); mEventsRead " << mEventsRead << endl;
     event_cut_hist->Fill("Good VPD Vz", 1);
     
+    if(mEventsRead > 51365) cout << "Pre basic declarations mEventsRead " << mEventsRead << endl;
     int nHitsFit, nHitsDedx;
     float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
     double beta, p;
@@ -244,7 +249,9 @@ Int_t MyAnalysisMaker::Make()
     refmult2 = 0;
     Qx = 0; Qy = 0;
     
+    if(mEventsRead > 51365) cout << "Pre TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ; mEventsRead " << mEventsRead << endl;
     TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ;    // Create a TObject array containing the primary tracks
+    if(mEventsRead > 51365) cout << "Pre TObjArrayIter  GetTracks(tracks) ; mEventsRead " << mEventsRead << endl;
     TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
     StMuTrack*                 track ;                              // Pointer to a track
 
