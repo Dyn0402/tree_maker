@@ -1,6 +1,6 @@
 #! /opt/star/bin/perl -w
 
-my $path = "//gpfs01/star/pwg/dneff/scratch/trees/script/62GeV/";
+my $path = "//gpfs01/star/pwg/dneff/scratch/trees/script/27GeV/";
 my $sufx = "sched*_*_*.condor";
 
 #foreach $eachCent (@flowCents) {  
