@@ -178,6 +178,10 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 	}
 
 	event_cut_hist->Fill("Good Run", 1);
+
+	double vx = muEvent->primaryVertexPosition().x();
+	double vy = muEvent->primaryVertexPosition().y();
+	double vz = muEvent->primaryVertexPosition().z();
     
     if(energy == 7) {
     	if(fabs(vz)>50.0) { // change to 50 for 7 GeV
@@ -200,9 +204,6 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
     event_cut_hist->Fill("Good Vr", 1);
 
-    double vx = muEvent->primaryVertexPosition().x();
-	double vy = muEvent->primaryVertexPosition().y();
-	double vz = muEvent->primaryVertexPosition().z();
 	if( (vx < 1.e-5 && vx > -1.e-5) &&
 	   (vy < 1.e-5 && vy > -1.e-5) &&
 	   (vz < 1.e-5 && vz > -1.e-5)  ) {
