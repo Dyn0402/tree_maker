@@ -18,7 +18,7 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     
     // List of member links in the chain
     StChain*                    chain  =  new StChain ;
-    StMuDstMaker*          muDstMaker  =  new StMuDstMaker(0,0,"",InputFileList,"MuDst",nFiles) ;
+    StMuDstMaker*          muDstMaker  =  new StMuDstMaker(0,0,"",InputFileList,"",nFiles) ;
     MyAnalysisMaker*    AnalysisCode   =  new MyAnalysisMaker(muDstMaker) ;
 
     // Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
@@ -35,7 +35,7 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     
     nEvents = muDstMaker->chain()->GetEntries();
     
-    cout<<"\n############################ Total Event in chain = "<<nEvents<<" ############################\n "<<endl;
+    cout<<"\n############################ Total Event in chain = "<<nEvents<< " fast entries = " << muDstMaker->chain()->GetEntriesFast() << "############################\n "<<endl;
     
     // Loop over the links in the chain
     
@@ -46,9 +46,7 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     for(int i=0;i<nEvents;i++)
     {
 
-//    	if(i > 51365) { cout << "Pre chain->Make(" << i << ")" << endl;	}
         iret = chain->Make(i);
-//        if(i > 51365) { cout << "Post chain->Make(" << i << ")" << endl; }
         
         if(i%((int)nEvents/50)==0)
             cout<<" => Processing event# = "<<i<<" with return code = "<<iret<<endl;
