@@ -1,3 +1,12 @@
+#include <TROOT.h>
+#include <TString.h>
+#include <TSystem.h>
+
+class StChain;
+class StMuDstMaker;
+class MyAnalysisMaker;
+
+
 
 void readMuDst(TString InputFileList, TString OutputDir, int energy)
 {

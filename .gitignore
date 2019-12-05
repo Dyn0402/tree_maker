@@ -5,8 +5,8 @@
 *.package/
 .sl73_gcc485/
 temp_gccflags.c
-.consign
-/StRoot/MyAnalysisMaker/.consign
+*.consign
+/StRoot/MyAnalysisMaker/*.consign
 
 .metadata
 bin/
