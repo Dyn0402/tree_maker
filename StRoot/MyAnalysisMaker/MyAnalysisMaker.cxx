@@ -40,6 +40,8 @@ MyAnalysisMaker::MyAnalysisMaker(StMuDstMaker* maker) : StMaker("MyAnalysisMaker
     mEventsRead = 0     ;                    // Zero the Number of Events read by the maker
     mEventsProcessed = 0     ;                    // Zero the Number of Events processed by the maker
     OutputFileName = "" ;                         // Output File Name( will be set inside the "readMuDst".C )
+    energy = 0 ;
+    ref_num = 0 ;
 }
 
 
@@ -242,8 +244,7 @@ Int_t MyAnalysisMaker::Make()
 	float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
 	double beta, p, m;
 
-	vector<Track> proton_tracks;
-
+	int protonp = 0;
 	refmultn = 0;
 	Qx = 0; Qy = 0;
 

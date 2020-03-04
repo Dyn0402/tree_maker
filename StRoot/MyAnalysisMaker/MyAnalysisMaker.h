@@ -69,9 +69,10 @@ private:
     Int_t                  trigger;
     Int_t                cent_flag;
     Int_t                runnumber;
-    Int_t                 refmult2;
+    Int_t                 refmultn;
     
     int						energy;
+    int						ref_num;
 
     char name[60];
     
