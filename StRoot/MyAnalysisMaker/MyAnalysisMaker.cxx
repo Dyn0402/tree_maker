@@ -342,7 +342,7 @@ Int_t MyAnalysisMaker::Make()
     TVector2 Q(Qx,Qy);
     double EventPlane = 0.5 * Q.Phi();
     
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmult2, muEvent->btofTrayMultiplicity(), EventPlane);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmultn, muEvent->btofTrayMultiplicity(), EventPlane);
     
     //fill tree
     nsmTree->Fill();
