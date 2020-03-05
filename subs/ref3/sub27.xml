@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE note [
-<!ENTITY energy "11">
-<!ENTITY refnum "2">
-<!ENTITY prod "P10ih">
-<!ENTITY trig_sufix "">
+<!ENTITY energy "27">
+<!ENTITY refnum "3">
+<!ENTITY prod "P11id">
+<!ENTITY trig_sufix "_2011">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10"  fileListSyntax="xrootd">
   
@@ -27,9 +27,9 @@
     <output fromScratch="*.root" toURL="file:/gpfs01/star/pwg/dneff/scratch/trees_old_ref&refnum;/output/&energy;GeV/" />
  
   <Generator>
-    <Location>/gpfs01/star/pwg/dneff/scratch/trees_old_ref2/log/</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees_old_ref2/script/11GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees_old_ref2/list/11GeV/</ListLocation>
+    <Location>/gpfs01/star/pwg/dneff/scratch/trees_old_ref3/log/</Location>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees_old_ref3/script/27GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees_old_ref3/list/27GeV/</ListLocation>
   </Generator>
   
 </job>
