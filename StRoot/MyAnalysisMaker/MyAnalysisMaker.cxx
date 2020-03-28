@@ -57,13 +57,13 @@ Int_t MyAnalysisMaker::Init()
     //-----------------------------------------------------------------------------------------
     histogram_output = new TFile(OutputFileName,"RECREATE") ;  //
     
-    nsmTree = new TTree("nsmTree","nsmTree");//                                                                                                           
+    tree = new TTree("tree","tree");//
 
     protonArr = new TClonesArray("nsmTrack", 1000); //                                                                                                  
-    nsmTree->Branch("Proton", &protonArr, 256000, 99);//                                                                                                
+    tree->Branch("Proton", &protonArr, 256000, 99);//
 
     levent = new nsmEvent();//                                                                                                                          
-    nsmTree->Branch("Event", "nsmEvent", &levent, 256000, 99);//   
+    tree->Branch("Event", "nsmEvent", &levent, 256000, 99);//
     
     event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 8, -0.5, 7.5);
 	event_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
@@ -345,7 +345,7 @@ Int_t MyAnalysisMaker::Make()
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmultn, muEvent->btofTrayMultiplicity(), EventPlane);
     
     //fill tree
-    nsmTree->Fill();
+    tree->Fill();
     protonArr->Delete();
  
     mEventsProcessed++ ;

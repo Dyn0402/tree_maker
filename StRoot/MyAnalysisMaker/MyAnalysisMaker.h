@@ -55,7 +55,7 @@ private:
 
     TClonesArray* protonArr;
     nsmEvent* levent;
-    TTree* nsmTree;
+    TTree* tree;
     TH1I* event_cut_hist;
 	TH1I* track_cut_hist;
 
