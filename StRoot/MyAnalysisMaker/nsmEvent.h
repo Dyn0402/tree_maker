@@ -12,20 +12,25 @@ private:
     
     UInt_t Nprim;
     UInt_t run;
+
     UInt_t ref2;
+    UInt_t ref3;
     
     UInt_t btof;
     
-    Float_t event_plane;
+    Float_t event_plane_ref2;
+    Float_t event_plane_ref3;
 
 public:
     nsmEvent();
     nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-             UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t event_plane
+             UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
+			 Float_t event_plane_ref2, Float_t event_plane_ref3
              );
     
     void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mbtof, Float_t mevent_plane
+                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt mref3, UInt_t mbtof,
+					  Float_t mevent_plane_ref2, Float_t event_plane_ref3
                       );
     
     Float_t VtxX() { return vtx_x; }

@@ -1,6 +1,6 @@
 
 
-void readMuDst(TString InputFileList, TString OutputDir, int energy, int ref_num)
+void readMuDst(TString InputFileList, TString OutputDir, int energy)
 {
     
     Int_t nFiles = 1e+4;
@@ -31,7 +31,6 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy, int ref_num
     
     AnalysisCode -> SetOutputFileName(OutputDir) ;
     AnalysisCode -> SetEnergy(energy) ;
-    AnalysisCode -> SetRefNum(ref_num) ;
     
     Int_t nEvents = 1e5;
     

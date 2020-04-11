@@ -41,7 +41,6 @@ MyAnalysisMaker::MyAnalysisMaker(StMuDstMaker* maker) : StMaker("MyAnalysisMaker
     mEventsProcessed = 0     ;                    // Zero the Number of Events processed by the maker
     OutputFileName = "" ;                         // Output File Name( will be set inside the "readMuDst".C )
     energy = 0 ;
-    ref_num = 0 ;
 }
 
 
@@ -98,10 +97,6 @@ Int_t MyAnalysisMaker::Init()
 
 void MyAnalysisMaker::SetEnergy(int energy_in) {
 	energy = energy_in;
-}
-
-void MyAnalysisMaker::SetRefNum(int ref_num_in) {
-	ref_num = ref_num_in;
 }
 
 
@@ -241,12 +236,12 @@ Int_t MyAnalysisMaker::Make()
     event_cut_hist->Fill("Good VPD Vz", 1);
 
 	int nHitsFit, nHitsDedx;
-	float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx, Qy;
+	float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
 	double beta, p, m;
 
 	int protonp = 0;
-	refmultn = 0;
-	Qx = 0; Qy = 0;
+	int ref2 = 0, ref3 = 0;
+	Qx_ref2 = 0; Qy_ref2 = 0; Qx_ref3 = 0; Qy_ref3 = 0;
 
 	TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ;    // Create a TObject array containing the primary tracks
 	TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
@@ -272,8 +267,11 @@ Int_t MyAnalysisMaker::Make()
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("ratio_high", 1);
 
-		dca = track->dcaGlobal().mag();
 		eta = track->eta();
+		if(fabs(eta) > 1.0) continue;
+		track_cut_hist->Fill("eta", 1);
+
+		dca = track->dcaGlobal().mag();
 		pt = track->pt();
 		phi = track->phi();
 		nsigmapr = track->nSigmaProton();
@@ -285,36 +283,25 @@ Int_t MyAnalysisMaker::Make()
 		m = -999;
 		if(beta > 1.e-5) { m = p*p*(1./(beta*beta) - 1.); }
 
-		if(ref_num == 2) {
+		// ref2
+		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) ref2++;
 
-			if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) refmultn++;
-
-			if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-				if(fabs(eta) > 0.5 || (energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
-					Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);
-				}
+		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+			if(fabs(eta) > 0.5 || (energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
+				Qx_ref2 += cos(2*phi); Qy_ref2 += sin(2*phi);
 			}
+		}
+		// ref3
+		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && m < 0.4 && nsigmapr < -3.0) ref3++;
 
-			if(fabs(eta) > 0.5) continue;
-
-		} else if(ref_num == 3) {
-
-			if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && m < 0.4 && nsigmapr < -3.0) refmultn++;
-
-			if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-				if((energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
-					Qx = Qx + cos(2*phi); Qy = Qy + sin(2*phi);
-				}
+		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+			if((energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
+				Qx_ref3 += cos(2*phi); Qy_ref3 += sin(2*phi);
 			}
+		}
 
-			if(fabs(eta) > 1.0) continue;
-
-		} else { cout << "Bad ref_num!!" << endl; continue; }
-
-		track_cut_hist->Fill("eta", 1);
-
-		if(charge != 1) continue;
-		track_cut_hist->Fill("Charge_Plus", 1);
+//		if(charge != 1) continue;  //  Just pull protons (not anti-protons)
+//		track_cut_hist->Fill("Charge_Plus", 1);
 
 		if(nHitsFit < 20) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
@@ -339,10 +326,12 @@ Int_t MyAnalysisMaker::Make()
 
     }//==================track loop ends=========================
 
-    TVector2 Q(Qx,Qy);
-    double EventPlane = 0.5 * Q.Phi();
+    TVector2 Q_ref2(Qx_ref2, Qy_ref2);
+    double event_plane_ref2 = 0.5 * Q_ref2.Phi();
+    TVector2 Q_ref3(Qx_ref3, Qy_ref3);
+	double event_plane_ref3 = 0.5 * Q_ref3.Phi();
     
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, refmultn, muEvent->btofTrayMultiplicity(), EventPlane);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, ref2, ref3, muEvent->btofTrayMultiplicity(), event_plane_ref2, event_plane_ref3);
     
     //fill tree
     tree->Fill();
