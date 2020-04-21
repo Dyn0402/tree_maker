@@ -58,8 +58,8 @@ Int_t MyAnalysisMaker::Init()
     
     tree = new TTree("tree","tree");//
 
-    protonArr = new TClonesArray("nsmTrack", 1000); //                                                                                                  
-    tree->Branch("Proton", &protonArr, 256000, 99);//
+    trackArr = new TClonesArray("nsmTrack", 1000); //
+    tree->Branch("Track", &trackArr, 256000, 99);//
 
     levent = new nsmEvent();//                                                                                                                          
     tree->Branch("Event", "nsmEvent", &levent, 256000, 99);//
@@ -242,7 +242,7 @@ Int_t MyAnalysisMaker::Make()
 	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
 	double beta, p, m;
 
-	int protonp = 0;
+	int trackp = 0;
 	int ref2 = 0, ref3 = 0;
 	Qx_ref2 = 0; Qy_ref2 = 0; Qx_ref3 = 0; Qy_ref3 = 0;
 
@@ -308,9 +308,6 @@ Int_t MyAnalysisMaker::Make()
 			}
 		}
 
-//		if(charge != 1) continue;  //  Just pull protons (not anti-protons)
-//		track_cut_hist->Fill("Charge_Plus", 1);
-
 		if(nHitsFit < 20) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
 		if(nHitsDedx <= 5) continue;
@@ -329,10 +326,10 @@ Int_t MyAnalysisMaker::Make()
 		track_cut_hist->Fill("pt_low", 1);
 		if(pt > 2.5) continue;
 		track_cut_hist->Fill("pt_high", 1);
-		// Cuts selecting relevant protons----------------------
+		// Cuts selecting relevant particles----------------------
         
 
-        new((*protonArr)[protonp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,nsigmapi,beta,charge);
+        new((*trackArr)[trackp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,nsigmapi,beta,charge);
 
     }//==================track loop ends=========================
 
@@ -345,7 +342,7 @@ Int_t MyAnalysisMaker::Make()
     
     //fill tree
     tree->Fill();
-    protonArr->Delete();
+    trackArr->Delete();
  
     mEventsProcessed++ ;
     return kStOK ;
