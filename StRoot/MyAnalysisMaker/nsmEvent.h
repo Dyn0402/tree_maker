@@ -43,7 +43,8 @@ public:
     
     UInt_t Btof() { return btof; }
 
-    Float_t EventPlane() { return event_plane; }
+    Float_t EventPlaneRef2() { return event_plane_ref2; }
+    Float_t EventPlaneRef3() { return event_plane_ref3; }
     
     ClassDef(nsmEvent,1) //Lambda event class
 };
