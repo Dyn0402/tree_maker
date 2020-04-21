@@ -9,7 +9,8 @@ nsmTrack::nsmTrack()
    phi = 0.;
    eta = 0.;
    dca = 0.;
-   nsigma=0.;
+   nsigmapr=0.;
+   nsigmapi=0.;
    beta=0.;
    charge=0.;
     
@@ -21,7 +22,8 @@ nsmTrack::nsmTrack(
 			 Float_t mphi, 
 			 Float_t meta, 
 			 Float_t mdca,
-			 Float_t mnsigma,
+			 Float_t mnsigmapr,
+			 Float_t mnsigmapi,
 			 Float_t mbeta,
              Float_t mcharge
 	               
@@ -32,7 +34,8 @@ nsmTrack::nsmTrack(
   phi = mphi;
   eta = meta;
   dca = mdca;
-  nsigma=mnsigma;
+  nsigmapr=mnsigmapr;
+  nsigmapi=mnsigmapi;
   beta=mbeta;
   charge=mcharge;
 

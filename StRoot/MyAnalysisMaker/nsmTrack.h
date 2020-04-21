@@ -12,7 +12,8 @@ private:
   Float_t phi;
   Float_t eta;
   Float_t dca;
-  Float_t nsigma;
+  Float_t nsigmapr;
+  Float_t nsigmapi;
   Float_t beta;
   Float_t charge;
 
@@ -23,7 +24,8 @@ public:
 	     Float_t mphi, 
 	     Float_t meta, 
 	     Float_t mdca,
-         Float_t mnsigma,
+         Float_t mnsigmapr,
+		 Float_t mnsigmapi,
          Float_t mbeta,
          Float_t mcharge
 	     );
@@ -34,7 +36,8 @@ public:
  Float_t Phi() { return phi; }
  Float_t Eta() { return eta; }
  Float_t Dca() { return dca; }
- Float_t Nsigma() {return nsigma;}
+ Float_t Nsigmapr() {return nsigmapr;}
+ Float_t Nsigmapi() {return nsigmapi;}
  Float_t Beta() { return beta; }
  Float_t Charge() {return charge;}
  ClassDef(nsmTrack,2) 

@@ -57,6 +57,8 @@ private:
     TTree* tree;
     TH1I* event_cut_hist;
 	TH1I* track_cut_hist;
+	TH2F* de_dx_pq_hist;
+	TH2F* beta_pq_hist;
 
 
 	UInt_t        mEventsRead;                   //  Number of Events read

@@ -84,10 +84,13 @@ Int_t MyAnalysisMaker::Init()
 	track_cut_hist->GetXaxis()->SetBinLabel(7, "Charge_Plus");
 	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsFit");
 	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsDedx");
-	track_cut_hist->GetXaxis()->SetBinLabel(10, "nsigmaproton");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "nsigma");
 	track_cut_hist->GetXaxis()->SetBinLabel(11, "dca");
 	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_low");
 	track_cut_hist->GetXaxis()->SetBinLabel(13, "pt_high");
+
+	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 10000, -3, 3, 10000, 0, 1e-4);
+	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 10000, -3, 3, 10000, 0, 5);
 
 	VertexZPos = -100.0;
 	VpdVzPos   = -100.0;
@@ -236,7 +239,7 @@ Int_t MyAnalysisMaker::Make()
     event_cut_hist->Fill("Good VPD Vz", 1);
 
 	int nHitsFit, nHitsDedx;
-	float ratio, dca, eta, pt, nsigmapr, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
+	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
 	double beta, p, m;
 
 	int protonp = 0;
@@ -267,6 +270,8 @@ Int_t MyAnalysisMaker::Make()
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("ratio_high", 1);
 
+		de_dx_pq_hist->Fill(charge*p, track->dEdx());
+
 		eta = track->eta();
 		if(fabs(eta) > 1.0) continue;
 		track_cut_hist->Fill("eta", 1);
@@ -281,7 +286,10 @@ Int_t MyAnalysisMaker::Make()
 		beta = -999;
 		beta = track->btofPidTraits().beta();
 		m = -999;
-		if(beta > 1.e-5) { m = p*p*(1./(beta*beta) - 1.); }
+		if(beta > 1.e-5) {
+			m = p*p*(1./(beta*beta) - 1.);
+			beta_pq_hist->Fill(charge*p, 1 / beta);
+		}
 
 		// ref2
 		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) ref2++;
@@ -308,9 +316,11 @@ Int_t MyAnalysisMaker::Make()
 		if(nHitsDedx <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
 
-		if(fabs(nsigmapr) > 2.2) continue; // > 1.2 for 27 GeV
-		if(energy == 27 && fabs(nsigmapr) > 1.2) continue;
-		track_cut_hist->Fill("nsigmaproton", 1);
+		nsigmapi = track->nSigmaPion();
+
+		if(fabs(nsigmapr) > 2.2 && fabs(nsigmapi) > 2.0) continue; // > 1.2 for 27 GeV
+		if(energy == 27 && fabs(nsigmapr) > 1.2 && fabs(nsigmapi) > 1.0) continue;
+		track_cut_hist->Fill("nsigma", 1);
 
 		if(dca < 0 || dca > 2.2) continue;
 		track_cut_hist->Fill("dca", 1);
@@ -322,7 +332,7 @@ Int_t MyAnalysisMaker::Make()
 		// Cuts selecting relevant protons----------------------
         
 
-        new((*protonArr)[protonp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,beta,charge);
+        new((*protonArr)[protonp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,nsigmapi,beta,charge);
 
     }//==================track loop ends=========================
 
