@@ -29,7 +29,7 @@ public:
              );
     
     void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z,
-                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt mref3, UInt_t mbtof,
+                      UInt_t mNprim, UInt_t mrun, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
 					  Float_t mevent_plane_ref2, Float_t event_plane_ref3
                       );
     
