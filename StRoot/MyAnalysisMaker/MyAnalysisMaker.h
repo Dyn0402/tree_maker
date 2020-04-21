@@ -52,7 +52,7 @@ private:
     TFile*        histogram_output;                   //  Histograms outputfile pointer
 
 
-    TClonesArray* protonArr;
+    TClonesArray* trackArr;
     nsmEvent* levent;
     TTree* tree;
     TH1I* event_cut_hist;
