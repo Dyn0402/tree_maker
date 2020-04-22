@@ -54,15 +54,17 @@ Int_t MyAnalysisMaker::Init()
     runnumber        =      -999;  //just a no.
     
     //-----------------------------------------------------------------------------------------
-    histogram_output = new TFile(OutputFileName,"RECREATE") ;  //
+    histogram_output = new TFile(OutputFileName,"RECREATE") ;
     
     tree = new TTree("tree","tree");//
 
-    trackArr = new TClonesArray("nsmTrack", 1000); //
-    tree->Branch("Track", &trackArr, 256000, 99);//
+    protonArr = new TClonesArray("nsmTrack", 1000);
+    pionArr = new TClonesArray("nsmTrack", 1000);
+    tree->Branch("Proton", &protonArr, 256000, 99);
+    tree->Branch("Pion", &pionArr, 256000, 99);
 
     levent = new nsmEvent();//                                                                                                                          
-    tree->Branch("Event", "nsmEvent", &levent, 256000, 99);//
+    tree->Branch("Event", "nsmEvent", &levent, 256000, 99);
     
     event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 8, -0.5, 7.5);
 	event_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
@@ -81,16 +83,16 @@ Int_t MyAnalysisMaker::Init()
 	track_cut_hist->GetXaxis()->SetBinLabel(4, "ratio_low");
 	track_cut_hist->GetXaxis()->SetBinLabel(5, "ratio_high");
 	track_cut_hist->GetXaxis()->SetBinLabel(6, "eta");
-	track_cut_hist->GetXaxis()->SetBinLabel(7, "Charge_Plus");
-	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsFit");
-	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsDedx");
-	track_cut_hist->GetXaxis()->SetBinLabel(10, "nsigma");
-	track_cut_hist->GetXaxis()->SetBinLabel(11, "dca");
-	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(13, "pt_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(7, "nHitsFit");
+	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsDedx");
+	track_cut_hist->GetXaxis()->SetBinLabel(9, "dca");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "pt_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(11, "pt_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(12, "nsigma");
+	track_cut_hist->GetXaxis()->SetBinLabel(13, "m");
 
-	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 10000, -3, 3, 10000, 0, 1e-4);
-	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 10000, -3, 3, 10000, 0, 5);
+//	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
+//	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
 
 	VertexZPos = -100.0;
 	VpdVzPos   = -100.0;
@@ -242,7 +244,7 @@ Int_t MyAnalysisMaker::Make()
 	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
 	double beta, p, m;
 
-	int trackp = 0;
+	int protonp = 0; int pionp = 0;
 	int ref2 = 0, ref3 = 0;
 	Qx_ref2 = 0; Qy_ref2 = 0; Qx_ref3 = 0; Qy_ref3 = 0;
 
@@ -270,11 +272,9 @@ Int_t MyAnalysisMaker::Make()
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("ratio_high", 1);
 
-		de_dx_pq_hist->Fill(charge*p, track->dEdx());
+//		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 
 		eta = track->eta();
-		if(fabs(eta) > 1.0) continue;
-		track_cut_hist->Fill("eta", 1);
 
 		dca = track->dcaGlobal().mag();
 		pt = track->pt();
@@ -288,7 +288,7 @@ Int_t MyAnalysisMaker::Make()
 		m = -999;
 		if(beta > 1.e-5) {
 			m = p*p*(1./(beta*beta) - 1.);
-			beta_pq_hist->Fill(charge*p, 1 / beta);
+//			beta_pq_hist->Fill(charge*p, 1 / beta);
 		}
 
 		// ref2
@@ -308,16 +308,13 @@ Int_t MyAnalysisMaker::Make()
 			}
 		}
 
+		if(fabs(eta) > 0.5) continue;
+		track_cut_hist->Fill("eta", 1);
+
 		if(nHitsFit < 20) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
 		if(nHitsDedx <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
-
-		nsigmapi = track->nSigmaPion();
-
-		if(fabs(nsigmapr) > 2.2 && fabs(nsigmapi) > 2.0) continue; // > 1.2 for 27 GeV
-		if(energy == 27 && fabs(nsigmapr) > 1.2 && fabs(nsigmapi) > 1.0) continue;
-		track_cut_hist->Fill("nsigma", 1);
 
 		if(dca < 0 || dca > 2.2) continue;
 		track_cut_hist->Fill("dca", 1);
@@ -326,10 +323,40 @@ Int_t MyAnalysisMaker::Make()
 		track_cut_hist->Fill("pt_low", 1);
 		if(pt > 2.5) continue;
 		track_cut_hist->Fill("pt_high", 1);
-		// Cuts selecting relevant particles----------------------
-        
 
-        new((*trackArr)[trackp++]) nsmTrack(pt,p,phi,eta,dca,nsigmapr,nsigmapi,beta,charge);
+		nsigmapi = track->nSigmaPion();
+
+		if(energy == 27) {
+			if(fabs(nsigmapr) <= 1.2) {
+				track_cut_hist->Fill("nsigma", 1);
+				if( (m > 0.75 && m < 1.05) || m == -999) {
+					track_cut_hist->Fill("m", 1);
+					new((*protonArr)[protonp++]) nsmTrack(pt,phi,eta,dca,nsigmapr,beta,charge);
+				}
+			} if(fabs(nsigmapi <= 1.0)) {
+				track_cut_hist->Fill("nsigma", 1);
+				if( (m > -0.15 && m < 0.15) || m == -999) {
+					track_cut_hist->Fill("m", 1);
+					new((*pionArr)[pionp++]) nsmTrack(pt,phi,eta,dca,nsigmapi,beta,charge);
+				}
+			}
+		} else {
+			if(fabs(nsigmapr) <= 2.2) {
+				track_cut_hist->Fill("nsigma", 1);
+				if( (m > 0.75 && m < 1.05) || m == -999) {
+					track_cut_hist->Fill("m", 1);
+					new((*protonArr)[protonp++]) nsmTrack(pt,phi,eta,dca,nsigmapr,beta,charge);
+				}
+			} if(fabs(nsigmapi <= 2.0)) {
+				track_cut_hist->Fill("nsigma", 1);
+				if( (m > -0.15 && m < 0.15) || m == -999) {
+					track_cut_hist->Fill("m", 1);
+					new((*pionArr)[pionp++]) nsmTrack(pt,phi,eta,dca,nsigmapi,beta,charge);
+				}
+			}
+		}
+
+		// Cuts selecting relevant particles----------------------
 
     }//==================track loop ends=========================
 
@@ -342,7 +369,8 @@ Int_t MyAnalysisMaker::Make()
     
     //fill tree
     tree->Fill();
-    trackArr->Delete();
+    protonArr->Clear();
+    pionArr->Clear();
  
     mEventsProcessed++ ;
     return kStOK ;
