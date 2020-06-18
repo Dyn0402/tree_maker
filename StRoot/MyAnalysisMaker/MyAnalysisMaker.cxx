@@ -359,9 +359,10 @@ Int_t MyAnalysisMaker::Make()
 		// Cuts selecting relevant particles----------------------
 
     }//==================track loop ends=========================
-    
+
+	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; }
-	else { dca_xy_avg = -999; }
+	else { dca_xy_avg = -999; cout << "else dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl; }
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
