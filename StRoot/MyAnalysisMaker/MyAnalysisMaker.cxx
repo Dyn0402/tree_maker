@@ -241,12 +241,15 @@ Int_t MyAnalysisMaker::Make()
     event_cut_hist->Fill("Good VPD Vz", 1);
 
 	int nHitsFit, nHitsDedx;
-	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx_ref2, Qy_ref2, Qx_ref3, Qy_ref3;
+	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx, Qy;
 	double beta, p, m;
+
+	float dca_xy_avg = 0.;
+	int dca_xy_count = 0;
 
 	int protonp = 0; int pionp = 0;
 	int ref2 = 0, ref3 = 0;
-	Qx_ref2 = 0; Qy_ref2 = 0; Qx_ref3 = 0; Qy_ref3 = 0;
+	Qx = 0; Qy = 0;
 
 	TObjArray* tracks = mMuDstMaker->muDst()->primaryTracks() ;    // Create a TObject array containing the primary tracks
 	TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
@@ -274,6 +277,9 @@ Int_t MyAnalysisMaker::Make()
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 
+		dca_xy_avg += track->dcaD();
+		dca_xy_count++;
+
 		eta = track->eta();
 
 		dca = track->dcaGlobal().mag();
@@ -294,21 +300,15 @@ Int_t MyAnalysisMaker::Make()
 		// ref2
 		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) ref2++;
 
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			if(fabs(eta) > 0.5 || (energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
-				Qx_ref2 += cos(2*phi); Qy_ref2 += sin(2*phi);
-			}
-		}
 		// ref3
 		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && m < 0.4 && nsigmapr < -3.0) ref3++;
 
+		// Q vector for event plane
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			if((energy == 27 && fabs(nsigmapr) > 1.2) || (energy != 27 && fabs(nsigmapr) > 2.2) || nHitsFit <= 5) {
-				Qx_ref3 += cos(2*phi); Qy_ref3 += sin(2*phi);
-			}
+			Qx += cos(2*phi); Qy += sin(2*phi);
 		}
 
-		if(fabs(eta) > 0.5) continue;
+		if(fabs(eta) > 1.0) continue;
 		track_cut_hist->Fill("eta", 1);
 
 		if(nHitsFit < 20) continue;
@@ -359,13 +359,11 @@ Int_t MyAnalysisMaker::Make()
 		// Cuts selecting relevant particles----------------------
 
     }//==================track loop ends=========================
-
-    TVector2 Q_ref2(Qx_ref2, Qy_ref2);
-    double event_plane_ref2 = 0.5 * Q_ref2.Phi();
-    TVector2 Q_ref3(Qx_ref3, Qy_ref3);
-	double event_plane_ref3 = 0.5 * Q_ref3.Phi();
     
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), muEvent->refMult(), runnumber, ref2, ref3, muEvent->btofTrayMultiplicity(), event_plane_ref2, event_plane_ref3);
+	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; }
+	else { dca_xy_avg = -999; }
+
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
     //fill tree
     tree->Fill();
