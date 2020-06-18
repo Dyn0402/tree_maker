@@ -21,19 +21,19 @@ private:
     
     UInt_t btof;
     
-    Float_t Qx;
-    Float_t Qy;
+    Float_t qx;
+    Float_t qy;
 
 public:
     nsmEvent();
     nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg,
              UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
-			 Float_t Qx, Float_t Qy
+			 Float_t qx, Float_t qy
              );
     
     void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg,
                       UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
-					  Float_t mQx, Float_t mQy
+					  Float_t mqx, Float_t mqy
                       );
     
     Float_t VtxX() { return vtx_x; }
@@ -49,8 +49,8 @@ public:
     
     UInt_t Btof() { return btof; }
 
-    Float_t Qx() { return Qx; }
-    Float_t Qy() { return Qy; }
+    Float_t Qx() { return qx; }
+    Float_t Qy() { return qy; }
     
     ClassDef(nsmEvent,1) //Lambda event class
 };

@@ -13,13 +13,13 @@ nsmEvent::nsmEvent()
     ref2  		= 0;
     ref3        = 0;
     btof 	    = 0;
-    Qx          = 0.;
-    Qy          = 0.;
+    qx          = 0.;
+    qy          = 0.;
 }
 
 nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg,
                    UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
-				   Float_t mQx, Float_t mQy)
+				   Float_t mqx, Float_t mqy)
 {
     vtx_x = mvtx_x;
     vtx_y = mvtx_y;
@@ -36,13 +36,13 @@ nsmEvent::nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_
     
     btof = mbtof;
 
-    Qx = mQx;
-    Qy = mQy;
+    qx = mqx;
+    qy = mqy;
 }
 
 void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg,
                             UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
-							Float_t mQx, Float_t mQy
+							Float_t mqx, Float_t mqy
                             )
 {
     vtx_x = mvtx_x;
@@ -60,6 +60,6 @@ void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Floa
     
     btof = mbtof;
 
-    Qx = mQx;
-    Qy = mQy;
+    qx = mqx;
+    qy = mqy;
 }
