@@ -49,7 +49,7 @@ void nsmEvent::SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Floa
     vtx_y = mvtx_y;
     vtx_z = mvtx_z;
     
-    dca_xy_acg = mdca_xy_avg;
+    dca_xy_avg = mdca_xy_avg;
 
     Nprim = mNprim;
     run  = mrun;
