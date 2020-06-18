@@ -160,7 +160,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
    
     //mb AuAu7
     else if(energy == 7) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(290004)))  // 290001
+		if(!(muEvent->triggerIdCollection().nominal().isTrigger(290004) || muEvent->triggerIdCollection().nominal().isTrigger(290001)))
 		return kTRUE;
     }
     

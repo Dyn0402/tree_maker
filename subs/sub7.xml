@@ -19,7 +19,7 @@
     </Package>
   </SandBox>
 
-<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="200" />
+<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="2000" />
   <stderr URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
   <stdout URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 
