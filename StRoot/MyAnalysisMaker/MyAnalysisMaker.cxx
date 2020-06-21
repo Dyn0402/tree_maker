@@ -282,13 +282,14 @@ Int_t MyAnalysisMaker::Make()
 
 		eta = track->eta();
 
-		cout << "pre track dcaD: " << track->dcaD() << endl;
-		cout << "pre track dcaZ: " << track->dcaZ() << endl;
+		cout << "pre-global track dcaD: " << track->dcaD() << endl;
+		cout << "pre-global track dcaZ: " << track->dcaZ() << endl;
 
 		dca = track->dcaGlobal().mag();
+		cout << "dcaGlobal.mag: " << dca << endl;
 
-		cout << "pre track dcaD: " << track->dcaD() << endl;
-		cout << "pre track dcaZ: " << track->dcaZ() << endl;
+		cout << "post-global track dcaD: " << track->dcaD() << endl;
+		cout << "post-global track dcaZ: " << track->dcaZ() << endl << endl;
 
 		pt = track->pt();
 		phi = track->phi();
