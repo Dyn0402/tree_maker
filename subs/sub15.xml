@@ -2,7 +2,6 @@
 <!DOCTYPE note [
 <!ENTITY energy "15">
 <!ENTITY prod "P14ii">
-<!ENTITY prod2 "P14id">
 <!ENTITY trig_sufix "">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10"  fileListSyntax="xrootd">
@@ -21,7 +20,6 @@
   </SandBox>
 
 <input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=production_&energy;GeV_2014,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="all" />
-<input URL="catalog:star.bnl.gov?production=&prod2;,trgsetupname=production_&energy;GeV_2014,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="all" />
   <stderr URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
   <stdout URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 

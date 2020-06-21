@@ -277,12 +277,19 @@ Int_t MyAnalysisMaker::Make()
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 
-		dca_xy_avg += track->dcaD();
+		dca_xy_avg += track->dcaD(); // Fix
 		dca_xy_count++;
 
 		eta = track->eta();
 
+		cout << "pre track dcaD: " << track->dcaD() << endl;
+		cout << "pre track dcaZ: " << track->dcaZ() << endl;
+
 		dca = track->dcaGlobal().mag();
+
+		cout << "pre track dcaD: " << track->dcaD() << endl;
+		cout << "pre track dcaZ: " << track->dcaZ() << endl;
+
 		pt = track->pt();
 		phi = track->phi();
 		nsigmapr = track->nSigmaProton();
@@ -327,13 +334,13 @@ Int_t MyAnalysisMaker::Make()
 		nsigmapi = track->nSigmaPion();
 
 		if(energy == 27) {
-			if(fabs(nsigmapr) <= 1.2) {
+			if(fabs(nsigmapr) <= 1.2 && fabs(eta) <= 1.0) {
 				track_cut_hist->Fill("nsigma", 1);
 				if( (m > 0.75 && m < 1.05) || m == -999) {
 					track_cut_hist->Fill("m", 1);
 					new((*protonArr)[protonp++]) nsmTrack(pt,phi,eta,dca,nsigmapr,beta,charge);
 				}
-			} if(fabs(nsigmapi <= 1.0)) {
+			} if(fabs(nsigmapi <= 1.0 && fabs(eta) <= 0.5)) {
 				track_cut_hist->Fill("nsigma", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m", 1);
@@ -362,7 +369,7 @@ Int_t MyAnalysisMaker::Make()
 
 	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; }
-	else { dca_xy_avg = -999; cout << "else dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl; }
+	else { dca_xy_avg = -9999; }
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
