@@ -4,7 +4,7 @@
 <!ENTITY prod "P14ii">
 <!ENTITY trig_sufix "">
 ]>
-<job simulateSubmission ="false" maxEvents="80000"  fileListSyntax="xrootd">
+<job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
   
   <command>
       starver pro
