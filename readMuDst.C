@@ -19,11 +19,11 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     
     // List of member links in the chain
     StChain*                    chain  =  new StChain ;
-    StMuDstMaker*          muDstMaker  =  new StMuDstMaker(0,0,"",InputFileList,"",nFiles) ;
+    StMuDstMaker*          muDstMaker  =  new StMuDstMaker(0,0,"",InputFileList,"MuDst",nFiles) ;
     MyAnalysisMaker*    AnalysisCode   =  new MyAnalysisMaker(muDstMaker) ;
 
     // Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
-//    muDstMaker -> SetStatus("*",0) ;                // Turn off all branches
+    muDstMaker -> SetStatus("*",1) ;                // Turn off all branches
 //    muDstMaker -> SetStatus("MuEvent",1) ;          // Turn on the Event data (esp. Event number)
 //    muDstMaker -> SetStatus("PrimaryTracks",1) ;    // Turn on the primary track data
 //    muDstMaker -> SetStatus("BTofHit",1) ;
