@@ -23,11 +23,12 @@ void readMuDst(TString InputFileList, TString OutputDir, int energy)
     MyAnalysisMaker*    AnalysisCode   =  new MyAnalysisMaker(muDstMaker) ;
 
     // Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
-    muDstMaker -> SetStatus("*",1) ;                // Turn off all branches
-//    muDstMaker -> SetStatus("MuEvent",1) ;          // Turn on the Event data (esp. Event number)
-//    muDstMaker -> SetStatus("PrimaryTracks",1) ;    // Turn on the primary track data
-//    muDstMaker -> SetStatus("BTofHit",1) ;
-//    muDstMaker -> SetStatus("BTofHeader",1) ;
+    muDstMaker -> SetStatus("*",0) ;                // Turn off all branches
+    muDstMaker -> SetStatus("MuEvent",1) ;          // Turn on the Event data (esp. Event number)
+    muDstMaker -> SetStatus("GlobalTracks", 1) ;
+    muDstMaker -> SetStatus("PrimaryTracks",1) ;    // Turn on the primary track data
+    muDstMaker -> SetStatus("BTofHit",1) ;
+    muDstMaker -> SetStatus("BTofHeader",1) ;
     
     AnalysisCode -> SetOutputFileName(OutputDir) ;
     AnalysisCode -> SetEnergy(energy) ;

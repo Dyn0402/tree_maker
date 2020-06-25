@@ -70,7 +70,7 @@ private:
     Float_t               VpdVzPos;
     Int_t                  trigger;
     Int_t                cent_flag;
-    Int_t                runnumber;
+    Int_t                run_num;
     
     int						energy;
 
