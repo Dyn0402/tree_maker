@@ -234,10 +234,11 @@ Int_t MyAnalysisMaker::Make()
 		track_cut_hist->Fill("ratio_high", 1);
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
-
-		dca_xy_avg += track->dcaD();  // Check
-		dca_xy_sd += pow(track->dcaD(), 2);  // Calculate second raw moment first
-		dca_xy_count++;
+		if(fabs(track->dcaD()) <= 4) {
+			dca_xy_avg += track->dcaD();  // Check
+			dca_xy_sd += pow(track->dcaD(), 2);  // Calculate second raw moment first
+			dca_xy_count++;
+		}
 
 		eta = track->eta();
 
