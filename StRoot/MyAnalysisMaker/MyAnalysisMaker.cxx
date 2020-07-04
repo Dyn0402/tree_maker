@@ -242,14 +242,14 @@ Int_t MyAnalysisMaker::Make()
 
 		eta = track->eta();
 
-		cout << "pre-global track dcaD: " << track->dcaD() << endl;
-		cout << "pre-global track dcaZ: " << track->dcaZ() << endl;
+//		cout << "pre-global track dcaD: " << track->dcaD() << endl;
+//		cout << "pre-global track dcaZ: " << track->dcaZ() << endl;
 
 		dca = track->dcaGlobal().mag();
-		cout << "dcaGlobal.mag: " << dca << endl;
-
-		cout << "post-global track dcaD: " << track->dcaD() << endl;
-		cout << "post-global track dcaZ: " << track->dcaZ() << endl << endl;
+//		cout << "dcaGlobal.mag: " << dca << endl;
+//
+//		cout << "post-global track dcaD: " << track->dcaD() << endl;
+//		cout << "post-global track dcaZ: " << track->dcaZ() << endl << endl;
 
 		pt = track->pt();
 		phi = track->phi();
@@ -328,7 +328,7 @@ Int_t MyAnalysisMaker::Make()
 
     }//==================track loop ends=========================
 
-	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
+//	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_sd = dca_xy_sd / dca_xy_count - pow(dca_xy_avg, 2); }
 	else { dca_xy_avg = -899; dca_xy_sd = -899; }
 
