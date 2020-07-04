@@ -52,7 +52,7 @@ MyAnalysisMaker::~MyAnalysisMaker()
 Int_t MyAnalysisMaker::Init()
 {
     //----------------------------------------
-    runnumber        =      -999;  //just a no.
+    run_num        =      -999;  //just a no.
     
     //-----------------------------------------------------------------------------------------
     histogram_output = new TFile(OutputFileName,"RECREATE") ;
@@ -118,7 +118,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     vector<int> good_triggers = triggers[energy];
     bool good_trig = false;
     for(int trig_index = 0; trig_index < (int)good_triggers.size(); trig_index++) {
-    	if(muEvent->triggerIdCollection.nominal().isTrigger(good_triggers[trig_index])) {
+    	if(muEvent->triggerIdCollection().nominal().isTrigger(good_triggers[trig_index])) {
     		good_trig = true;
     		break;
     	}
@@ -331,7 +331,7 @@ Int_t MyAnalysisMaker::Make()
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_sd = dca_xy_sd / dca_xy_count - pow(dca_xy_avg, 2); }
 	else { dca_xy_avg = -899; dca_xy_sd = -899; }
 
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_sd, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_sd, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
     //fill tree
     tree->Fill();
