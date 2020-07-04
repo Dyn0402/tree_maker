@@ -113,85 +113,46 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     }
     
     event_cut_hist->Fill("Is muEvent", 1);
-
-    // Only accept events with good trigger.
-
-    //Vpd-Zdc-mb & Vpd-Zdc-mb-protected  AuAu2011
-    if(energy == 200) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(350001) || muEvent->triggerIdCollection().nominal().isTrigger(350011) || muEvent->triggerIdCollection().nominal().isTrigger(350003) || muEvent->triggerIdCollection().nominal().isTrigger(350013) || muEvent->triggerIdCollection().nominal().isTrigger(350023) || muEvent->triggerIdCollection().nominal().isTrigger(350033) || muEvent->triggerIdCollection().nominal().isTrigger(350043)))
-			return kTRUE;
-    }
     
-    //mb AuAu62
-    else if(energy == 62) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(270001) || muEvent->triggerIdCollection().nominal().isTrigger(270011) || muEvent->triggerIdCollection().nominal().isTrigger(270021)))
-			return kTRUE;
+    // Check if trigger is good
+    vector<int> good_triggers = triggers[energy];
+    bool good_trig = false;
+    for(int trig_index = 0; trig_index < (int)good_triggers.size(); trig_index++) {
+    	if(muEvent->triggerIdCollection.nominal().isTrigger(good_triggers[trig_index])) {
+    		good_trig = true;
+    		break;
+    	}
     }
+    if(!good_trig) { return kTRUE; }
 
-    //mb AuAu39
-    else if(energy == 39) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(280001)))
-		return kTRUE;
-    }
-   
-    //mb AuAu27
-    else if(energy == 27) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(360001)))
-		return kTRUE;
-    }
-   
-    //mb AuAu19
-    else if(energy == 19) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(340001) || muEvent->triggerIdCollection().nominal().isTrigger(340011) || muEvent->triggerIdCollection().nominal().isTrigger(340021))){
-			return kTRUE;
-		}
-    }
-
-    //mb AuAu14
-    else if(energy == 14) {
-	   if(!(muEvent->triggerIdCollection().nominal().isTrigger(440001) || muEvent->triggerIdCollection().nominal().isTrigger(440004) || muEvent->triggerIdCollection().nominal().isTrigger(440005)))
-	   return kTRUE;
-    }
-    
-    //mb AuAu11
-    else if(energy == 11) {
-		 if(!(muEvent->triggerIdCollection().nominal().isTrigger(310004) || muEvent->triggerIdCollection().nominal().isTrigger(310014)))
-		 return kTRUE;
-    }
-   
-    //mb AuAu7
-    else if(energy == 7) {
-		if(!(muEvent->triggerIdCollection().nominal().isTrigger(290004) || muEvent->triggerIdCollection().nominal().isTrigger(290001)))
-		return kTRUE;
-    }
-    
     event_cut_hist->Fill("Good Trigger", 1);
 
-
+    // Check if run number is good
     run_num = muEvent->runId();
-    vector<int> bad_runs_energy = bad_runs[energy];
-    for(int bad_run_index = 0; bad_run_index < (int)bad_runs_energy.size(); bad_run_index++) {
-    	if(run_num == bad_run_energy[bad_run_index]) { return kTRUE; }
-    }
+//    vector<int> bad_runs_energy = bad_runs[energy];
+//    for(int bad_run_index = 0; bad_run_index < (int)bad_runs_energy.size(); bad_run_index++) {
+//    	if(run_num == bad_run_energy[bad_run_index]) { return kTRUE; }
+//    }
 
 	event_cut_hist->Fill("Good Run", 1);
 
+	// Check if vertex is good
 	double vx = muEvent->primaryVertexPosition().x();
 	double vy = muEvent->primaryVertexPosition().y();
 	double vz = muEvent->primaryVertexPosition().z();
     
     if(energy == 7) {
-    	if(fabs(vz)>50.0) { // change to 50 for 7 GeV
+    	if(fabs(vz)>50.0) {
 			return kTRUE;
 		}
-    } else if(fabs(vz)>30.0) { // change to 50 for 7 GeV
+    } else if(fabs(vz)>30.0) {
 		return kTRUE; // Vertex within 30cm of detector center along beam pipe.
 	}
 
     event_cut_hist->Fill("Good Vz", 1);
 
     if(energy == 14) {
-		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.) //for 14 GeV
+		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.)
 			return kTRUE;
     } else if(sqrt(vx*vx+vy*vy)>2.0) {
     	return kTRUE; // Vertex within 2cm radially of detector center axis.
@@ -241,6 +202,7 @@ Int_t MyAnalysisMaker::Make()
 	double beta, p, m;
 
 	float dca_xy_avg = 0.;
+	float dca_xy_sd = 0.;
 	int dca_xy_count = 0;
 
 	int protonp = 0; int pionp = 0;
@@ -273,7 +235,8 @@ Int_t MyAnalysisMaker::Make()
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 
-		dca_xy_avg += track->dcaD(); // Fix
+		dca_xy_avg += track->dcaD();  // Check
+		dca_xy_sd += pow(track->dcaD(), 2);  // Calculate second raw moment first
 		dca_xy_count++;
 
 		eta = track->eta();
@@ -365,10 +328,10 @@ Int_t MyAnalysisMaker::Make()
     }//==================track loop ends=========================
 
 	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
-	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; }
-	else { dca_xy_avg = -9999; }
+	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_sd = dca_xy_sd / dca_xy_count - pow(dca_xy_avg, 2); }
+	else { dca_xy_avg = -899; dca_xy_sd = -899; }
 
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_sd, muEvent->refMult(), runnumber, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
     //fill tree
     tree->Fill();

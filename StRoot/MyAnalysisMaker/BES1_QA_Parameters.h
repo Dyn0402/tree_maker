@@ -6,15 +6,15 @@ using namespace std;
 // All QA taken from Analysis note for net-proton C4 fluctuations 2019
 
 map<int, vector<int>> triggers {
-	{7, {290001, 290004}},
-	{11, {310014}},
-	{15, {}},
-	{19, {}},
-	{27, {}},
-	{39, {}},
-	{54, {}},
-	{62, {}},
-	{200, {}}
+	{7, {290001, 290004}},  // Conflict with Roli Original
+	{11, {310004, 310014}},  // Conflict with Xiaofeng Analysis Note
+	{15, {440001, 440004, 440005}},  // Conflict with Xiaofeng Analysis Note
+	{19, {340001, 340011, 340021}},
+	{27, {360001}},
+	{39, {280001}},
+	{54, {580001, 580021}},  // From Xiaofeng Analysis Note, Roli didn't have 54
+	{62, {270001, 270011, 270021}},
+	{200, {350001, 350011, 350003, 350013, 350023, 350033, 350043}}  // Conflict with Xiaofeng Analysis Note
 };
 
 map<int, vector<int>> bad_runs{
