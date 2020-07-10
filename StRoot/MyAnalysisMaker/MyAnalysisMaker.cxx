@@ -200,9 +200,6 @@ Int_t MyAnalysisMaker::Make()
     		VertexZPos  =  muEvent-> primaryVertexPosition().z();
     		if(fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
     	} else {
-    		for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
-				if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " no btof header" << endl << endl; }
-			}
     		return kStOK; }
     }
     
@@ -345,6 +342,10 @@ Int_t MyAnalysisMaker::Make()
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { dca_xy_avg = -899; dca_xy_err = -899; }
 //	cout << "post dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << "  |  dca_xy_err: " << dca_xy_err << endl;
+
+	for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
+		if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " still alive" << endl << endl; }
+	}
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_err, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
