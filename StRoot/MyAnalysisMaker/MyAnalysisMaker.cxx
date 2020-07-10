@@ -202,7 +202,7 @@ Int_t MyAnalysisMaker::Make()
 	double beta, p, m;
 
 	float dca_xy_avg = 0.;
-	float dca_xy_sd = 0.;
+	float dca_xy_err = 0.;
 	int dca_xy_count = 0;
 
 	int protonp = 0; int pionp = 0;
@@ -236,7 +236,7 @@ Int_t MyAnalysisMaker::Make()
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 		if(fabs(track->dcaD()) <= 4) {
 			dca_xy_avg += track->dcaD();  // Check
-			dca_xy_sd += pow(track->dcaD(), 2);  // Calculate second raw moment first
+			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
 			dca_xy_count++;
 		}
 
@@ -329,10 +329,10 @@ Int_t MyAnalysisMaker::Make()
     }//==================track loop ends=========================
 
 //	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
-	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_sd = dca_xy_sd / dca_xy_count - pow(dca_xy_avg, 2); }
-	else { dca_xy_avg = -899; dca_xy_sd = -899; }
+	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(dca_xy_avg, 2)) / dca_xy_count, 0.5); }
+	else { dca_xy_avg = -899; dca_xy_err = -899; }
 
-    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_sd, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
+    levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_err, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
     //fill tree
     tree->Fill();

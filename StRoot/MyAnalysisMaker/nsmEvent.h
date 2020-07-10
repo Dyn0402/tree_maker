@@ -11,7 +11,7 @@ private:
     Float_t vtx_z;
     
     Float_t dca_xy_avg;
-    Float_t dca_xy_sd;
+    Float_t dca_xy_err;
 
     UInt_t Nprim;
     UInt_t run;
@@ -27,12 +27,12 @@ private:
 
 public:
     nsmEvent();
-    nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg, Float_t mdca_xy_sd,
+    nsmEvent(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg, Float_t mdca_xy_err,
              UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
 			 Float_t qx, Float_t qy
              );
     
-    void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg, Float_t mdca_xy_sd,
+    void SetEventData(Float_t mvtx_x, Float_t mvtx_y, Float_t mvtx_z, Float_t mdca_xy_avg, Float_t mdca_xy_err,
                       UInt_t mNprim, UInt_t mrun, UInt_t mevent_id, UInt_t mref2, UInt_t mref3, UInt_t mbtof,
 					  Float_t mqx, Float_t mqy
                       );
@@ -42,7 +42,7 @@ public:
     Float_t VtxZ() { return vtx_z; }
     
     Float_t Dca_XY_Avg() { return dca_xy_avg; }
-    Float_t Dca_XY_Sd() { return dca_xy_sd; }
+    Float_t Dca_XY_Err() { return dca_xy_err; }
 
     UInt_t NPrimaries() { return Nprim; }
     UInt_t Run() { return run; }
