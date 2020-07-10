@@ -185,6 +185,9 @@ Int_t MyAnalysisMaker::Make()
     }
 
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
+    	for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
+			if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " bad event" << endl << endl; }
+		}
     	return           kStOK;
     }
 
@@ -196,7 +199,11 @@ Int_t MyAnalysisMaker::Make()
     		VpdVzPos    =  mMuDstMaker->muDst()->btofHeader()->vpdVz();
     		VertexZPos  =  muEvent-> primaryVertexPosition().z();
     		if(fabs(VpdVzPos-VertexZPos) > 3) return kStOK; // for 39,62 GeV
-    	} else { return kStOK; }
+    	} else {
+    		for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
+				if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " no btof header" << endl << endl; }
+			}
+    		return kStOK; }
     }
     
     //---------------------------------------------------------
