@@ -178,6 +178,8 @@ Int_t MyAnalysisMaker::Make()
 	event_cut_hist->Fill("Original", 1);
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
 
+    if(muEvent->eventId() == 898) { cout << "898 found" << endl; }
+
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
     	return           kStOK;
     }
@@ -328,9 +330,10 @@ Int_t MyAnalysisMaker::Make()
 
     }//==================track loop ends=========================
 
-//	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << endl;
+	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << "  |  dca_xy_err: " << dca_xy_err << endl;
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { dca_xy_avg = -899; dca_xy_err = -899; }
+	cout << "post dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << "  |  dca_xy_err: " << dca_xy_err << endl;
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_err, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
