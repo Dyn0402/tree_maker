@@ -180,7 +180,9 @@ Int_t MyAnalysisMaker::Make()
 
     vector<int> missing {898, 1102, 1382};
 
-    if(missing.find(muEvent->eventId()) != missing.end()) { cout << endl << "Event " << muEvent->eventId() << " found" << endl << endl; }
+    for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
+    	if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " found" << endl << endl; }
+    }
 
     if(IsBadEvent(muEvent))  {                                     //Nominal Event cuts and trigger cut
     	return           kStOK;
