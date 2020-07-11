@@ -225,6 +225,7 @@ Int_t MyAnalysisMaker::Make()
 
 	while((track = (StMuTrack*)GetTracks.Next()))
 	{
+		if(!muTrack) continue;
 		if(track->flag() < 0)  continue;
 		track_cut_hist->Fill("Original", 1);
 		// Track quality cuts----------------------
@@ -237,7 +238,6 @@ Int_t MyAnalysisMaker::Make()
 		track_cut_hist->Fill("p_low", 1);
 
 		nHitsFit =  track->nHitsFit();
-		nHitsFit =  fabs(nHitsFit)+1;
 		ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
 //		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("ratio_low", 1);
@@ -245,11 +245,6 @@ Int_t MyAnalysisMaker::Make()
 		track_cut_hist->Fill("ratio_high", 1);
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
-		if(fabs(track->dcaD()) <= 4) {
-			dca_xy_avg += track->dcaD();  // Check
-			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
-			dca_xy_count++;
-		}
 
 		eta = track->eta();
 
@@ -286,6 +281,12 @@ Int_t MyAnalysisMaker::Make()
 		// Q vector for event plane
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			Qx += cos(2*phi); Qy += sin(2*phi);
+		}
+
+		if(fabs(track->dcaD()) <= 4) {
+			dca_xy_avg += track->dcaD();  // Check
+			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
+			dca_xy_count++;
 		}
 
 		if(fabs(eta) > 1.0) continue;
