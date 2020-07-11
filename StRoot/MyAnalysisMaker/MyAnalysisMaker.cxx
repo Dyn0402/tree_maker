@@ -78,6 +78,7 @@ Int_t MyAnalysisMaker::Init()
 	event_cut_hist->GetXaxis()->SetBinLabel(8, "Good VPD Vz");
 
 	track_cut_hist = new TH1I("Track Cut Hist", "Track Cut Hist", 13, -0.5, 12.5);
+	track_cut_hist->GetXaxis()->SetBinLabel(1, "Expected");
 	track_cut_hist->GetXaxis()->SetBinLabel(1, "Original");
 	track_cut_hist->GetXaxis()->SetBinLabel(2, "Charge");
 	track_cut_hist->GetXaxis()->SetBinLabel(3, "p_low");
@@ -207,9 +208,12 @@ Int_t MyAnalysisMaker::Make()
     
     event_cut_hist->Fill("Good VPD Vz", 1);
 
-	int nHitsFit, nHitsDedx;
+	int nHitsFit, nHitsDedx, btofMatch;
 	float ratio, dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx, Qy;
 	double beta, p, m;
+
+	int tofmatched = 0;
+	int tofmatchedbeta = 0;
 
 	float dca_xy_avg = 0.;
 	float dca_xy_err = 0.;
@@ -263,6 +267,7 @@ Int_t MyAnalysisMaker::Make()
 		nHitsDedx = track->nHitsDedx();
 		if(phi < 0) phi = phi + 2 * TMath::Pi();
 
+		btofMatch = track->btofPidTraits().matchFlag();
 		beta = -999;
 		beta = track->btofPidTraits().beta();
 		m = -999;
@@ -271,11 +276,24 @@ Int_t MyAnalysisMaker::Make()
 //			beta_pq_hist->Fill(charge*p, 1 / beta);
 		}
 
+		// tofmatched
+		if(fabs(eta) < 0.5 && dca < 3.0 && nHitsFit > 10) {
+			if(btofMatch > 0) {
+				tofmatched++;
+				if(beta > 0.1) { tofmatchedbeta++; }
+			}
+		}
+
 		// ref2
 		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) > 0.5 && fabs(eta) < 1.0) ref2++;
 
 		// ref3
-		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && m < 0.4 && nsigmapr < -3.0) ref3++;
+		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && nsigmapr < -3.0) {
+			if(btofMatch == 0) { ref3++; }
+			else if(btofMatch > 0) {
+				if(m < 0.4) { ref3++; }
+			}
+		}
 
 		if(ratio < 0.52) continue;
 		// Q vector for event plane
@@ -283,8 +301,8 @@ Int_t MyAnalysisMaker::Make()
 			Qx += cos(2*phi); Qy += sin(2*phi);
 		}
 
-		if(fabs(track->dcaD()) <= 4) {
-			dca_xy_avg += track->dcaD();  // Check
+		if(track->dcaD() < 4 && track->dcaD() >= -4) {
+			dca_xy_avg += track->dcaD();
 			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
 			dca_xy_count++;
 		}
@@ -340,6 +358,8 @@ Int_t MyAnalysisMaker::Make()
 		// Cuts selecting relevant particles----------------------
 
     }//==================track loop ends=========================
+
+	if(tofmatchedbeta == 0) { return kStOK; }
 
 //	cout << "pre dca_xy_count: " << dca_xy_count << "  |  dca_xy_avg: " << dca_xy_avg << "  |  dca_xy_err: " << dca_xy_err << endl;
 	if(dca_xy_count > 0) { dca_xy_avg /= dca_xy_count; dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(dca_xy_avg, 2)) / dca_xy_count, 0.5); }
