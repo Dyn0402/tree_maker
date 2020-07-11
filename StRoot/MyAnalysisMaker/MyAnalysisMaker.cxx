@@ -232,13 +232,6 @@ Int_t MyAnalysisMaker::Make()
 
 	while((track = (StMuTrack*)GetTracks.Next()))
 	{
-		if(muEvent->eventId() == 31921) {
-			ofs31921 << track->id() << " " << !track << " " << track->flag() << " " << track->nHitsFit() << " "
-					<< track->nHitsPoss() << " " << track->btofPidTraits().beta() << " "
-					<< track->btofPidTraits().matchFlag() << " " << track->dcaD() << endl;
-		}
-
-
 		if(!track) continue;
 		if(track->flag() < 0)  continue;
 		track_cut_hist->Fill("Original", 1);
@@ -309,6 +302,12 @@ Int_t MyAnalysisMaker::Make()
 		// Q vector for event plane
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			Qx += cos(2*phi); Qy += sin(2*phi);
+		}
+
+		if(muEvent->eventId() == 31921) {
+			ofs31921 << track->id() << " " << !track << " " << track->flag() << " " << track->nHitsFit() << " "
+					<< track->nHitsPoss() << " " << track->btofPidTraits().beta() << " "
+					<< track->btofPidTraits().matchFlag() << " " << track->dcaD() << endl;
 		}
 
 		if(track->dcaD() < 4 && track->dcaD() >= -4) {
