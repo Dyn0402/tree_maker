@@ -225,7 +225,7 @@ Int_t MyAnalysisMaker::Make()
 
 	while((track = (StMuTrack*)GetTracks.Next()))
 	{
-		if(!muTrack) continue;
+		if(!track) continue;
 		if(track->flag() < 0)  continue;
 		track_cut_hist->Fill("Original", 1);
 		// Track quality cuts----------------------
