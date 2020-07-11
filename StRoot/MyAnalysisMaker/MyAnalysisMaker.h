@@ -46,6 +46,7 @@ public:
     void SetOutputFileName(TString name) {OutputFileName = name;}  // Make name available to member functions
     
     ofstream ofs;
+    ofstream ofs31921;
     
 private:
     StMuDstMaker      *mMuDstMaker;                   //  Make MuDst pointer available to member functions

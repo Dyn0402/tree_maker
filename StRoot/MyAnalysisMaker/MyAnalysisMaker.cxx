@@ -228,8 +228,17 @@ Int_t MyAnalysisMaker::Make()
 	TObjArrayIter  GetTracks(tracks) ;                              // Create an iterator to step through the tracks
 	StMuTrack*                 track ;                              // Pointer to a track
 
+	if(muEvent->eventId() == 31921) { ofs31921.open("31921_dylan.dat"); }
+
 	while((track = (StMuTrack*)GetTracks.Next()))
 	{
+		if(muEvent->eventId() == 31921) {
+			ofs31921 << track->id() << " " << !track << " " << track->flag() << " " << track->nHitsFit() << " "
+					<< track->nHitsPoss() << " " << track->btofPidTraits().beta() << " "
+					<< track->btofPidTraits().matchFlag() << " " << track->dcaD() << endl;
+		}
+
+
 		if(!track) continue;
 		if(track->flag() < 0)  continue;
 		track_cut_hist->Fill("Original", 1);
