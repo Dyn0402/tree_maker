@@ -24,6 +24,7 @@
   <stdout URL="file:/gpfs01/star/pwg/dneff/scratch/11GeV_Run/log/log_&energy;GeV$JOBID.out" />
 
     <output fromScratch="*.root" toURL="file:/gpfs01/star/pwg/dneff/scratch/11GeV_Run/output/" />
+    <output fromScratch="*.dat" toURL="file:/gpfs01/star/pwg/dneff/scratch/11GeV_Run/output/" />
  
   <Generator>
     <Location>/gpfs01/star/pwg/dneff/scratch/11GeV_Run/log/</Location>

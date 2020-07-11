@@ -56,6 +56,7 @@ Int_t MyAnalysisMaker::Init()
     
     //-----------------------------------------------------------------------------------------
     histogram_output = new TFile(OutputFileName,"RECREATE") ;
+    ofs.open(OutputFileName+".dat");
     
     tree = new TTree("tree","tree");//
 
@@ -164,7 +165,7 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 	if( (vx < 1.e-5 && vx > -1.e-5) ||
 	   (vy < 1.e-5 && vy > -1.e-5) ||
 	   (vz < 1.e-5 && vz > -1.e-5)  ) {
-		return kTRUE; // Too close to zero?
+		return kTRUE; // Cut on the number of vertices in the event.  On old tapes, no-vertex gets reported as VtxPosition=(0,0,0).
 	}
 
 	event_cut_hist->Fill("Vertex Non-Zero", 1);
@@ -372,6 +373,8 @@ Int_t MyAnalysisMaker::Make()
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_err, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
+    ofs << muEvent->eventId() << " " << dca_xy_avg << " " << dca_xy_err << " " << dca_xy_count << endl;
+
     //fill tree
     tree->Fill();
     protonArr->Clear();

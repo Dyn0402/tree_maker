@@ -45,7 +45,7 @@ public:
     Bool_t IsBadTrack(StMuTrack * track);
     void SetOutputFileName(TString name) {OutputFileName = name;}  // Make name available to member functions
     
-    
+    ofstream ofs;
     
 private:
     StMuDstMaker      *mMuDstMaker;                   //  Make MuDst pointer available to member functions
