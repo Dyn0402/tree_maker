@@ -225,22 +225,23 @@ Int_t MyAnalysisMaker::Make()
 
 	while((track = (StMuTrack*)GetTracks.Next()))
 	{
+		if(track->flag() < 0)  continue;
 		track_cut_hist->Fill("Original", 1);
 		// Track quality cuts----------------------
 		charge = track->charge();
-		if(fabs(charge)!=1) continue; // Eliminates neutral particles
+//		if(fabs(charge)!=1) continue; // Eliminates neutral particles
 		track_cut_hist->Fill("Charge", 1);
 
 		p = track->p().mag();
-		if (p < 0.15) continue;
+//		if (p < 0.15) continue;
 		track_cut_hist->Fill("p_low", 1);
 
 		nHitsFit =  track->nHitsFit();
 		nHitsFit =  fabs(nHitsFit)+1;
 		ratio    =  (float) nHitsFit / (float) track->nHitsPoss();
-		if(ratio < 0.52) continue;
+//		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("ratio_low", 1);
-		if(ratio > 1.05) continue;
+//		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("ratio_high", 1);
 
 //		de_dx_pq_hist->Fill(charge*p, track->dEdx());
@@ -281,6 +282,7 @@ Int_t MyAnalysisMaker::Make()
 		// ref3
 		if(nHitsFit > 10 && dca < 3.0 && fabs(eta) < 1.0 && m < 0.4 && nsigmapr < -3.0) ref3++;
 
+		if(ratio < 0.52) continue;
 		// Q vector for event plane
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			Qx += cos(2*phi); Qy += sin(2*phi);
