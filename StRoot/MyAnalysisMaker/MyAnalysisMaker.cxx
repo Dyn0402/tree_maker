@@ -161,8 +161,8 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
     event_cut_hist->Fill("Good Vr", 1);
 
-	if( (vx < 1.e-5 && vx > -1.e-5) &&
-	   (vy < 1.e-5 && vy > -1.e-5) &&
+	if( (vx < 1.e-5 && vx > -1.e-5) ||
+	   (vy < 1.e-5 && vy > -1.e-5) ||
 	   (vz < 1.e-5 && vz > -1.e-5)  ) {
 		return kTRUE; // Too close to zero?
 	}
