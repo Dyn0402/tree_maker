@@ -156,6 +156,10 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
 
     event_cut_hist->Fill("Good Vz", 1);
 
+    if(muEvent->eventId() == 39892) {
+    	cout << endl << "vx: " << vx << " | vy: " << vy << " | vz: " << vz << " | vr: " << sqrt(vx*vx+vy*vy) << endl;
+    }
+
     if(energy == 14) {
 		if(sqrt(pow(vx,2.)+pow((vy+0.89),2.))>1.)
 			return kTRUE;
@@ -183,7 +187,7 @@ Int_t MyAnalysisMaker::Make()
 	event_cut_hist->Fill("Original", 1);
     StMuEvent* muEvent  =  mMuDstMaker->muDst()->event();
 
-    vector<int> missing {898, 1102, 1382};
+    vector<int> missing {91862, 92400};
 
     for(int missing_index = 0; missing_index < (int)missing.size(); missing_index++) {
     	if(missing[missing_index] == muEvent->eventId()) { cout << endl << "Event " << muEvent->eventId() << " found" << endl << endl; }
