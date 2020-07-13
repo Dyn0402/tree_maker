@@ -209,7 +209,7 @@ Int_t MyAnalysisMaker::Make()
     
     event_cut_hist->Fill("Good VPD Vz", 1);
 
-	int nHitsDedx, btofMatch;
+	int nHitsFit, nHitsDedx, btofMatch;
 	float dca, eta, pt, nsigmapr, nsigmapi, phi, charge, Qx, Qy;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
@@ -245,6 +245,7 @@ Int_t MyAnalysisMaker::Make()
 //		if (p < 0.15) continue;
 		track_cut_hist->Fill("p_low", 1);
 
+		nHitsFit = track->nHitsFit();
 		ratio    =  static_cast<double>(track->nHitsFit()) / static_cast<double> (track->nHitsPoss());
 //		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("ratio_low", 1);
