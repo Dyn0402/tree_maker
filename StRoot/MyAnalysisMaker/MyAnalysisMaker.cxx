@@ -33,6 +33,8 @@
 
 using namespace std;
 
+int trigger = 0;
+
 ClassImp(MyAnalysisMaker)                       // Macro for CINT compatibility
 MyAnalysisMaker::MyAnalysisMaker(StMuDstMaker* maker) : StMaker("MyAnalysisMaker")
 {                                               // Initialize data members here.
@@ -121,11 +123,12 @@ Bool_t MyAnalysisMaker::IsBadEvent(StMuEvent *muEvent)
     bool good_trig = false;
     for(int trig_index = 0; trig_index < (int)good_triggers.size(); trig_index++) {
     	if(muEvent->triggerIdCollection().nominal().isTrigger(good_triggers[trig_index])) {
+    		trigger = good_triggers[trig_index];
     		good_trig = true;
     		break;
     	}
     }
-    if(!good_trig) { return kTRUE; }
+    if(!good_trig) { trigger = -1; return kTRUE; }
 
     event_cut_hist->Fill("Good Trigger", 1);
 
@@ -382,7 +385,9 @@ Int_t MyAnalysisMaker::Make()
 
     levent->SetEventData(muEvent->primaryVertexPosition().x(), muEvent->primaryVertexPosition().y(), muEvent->primaryVertexPosition().z(), dca_xy_avg, dca_xy_err, muEvent->refMult(), run_num, muEvent->eventId(), ref2, ref3, muEvent->btofTrayMultiplicity(), Qx, Qy);
     
-    ofs << muEvent->eventId() << " " << dca_xy_avg << " " << dca_xy_err << " " << dca_xy_count << endl;
+    if(protonp + pionp > 0) {
+    	ofs << muEvent->eventId() << " " << dca_xy_avg << " " << dca_xy_err << " " << dca_xy_count << " " << muEvent->primaryVertexPosition().x() << " " << muEvent->primaryVertexPosition().y() << " " << muEvent->primaryVertexPosition().z() << " " << trigger << endl;
+    }
 
     //fill tree
     tree->Fill();
