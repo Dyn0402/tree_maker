@@ -1,4 +1,6 @@
-//Dylan Edited 06/25/19
+// 7/15/20 Dylan Neff
+// Reproduces Toshihiro's data for 11GeV run 11149014 up to the gRandom call in StRefMultCorr
+// Plan to heavily edit after this commit to match Xiaofeng's definitions/cuts
 
 #include "MyAnalysisMaker.h"
 #include "BES1_QA_Parameters.h"
