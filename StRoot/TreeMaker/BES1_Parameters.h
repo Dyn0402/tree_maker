@@ -20,9 +20,6 @@ namespace pars {
 	int branch_buffer = 256000;
 	int branch_split = 1;
 
-	map<int, float> vz_max;
-
-
 	map<int, float> vz_max {
 		{7, 50.0},
 		{11, 30.0},
