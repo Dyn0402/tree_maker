@@ -17,8 +17,8 @@ using namespace std;
 class ParticleVars {
 public:
 	// Structors
-	ParticleVars::ParticleVars();
-	ParticleVars::~ParticleVars();
+	ParticleVars();
+	~ParticleVars();
 
 	// Doers
 	void add_event(float pt, float phi, float eta, float dca, float nsigma, float beta, short charge);

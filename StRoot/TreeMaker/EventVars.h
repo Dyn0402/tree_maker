@@ -12,8 +12,8 @@
 class EventVars {
 public:
 	// Structors
-	EventVars::EventVars();
-	EventVars::~EventVars();
+	EventVars();
+	~EventVars();
 
 	// Doers
 	void clear();
