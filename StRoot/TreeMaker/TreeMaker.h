@@ -13,6 +13,7 @@
 
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
+#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMaker.h"
 #include "TROOT.h"
 #include "TFile.h"
