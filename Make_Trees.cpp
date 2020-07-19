@@ -25,13 +25,13 @@ void Tree_Maker(string input_file_list, string output_dir, int energy) {
 	// Load libraries
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
-//	gSystem->Load("St_base");
-//	gSystem->Load("StChain");
-//	gSystem->Load("StUtilities");
-//	gSystem->Load("StIOMaker");
-//	gSystem->Load("StarClassLibrary");
-//	gSystem->Load("StEvent");
-//	gSystem->Load("StBTofUtil");
+	gSystem->Load("St_base");
+	gSystem->Load("StChain");
+	gSystem->Load("StUtilities");
+	gSystem->Load("StIOMaker");
+	gSystem->Load("StarClassLibrary");
+	gSystem->Load("StEvent");
+	gSystem->Load("StBTofUtil");
 
 	StChain *chain = new StChain;
 	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, input_file_list, "MuDst", num_files);
