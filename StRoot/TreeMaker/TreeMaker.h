@@ -8,6 +8,7 @@
 #ifndef TREEMAKER_H_
 #define TREEMAKER_H_
 
+#include <iostream>
 #include <string>
 
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
@@ -18,6 +19,7 @@
 #include "TTree.h"
 #include "TH2.h"
 #include "TH1.h"
+#include "TObjArray.h"
 
 #include "EventVars.h"
 #include "ParticleVars.h"
@@ -26,6 +28,7 @@
 class StMaker;
 class StMuDstMaker;
 class StMuEvent;
+class StMuTrack;
 
 using namespace std;
 
@@ -33,8 +36,9 @@ using namespace std;
 class TreeMaker : public StMaker {
 public:
 	// Structors
-	TreeMaker(StMuDstMaker* maker);  // Constructor
-	virtual ~TreeMaker();  // Destructor
+	TreeMaker(StMuDstMaker* maker);
+	TreeMaker(StMuDstMaker* maker, string name, int energy_in);
+	virtual ~TreeMaker();
 
 	// Setters
 	void set_energy(int energy_in);  // Set energy being run for cut purposes
@@ -60,6 +64,12 @@ private:
 	TH1D* track_cut_hist;
 	TH2F* de_dx_pq_hist;
 	TH2F* beta_pq_hist;
+
+	// Temp QA plots
+	TH1D* flag_diff_hist;
+	TH1D* nHitsFit_diff_hist;
+	TH1D* nHitsPoss_diff_hist;
+	TH1D* dca_diff_hist;
 
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed

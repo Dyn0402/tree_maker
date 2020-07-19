@@ -20,6 +20,9 @@ namespace pars {
 	int branch_buffer = 256000;
 	int branch_split = 1;
 
+	map<int, float> vz_max;
+
+
 	map<int, float> vz_max {
 		{7, 50.0},
 		{11, 30.0},
@@ -58,7 +61,7 @@ namespace pars {
 
 	float vertex_min = 1e-5;
 
-	map<int, float> vy_offset {
+	map<int, float> vpd_vz_max_diff {
 			{7, 0.0},
 			{11, 0.89},
 			{15, 0.0},
@@ -69,6 +72,8 @@ namespace pars {
 			{62, 0.0},
 			{200, 0.0}
 		};
+
+	static const int trig7_arr[] = {290001, 290004}; vector<int> trig7(trig7_arr, trig7_arr + sizeof(trig7_arr) / sizeof(trig7_arr[0]));
 
 	map<int, vector<int>> triggers {
 		{7, {290001, 290004}},  // Conflict with Roli Original

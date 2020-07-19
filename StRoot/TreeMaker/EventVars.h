@@ -21,10 +21,10 @@ public:
 	// Public Members
 	int run_num;
 	int event_id;
-	int refmult;
-	int refmult2;
-	int refmult3;
-	int btof;
+	short refmult;
+	short refmult2;
+	short refmult3;
+	short btof;
 
 	float vx, vy, vz;
 	float qx, qy;

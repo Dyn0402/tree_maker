@@ -21,6 +21,7 @@ public:
 	ParticleVars::~ParticleVars();
 
 	// Doers
+	void add_event(float pt, float phi, float eta, float dca, float nsigma, float beta, short charge);
 	void clear();
 
 	// Public Members
@@ -30,7 +31,7 @@ public:
 	vector<float> dca;
 	vector<float> nsigma;
 	vector<float> beta;
-	vector<int> charge;
+	vector<short> charge;
 };
 
 
