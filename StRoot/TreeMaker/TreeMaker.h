@@ -15,6 +15,7 @@
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMaker.h"
+
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -26,7 +27,7 @@
 #include "ParticleVars.h"
 #include "BES1_Parameters.h"  // pull pars namespace from here
 
-//class StMaker;
+class StMaker;
 class StMuDstMaker;
 class StMuEvent;
 class StMuTrack;
