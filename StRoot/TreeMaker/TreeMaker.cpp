@@ -275,7 +275,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
 	StMuTrack* track;
 
-	int nHitsFit, nHitsDedx, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
+	int nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
@@ -357,7 +357,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		if(nHitsFit <= 20) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
-		if(nHitsDedx <= 5) continue;
+		if(track->nHitsDedx() <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
 
 		if(dca < 0 || dca > 1.2) continue;
