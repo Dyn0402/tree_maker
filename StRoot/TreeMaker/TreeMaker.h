@@ -14,7 +14,7 @@
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
-#include "StMuDSTMaker/COMMON/StBtofHeader.h"
+#include "StEvent/StBtofHeader.h"
 #include "StMaker.h"
 
 #include "TROOT.h"
