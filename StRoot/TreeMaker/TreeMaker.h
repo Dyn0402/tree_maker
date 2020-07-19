@@ -30,6 +30,7 @@
 
 class StMaker;
 class StMuDstMaker;
+class StMuDst;
 class StMuEvent;
 class StMuTrack;
 
@@ -57,7 +58,8 @@ public:
 	void track_loop(StMuEvent *mu_event);
 
 private:
-	StMuDstMaker* mudst_maker;  // MuDstMaker passed in via constructor
+	StMuDstMaker *muDst_maker;  // MuDstMaker passed in via constructor
+	StMuDst *muDst;
 
 	string out_file_name;  // Name of output root file
 	TFile* out_file;  // Root file to be written

@@ -13,7 +13,8 @@ ClassImp(TreeMaker)
 
 // Structors
 TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
-	mudst_maker = maker;
+	muDst_maker = maker;
+	muDst = muDst_maker->muDst();
 
 	out_file_name = "";
 	out_file = NULL;
@@ -36,7 +37,8 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 }
 
 TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in) : StMaker("TreeMaker") {
-	mudst_maker = maker;
+	muDst_maker = maker;
+	muDst = muDst_maker->muDst();
 
 	out_file_name = name;
 	out_file = NULL;
@@ -161,7 +163,7 @@ Int_t TreeMaker::Make() {
 
 	event.clear(); protons.clear(); pions.clear();  // Clear event/particle objects before processing new event
 
-	StMuEvent* mu_event = mudst_maker->muDst()->event();  // Get muEvent from maker
+	StMuEvent* mu_event = muDst->event();  // Get muEvent from maker
 
 	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
@@ -248,8 +250,8 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 	// Filter out events with disagreement between vpd and vertex reconstruction.
 	if(pars::vpd_vz_max_diff.count(energy) > 0) {
-		if(mudst_maker->muDst()->btofHeader()) {
-			float vpd_vz = mudst_maker->muDst()->btofHeader()->vpdVz();
+		if(muDst->btofHeader()) {
+			float vpd_vz = muDst->btofHeader()->vpdVz();
 			if(fabs(vpd_vz - event.vz) > pars::vpd_vz_max_diff[energy]) {
 				return kStOK;
 			} else {
@@ -270,7 +272,7 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 }
 
 void TreeMaker::track_loop(StMuEvent *mu_event) {
-	int num_primary = mu_event->primaryTracks()->GetEntries();
+	int num_primary = muDst->primaryTracks()->GetEntries();
 	StMuTrack* track;
 
 	int nHitsFit, nHitsDedx, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
@@ -281,12 +283,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 	for(int track_index = 0; track_index < num_primary; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
-		track = (StMuTrack*) mu_event->primaryTracks(track_index);
+		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
 		// Temp QA plots
-		flag_diff_hist->Fill(fabs(track->flag() - mu_event->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(track->nHitsFit() - mu_event->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - mu_event->globalTracks(track->index2Global())->nHitsPoss());
+		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
+		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
 		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
 
 		// Initial track cuts
@@ -297,7 +299,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
 		track_cut_hist->Fill("Primary Flag", 1);
 
-		if(mu_event->globalTracks(track->index2Global()) < 0) continue;  // Check global track flag, still unsure what it is
+		if(muDst->globalTracks(track->index2Global()) < 0) continue;  // Check global track flag, still unsure what it is
 		track_cut_hist->Fill("Global Flag", 1);
 
 		charge = track->charge();
