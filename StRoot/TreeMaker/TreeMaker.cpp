@@ -112,7 +112,7 @@ Int_t TreeMaker::Init() {
 	tree->Branch("pion.beta", &pions.beta, pars::branch_buffer, pars::branch_split);
 	tree->Branch("pion.charge", &pions.charge, pars::branch_buffer, pars::branch_split);
 
-	event_cut_hist = new TH1I("Event Cut Hist", "Event Cut Hist", 9, -0.5, 8.5);
+	event_cut_hist = new TH1D("Event Cut Hist", "Event Cut Hist", 9, -0.5, 8.5);
 	event_cut_hist->GetXaxis()->SetBinLabel(1, "Expected");
 	event_cut_hist->GetXaxis()->SetBinLabel(2, "Events Read");
 	event_cut_hist->GetXaxis()->SetBinLabel(3, "Is muEvent");
@@ -123,7 +123,7 @@ Int_t TreeMaker::Init() {
 	event_cut_hist->GetXaxis()->SetBinLabel(8, "Vertex Non-Zero");
 	event_cut_hist->GetXaxis()->SetBinLabel(9, "Good VPD Vz");
 
-	track_cut_hist = new TH1I("Track Cut Hist", "Track Cut Hist", 17, -0.5, 16.5);
+	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 17, -0.5, 16.5);
 	track_cut_hist->GetXaxis()->SetBinLabel(1, "Tracks Read");
 	track_cut_hist->GetXaxis()->SetBinLabel(2, "Is Track");
 	track_cut_hist->GetXaxis()->SetBinLabel(3, "Primary Flag");
@@ -184,8 +184,8 @@ Int_t TreeMaker::Finish() {
 	out_file->Close();
 
 	cout <<"\n ======> All done <======"<<endl;
-	cout<<" Acutal #Events Read = " <<mEventsRead<<"\n###### Thank You ######\n"<< endl ;
-	cout<<" Acutal #Events Processed = " <<mEventsProcessed<<"\n###### Thank You ######\n"<< endl ;
+	cout<<" Acutal #Events Read = " << events_read <<"\n###### Thank You ######\n"<< endl ;
+	cout<<" Acutal #Events Processed = " << events_processed <<"\n###### Thank You ######\n"<< endl ;
 
 	cout << "donzo" << endl;
 
@@ -287,7 +287,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		flag_diff_hist->Fill(fabs(track->flag() - mu_event->globalTracks(track->index2Global())->flag()));
 		nHitsFit_diff_hist->Fill(track->nHitsFit() - mu_event->globalTracks(track->index2Global())->nHitsFit());
 		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - mu_event->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_hist->Fill(track->dca() - track->dcaGlobal());
+		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
 
 		// Initial track cuts
 
@@ -334,9 +334,9 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		// Cut on ratio of nHitsFit to nHitsPossible
 		ratio = (double) nHitsFit / (double) track->nHitsPoss();
 		if(ratio < 0.52) continue;
-		track_cut_hist->Fill("nHitsRatio Min");
+		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
-		track_cut_hist->Fill("nHitsRatio Max");
+		track_cut_hist->Fill("nHitsRatio Max", 1);
 
 		// Event Plane Q vector
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {

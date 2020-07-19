@@ -14,9 +14,9 @@
 
 using namespace std;
 
-class StChain;
-class StMuDstMaker;
-class TreeMaker;
+//class StChain;
+//class StMuDstMaker;
+//class TreeMaker;
 
 
 void Tree_Maker(string input_file_list, string output_dir, int energy) {
