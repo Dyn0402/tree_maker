@@ -25,10 +25,10 @@
 #include "ParticleVars.h"
 #include "BES1_Parameters.h"  // pull pars namespace from here
 
-//class StMaker;
-//class StMuDstMaker;
-//class StMuEvent;
-//class StMuTrack;
+class StMaker;
+class StMuDstMaker;
+class StMuEvent;
+class StMuTrack;
 
 using namespace std;
 
