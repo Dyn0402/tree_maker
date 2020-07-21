@@ -313,11 +313,11 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("Charge", 1);
 
 		// Temp QA plots
-//		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-//		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
+		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 
 		// Get main track variables
@@ -388,10 +388,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("pt_high", 1);
 
 		// Temp QA plots
-//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 		nsigmapi = track->nSigmaPion();
 
