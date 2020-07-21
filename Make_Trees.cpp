@@ -19,7 +19,7 @@ class StMuDstMaker;
 class TreeMaker;
 
 
-void Tree_Maker(string input_file_list, string output_dir, int energy) {
+void Make_Trees(string input_file_list, string output_dir, int energy) {
 	int num_files = 1e4;
 
 	// Load libraries
