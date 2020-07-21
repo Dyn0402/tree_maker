@@ -25,13 +25,13 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 	// Load libraries
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
-	gSystem->Load("St_base");
-	gSystem->Load("StChain");
-	gSystem->Load("StUtilities");
-	gSystem->Load("StIOMaker");
-	gSystem->Load("StarClassLibrary");
-	gSystem->Load("StEvent");
-	gSystem->Load("StBTofUtil");
+//	gSystem->Load("St_base");
+//	gSystem->Load("StChain");
+//	gSystem->Load("StUtilities");
+//	gSystem->Load("StIOMaker");
+//	gSystem->Load("StarClassLibrary");
+//	gSystem->Load("StEvent");
+//	gSystem->Load("StBTofUtil");
 
 	StChain *chain = new StChain;
 	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);
@@ -49,9 +49,9 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 	TreeMaker *tree_maker = new TreeMaker(muDst_maker, output_dir, energy);
 
 	int num_events = 1e7;
-	num_events = muDstMaker->chain()->GetEntries();
+	num_events = muDst_maker->chain()->GetEntries();
 
-	cout<<"\n############################ Total Event in chain = "<< num_events << " fast entries = " << muDstMaker->chain()->GetEntriesFast() << "############################\n "<<endl;
+	cout<<"\n############################ Total Event in chain = "<< num_events << " fast entries = " << muDst_maker->chain()->GetEntriesFast() << "############################\n "<<endl;
 
 
 	int status = chain->Init() ;
