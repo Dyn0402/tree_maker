@@ -67,7 +67,7 @@ namespace pars {
 			{200, 0.0}
 		};
 
-	static const int trig7_arr[] = {290001, 290004}; vector<int> trig7(trig7_arr, trig7_arr + sizeof(trig7_arr) / sizeof(trig7_arr[0]));
+//	static const int trig7_arr[] = {290001, 290004}; vector<int> trig7(trig7_arr, trig7_arr + sizeof(trig7_arr) / sizeof(trig7_arr[0]));
 
 	map<int, vector<int>> triggers {
 		{7, {290001, 290004}},  // Conflict with Roli Original

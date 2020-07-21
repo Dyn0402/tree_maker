@@ -31,7 +31,7 @@ namespace pars {
 
 	extern map<int, float> vpd_vz_max_diff;
 
-	extern static const int trig7_arr[];
+//	extern static const int trig7_arr[];
 
 	extern map<int, vector<int>> triggers;
 
