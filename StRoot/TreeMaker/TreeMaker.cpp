@@ -58,7 +58,6 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in) : StMaker(
 	events_read = 0;
 	events_processed = 0;
 	energy = energy_in;
-	cout << "Through constructor" << endl;
 }
 
 TreeMaker::~TreeMaker() {
@@ -87,10 +86,10 @@ Int_t TreeMaker::Init() {
 
 	tree->Branch("run_num", &event.run_num, "run_num/I");
 	tree->Branch("event_id", &event.event_id, "event_id/I");
-	tree->Branch("refmult", &event.refmult, "refmult/I");
-	tree->Branch("refmult2", &event.refmult2, "refmult2/I");
-	tree->Branch("refmult3", &event.refmult3, "refmult3/I");
-	tree->Branch("btof", &event.btof, "btof/I");
+	tree->Branch("refmult", &event.refmult, "refmult/S");
+	tree->Branch("refmult2", &event.refmult2, "refmult2/S");
+	tree->Branch("refmult3", &event.refmult3, "refmult3/S");
+	tree->Branch("btof", &event.btof, "btof/S");
 	tree->Branch("vx", &event.vx, "vx/F");
 	tree->Branch("vy", &event.vy, "vy/F");
 	tree->Branch("vz", &event.vz, "vz/F");
@@ -150,11 +149,9 @@ Int_t TreeMaker::Init() {
 
 	// Temp QA plots
 	flag_diff_hist = new TH1D("flag_diff_hist", "Flag Primary - Flag Global", 801, -400.5, 400.5);
-	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 11, -5.5, 5.5);
-	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 11, -5.5, 5.5);
-	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -5.0, 5.0);
-
-	cout << "Through init" << endl;
+	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
+	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
+	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
 
 	return kStOK;
 }
@@ -170,15 +167,9 @@ Int_t TreeMaker::Make() {
 
 	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
-	cout << "Through event" << endl;
-
 	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 
-	cout << "Through tracks" << endl;
-
 	tree->Fill();  // Fill tree with event/protons/pions
-
-	cout << "Tree filled" << endl;
 
 	events_processed++;
 
