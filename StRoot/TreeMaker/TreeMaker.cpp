@@ -128,21 +128,23 @@ Int_t TreeMaker::Init() {
 	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 17, -0.5, 16.5);
 	track_cut_hist->GetXaxis()->SetBinLabel(1, "Tracks Read");
 	track_cut_hist->GetXaxis()->SetBinLabel(2, "Is Track");
-	track_cut_hist->GetXaxis()->SetBinLabel(3, "Primary Flag");
-	track_cut_hist->GetXaxis()->SetBinLabel(4, "Global Flag");
-	track_cut_hist->GetXaxis()->SetBinLabel(5, "Charge");
-	track_cut_hist->GetXaxis()->SetBinLabel(6, "nHitsRatio Min");
-	track_cut_hist->GetXaxis()->SetBinLabel(7, "nHitsRatio Max");
-	track_cut_hist->GetXaxis()->SetBinLabel(8, "eta");
-	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsFit");
-	track_cut_hist->GetXaxis()->SetBinLabel(10, "nHitsDedx");
-	track_cut_hist->GetXaxis()->SetBinLabel(11, "dca");
-	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(13, "pt_high");
-	track_cut_hist->GetXaxis()->SetBinLabel(14, "nsigma_proton");
-	track_cut_hist->GetXaxis()->SetBinLabel(15, "m_proton");
-	track_cut_hist->GetXaxis()->SetBinLabel(16, "nsigma_pion");
-	track_cut_hist->GetXaxis()->SetBinLabel(17, "m_pion");
+	track_cut_hist->GetXaxis()->SetBinLabel(3, "Vertex Index 0");
+	track_cut_hist->GetXaxis()->SetBinLabel(4, "Global Index > 0");
+	track_cut_hist->GetXaxis()->SetBinLabel(5, "Primary Flag");
+	track_cut_hist->GetXaxis()->SetBinLabel(6, "Global Flag");
+	track_cut_hist->GetXaxis()->SetBinLabel(7, "Charge");
+	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsRatio Min");
+	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsRatio Max");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "eta");
+	track_cut_hist->GetXaxis()->SetBinLabel(11, "nHitsFit");
+	track_cut_hist->GetXaxis()->SetBinLabel(12, "nHitsDedx");
+	track_cut_hist->GetXaxis()->SetBinLabel(13, "dca");
+	track_cut_hist->GetXaxis()->SetBinLabel(14, "pt_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(15, "pt_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(16, "nsigma_proton");
+	track_cut_hist->GetXaxis()->SetBinLabel(17, "m_proton");
+	track_cut_hist->GetXaxis()->SetBinLabel(18, "nsigma_pion");
+	track_cut_hist->GetXaxis()->SetBinLabel(19, "m_pion");
 
 	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
@@ -278,7 +280,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
 	StMuTrack* track;
 
-	int nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
+	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
@@ -292,6 +294,13 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		if(!track) continue;  // Check that track not NULL
 		track_cut_hist->Fill("Is Track", 1);
+
+		if(track->vertexIndex() != 0) continue;  // Check that vertex index is zero
+		track_cut_hist->Fill("Vertex Index 0", 1);
+
+		index_2g = track->index2Global();
+		if(index_2g < 0) continue;  // Check that global index non negative
+		track_cut_hist->Fill("Global Index > 0", 1);
 
 		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
 		track_cut_hist->Fill("Primary Flag", 1);
