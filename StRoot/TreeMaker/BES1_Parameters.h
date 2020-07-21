@@ -13,8 +13,30 @@
 
 using namespace std;
 
-// All QA taken from Analysis note for net-proton C4 fluctuations 2019
 
+// Hard-coded variables to be defined in BES1_Parameters.cpp
+
+namespace pars {
+
+	extern int branch_buffer;
+	extern int branch_split;
+
+	extern map<int, float> vz_max;
+
+	extern map<int, float> vr_max;
+
+	extern map<int, float> vy_offset;
+
+	extern float vertex_min;
+
+	extern map<int, float> vpd_vz_max_diff;
+
+	extern static const int trig7_arr[];
+
+	extern map<int, vector<int>> triggers;
+
+	extern map<int, vector<int>> bad_runs;
+}
 
 
 
