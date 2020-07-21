@@ -304,11 +304,11 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("Charge", 1);
 
 		// Temp QA plots
-		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
+//		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 
 		// Get main track variables
@@ -379,42 +379,42 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("pt_high", 1);
 
 		// Temp QA plots
-		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 		nsigmapi = track->nSigmaPion();
 
-//		if(energy == 27) {
-//			if(fabs(nsigmapr) <= 1.2) {
-//				track_cut_hist->Fill("nsigma_proton", 1);
-//				if( (m > 0.6 && m < 1.2) || m == -999) {
-//					track_cut_hist->Fill("m_proton", 1);
-//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-//				}
-//			} if(fabs(nsigmapi <= 1.0)) {
-//				track_cut_hist->Fill("nsigma_pion", 1);
-//				if( (m > -0.15 && m < 0.15) || m == -999) {
-//					track_cut_hist->Fill("m_pion", 1);
-//					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-//				}
-//			}
-//		} else {
-//			if(fabs(nsigmapr) <= 2.2) {
-//				track_cut_hist->Fill("nsigma_proton", 1);
-//				if( (m > 0.6 && m < 1.2) || m == -999) {
-//					track_cut_hist->Fill("m_proton", 1);
-//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-//				}
-//			} if(fabs(nsigmapi <= 2.0)) {
-//				track_cut_hist->Fill("nsigma_pion", 1);
-//				if( (m > -0.15 && m < 0.15) || m == -999) {
-//					track_cut_hist->Fill("m_pion", 1);
-//					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-//				}
-//			}
-//		}
+		if(energy == 27) {
+			if(fabs(nsigmapr) <= 1.2) {
+				track_cut_hist->Fill("nsigma_proton", 1);
+				if( (m > 0.6 && m < 1.2) || m == -999) {
+					track_cut_hist->Fill("m_proton", 1);
+					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+				}
+			} if(fabs(nsigmapi <= 1.0)) {
+				track_cut_hist->Fill("nsigma_pion", 1);
+				if( (m > -0.15 && m < 0.15) || m == -999) {
+					track_cut_hist->Fill("m_pion", 1);
+					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+				}
+			}
+		} else {
+			if(fabs(nsigmapr) <= 2.2) {
+				track_cut_hist->Fill("nsigma_proton", 1);
+				if( (m > 0.6 && m < 1.2) || m == -999) {
+					track_cut_hist->Fill("m_proton", 1);
+					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+				}
+			} if(fabs(nsigmapi <= 2.0)) {
+				track_cut_hist->Fill("nsigma_pion", 1);
+				if( (m > -0.15 && m < 0.15) || m == -999) {
+					track_cut_hist->Fill("m_pion", 1);
+					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+				}
+			}
+		}
 
 	}
 
