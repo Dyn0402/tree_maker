@@ -66,12 +66,15 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 			cout << "About to process Event #" << event_index << endl;
 		}
 		status = chain->Make(event_index++);
-		if(status == 2) { cout << "Ending on status: " << status << " and " << event_index << " events read " << endl; }
+		if(status == 2) { --event_index; cout << "Ending on status: " << status << " and " << event_index << " events read " << endl; }
 	}
 
 	chain->Finish();
 
-	cout << "donzo" << endl;
-
 	delete chain;
+
+	if(event_index > num_events) { cout << endl << endl << "More events found than expected: " << event_index << "/" << num_events << endl << endl; }
+	if(event_index < num_events) { cout << endl << endl << "More events found than expected: " << event_index << "/" << num_events << endl << endl; }
+
+	cout << "donzo" << endl;
 }

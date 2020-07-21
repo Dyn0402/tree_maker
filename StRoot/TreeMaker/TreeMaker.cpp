@@ -172,7 +172,7 @@ Int_t TreeMaker::Make() {
 
 	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
-//	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
+	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 
 	tree->Fill();  // Fill tree with event/protons/pions
 
@@ -386,35 +386,35 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		nsigmapi = track->nSigmaPion();
 
-		if(energy == 27) {
-			if(fabs(nsigmapr) <= 1.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi <= 1.0)) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			}
-		} else {
-			if(fabs(nsigmapr) <= 2.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi <= 2.0)) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			}
-		}
+//		if(energy == 27) {
+//			if(fabs(nsigmapr) <= 1.2) {
+//				track_cut_hist->Fill("nsigma_proton", 1);
+//				if( (m > 0.6 && m < 1.2) || m == -999) {
+//					track_cut_hist->Fill("m_proton", 1);
+//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			} if(fabs(nsigmapi <= 1.0)) {
+//				track_cut_hist->Fill("nsigma_pion", 1);
+//				if( (m > -0.15 && m < 0.15) || m == -999) {
+//					track_cut_hist->Fill("m_pion", 1);
+//					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			}
+//		} else {
+//			if(fabs(nsigmapr) <= 2.2) {
+//				track_cut_hist->Fill("nsigma_proton", 1);
+//				if( (m > 0.6 && m < 1.2) || m == -999) {
+//					track_cut_hist->Fill("m_proton", 1);
+//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			} if(fabs(nsigmapi <= 2.0)) {
+//				track_cut_hist->Fill("nsigma_pion", 1);
+//				if( (m > -0.15 && m < 0.15) || m == -999) {
+//					track_cut_hist->Fill("m_pion", 1);
+//					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			}
+//		}
 
 	}
 
