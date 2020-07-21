@@ -384,7 +384,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
 		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
 		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-		dca_prim_glob_post_hist->Fill(track->dca().mag, track->dcaGlobal().mag());
+		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 		nsigmapi = track->nSigmaPion();
 
