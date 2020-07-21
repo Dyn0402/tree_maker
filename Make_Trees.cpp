@@ -71,5 +71,7 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 
 	chain->Finish();
 
-//	delete chain;
+	cout << "donzo" << endl;
+
+	delete chain;
 }

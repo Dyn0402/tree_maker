@@ -152,11 +152,11 @@ Int_t TreeMaker::Init() {
 	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
 	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
 	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 200, 0, 10, 200, 0, 10);
+	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
 	nHitsFit_diff_post_hist = new TH1D("nHitsFit_diff_post_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
 	nHitsPoss_diff_post_hist = new TH1D("nHitsPoss_diff_post_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
 	dca_diff_post_hist = new TH1D("dca_diff_post_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 200, 0, 10, 200, 0, 10);
+	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
 
 	return kStOK;
 }
@@ -172,7 +172,7 @@ Int_t TreeMaker::Make() {
 
 	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
-	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
+//	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 
 	tree->Fill();  // Fill tree with event/protons/pions
 
@@ -193,8 +193,6 @@ Int_t TreeMaker::Finish() {
 	cout <<"\n ======> Finished <======"<<endl;
 	cout<<" Acutal #Events Read = " << events_read << endl ;
 	cout<<" Acutal #Events Processed = " << events_processed << endl ;
-
-	cout << "donzo" << endl;
 
 	return kStOk;
 }
