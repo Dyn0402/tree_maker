@@ -58,6 +58,7 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in) : StMaker(
 	events_read = 0;
 	events_processed = 0;
 	energy = energy_in;
+	cout << "Through constructor" << endl;
 }
 
 TreeMaker::~TreeMaker() {
@@ -151,7 +152,9 @@ Int_t TreeMaker::Init() {
 	flag_diff_hist = new TH1D("flag_diff_hist", "Absolute Flag Difference", 1001, -0.5, 1000.5);
 	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "Absolute nHitsFit Difference", 31, -0.5, 30.5);
 	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "Absolute nHitsPoss Difference", 31, -0.5, 30.5);
-	dca_diff_hist = new TH1D("dca_diff_hist", "Absolute dca Difference", 200, -0.1, 50.0);
+	dca_diff_hist = new TH1D("dca_diff_hist", "Absolute dca Difference", 200, -0.1, 10.0);
+
+	cout << "Through init" << endl;
 
 	return kStOK;
 }
@@ -167,9 +170,15 @@ Int_t TreeMaker::Make() {
 
 	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
+	cout << "Through event" << endl;
+
 	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 
+	cout << "Through tracks" << endl;
+
 	tree->Fill();  // Fill tree with event/protons/pions
+
+	cout << "Tree filled" << endl;
 
 	events_processed++;
 
@@ -188,6 +197,8 @@ Int_t TreeMaker::Finish() {
 	cout <<"\n ======> All done <======"<<endl;
 	cout<<" Acutal #Events Read = " << events_read <<"\n###### Thank You ######\n"<< endl ;
 	cout<<" Acutal #Events Processed = " << events_processed <<"\n###### Thank You ######\n"<< endl ;
+
+	cout << "kStOk is this number: " << kStOk << endl;
 
 	cout << "donzo" << endl;
 
@@ -287,9 +298,9 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		// Temp QA plots
 		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+		nHitsFit_diff_hist->Fill(fabs(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit()));
+		nHitsPoss_diff_hist->Fill(fabs(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss()));
+		dca_diff_hist->Fill(fabs(track->dca().mag() - track->dcaGlobal().mag()));
 
 		// Initial track cuts
 
