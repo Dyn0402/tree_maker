@@ -34,7 +34,7 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 	gSystem->Load("StBTofUtil");
 
 	StChain *chain = new StChain;
-	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list, "MuDst", num_files);
+	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);
 
 	// Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
 	muDst_maker->SetStatus("*", 0);  // Turn off all branches
