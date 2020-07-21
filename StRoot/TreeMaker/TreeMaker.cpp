@@ -152,6 +152,11 @@ Int_t TreeMaker::Init() {
 	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
 	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
 	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
+	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 200, 0, 10, 200, 0, 10);
+	nHitsFit_diff_post_hist = new TH1D("nHitsFit_diff_post_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
+	nHitsPoss_diff_post_hist = new TH1D("nHitsPoss_diff_post_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
+	dca_diff_post_hist = new TH1D("dca_diff_post_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
+	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 200, 0, 10, 200, 0, 10);
 
 	return kStOK;
 }
@@ -185,9 +190,9 @@ Int_t TreeMaker::Finish() {
 	out_file->Write();
 	out_file->Close();
 
-	cout <<"\n ======> All done <======"<<endl;
-	cout<<" Acutal #Events Read = " << events_read <<"\n###### Thank You ######\n"<< endl ;
-	cout<<" Acutal #Events Processed = " << events_processed <<"\n###### Thank You ######\n"<< endl ;
+	cout <<"\n ======> Finished <======"<<endl;
+	cout<<" Acutal #Events Read = " << events_read << endl ;
+	cout<<" Acutal #Events Processed = " << events_processed << endl ;
 
 	cout << "donzo" << endl;
 
@@ -285,12 +290,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
-		// Temp QA plots
-		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-
 		// Initial track cuts
 
 		if(!track) continue;  // Check that track not NULL
@@ -305,6 +304,13 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		charge = track->charge();
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
 		track_cut_hist->Fill("Charge", 1);
+
+		// Temp QA plots
+		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
+		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+		dca_prim_glob_hist->Fill(track->dca().mag, track->dcaGlobal().mag());
 
 
 		// Get main track variables
@@ -373,6 +379,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("pt_low", 1);
 		if(pt > 2.2) continue;
 		track_cut_hist->Fill("pt_high", 1);
+
+		// Temp QA plots
+		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+		dca_prim_glob_post_hist->Fill(track->dca().mag, track->dcaGlobal().mag());
 
 		nsigmapi = track->nSigmaPion();
 

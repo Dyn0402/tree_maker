@@ -75,6 +75,12 @@ private:
 	TH1D* nHitsFit_diff_hist;
 	TH1D* nHitsPoss_diff_hist;
 	TH1D* dca_diff_hist;
+	TH2D* dca_prim_glob_hist;
+	TH1D* nHitsFit_diff_post_hist;
+	TH1D* nHitsPoss_diff_post_hist;
+	TH1D* dca_diff_post_hist;
+	TH2D* dca_prim_glob_post_hist;
+
 
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed
