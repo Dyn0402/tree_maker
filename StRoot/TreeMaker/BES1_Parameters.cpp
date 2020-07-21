@@ -56,15 +56,10 @@ namespace pars {
 	float vertex_min = 1e-5;
 
 	map<int, float> vpd_vz_max_diff {
-			{7, 0.0},
-			{11, 0.89},
-			{15, 0.0},
-			{19, 0.0},
-			{27, 0.0},
-			{39, 0.0},
-			{54, 0.0},
-			{62, 0.0},
-			{200, 0.0}
+			{39, 3.0},
+			{54, 3.0},
+			{62, 3.0},
+			{200, 3.0}
 		};
 
 //	static const int trig7_arr[] = {290001, 290004}; vector<int> trig7(trig7_arr, trig7_arr + sizeof(trig7_arr) / sizeof(trig7_arr[0]));

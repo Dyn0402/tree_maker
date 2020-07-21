@@ -140,19 +140,19 @@ Int_t TreeMaker::Init() {
 	track_cut_hist->GetXaxis()->SetBinLabel(11, "dca");
 	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_low");
 	track_cut_hist->GetXaxis()->SetBinLabel(13, "pt_high");
-	track_cut_hist->GetXaxis()->SetBinLabel(14, "n_sigma_proton");
+	track_cut_hist->GetXaxis()->SetBinLabel(14, "nsigma_proton");
 	track_cut_hist->GetXaxis()->SetBinLabel(15, "m_proton");
-	track_cut_hist->GetXaxis()->SetBinLabel(16, "n_sigma_pion");
+	track_cut_hist->GetXaxis()->SetBinLabel(16, "nsigma_pion");
 	track_cut_hist->GetXaxis()->SetBinLabel(17, "m_pion");
 
 	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
 
 	// Temp QA plots
-	flag_diff_hist = new TH1D("flag_diff_hist", "Absolute Flag Difference", 1001, -0.5, 1000.5);
-	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "Absolute nHitsFit Difference", 31, -0.5, 30.5);
-	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "Absolute nHitsPoss Difference", 31, -0.5, 30.5);
-	dca_diff_hist = new TH1D("dca_diff_hist", "Absolute dca Difference", 200, -0.1, 10.0);
+	flag_diff_hist = new TH1D("flag_diff_hist", "Flag Primary - Flag Global", 801, -400.5, 400.5);
+	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 11, -5.5, 5.5);
+	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 11, -5.5, 5.5);
+	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -5.0, 5.0);
 
 	cout << "Through init" << endl;
 
@@ -197,8 +197,6 @@ Int_t TreeMaker::Finish() {
 	cout <<"\n ======> All done <======"<<endl;
 	cout<<" Acutal #Events Read = " << events_read <<"\n###### Thank You ######\n"<< endl ;
 	cout<<" Acutal #Events Processed = " << events_processed <<"\n###### Thank You ######\n"<< endl ;
-
-	cout << "kStOk is this number: " << kStOk << endl;
 
 	cout << "donzo" << endl;
 
@@ -264,10 +262,10 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 		if(muDst->btofHeader()) {
 			float vpd_vz = muDst->btofHeader()->vpdVz();
 			if(fabs(vpd_vz - event.vz) > pars::vpd_vz_max_diff[energy]) {
-				return kStOK;
-			} else {
-				return kStOK;
+				return true;
 			}
+		} else {
+			return true;
 		}
 	}
 	event_cut_hist->Fill("Good VPD Vz", 1);
@@ -292,15 +290,17 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	double beta, p, m;
 	short charge;
 
+	cout << "pre-track loop ref2: " << event.refmult2 << "  ref3: " << event.refmult3 << endl;
+
 	for(int track_index = 0; track_index < num_primary; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
 		// Temp QA plots
 		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(fabs(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit()));
-		nHitsPoss_diff_hist->Fill(fabs(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss()));
-		dca_diff_hist->Fill(fabs(track->dca().mag() - track->dcaGlobal().mag()));
+		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
+		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
+		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
 
 		// Initial track cuts
 
@@ -323,7 +323,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		p = track->p().mag();
 		pt = track->pt();
 		eta = track->eta();
-		phi = track->phi();
+		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
 		dca = track->dcaGlobal().mag();
 		nsigmapr = track->nSigmaProton();
 
@@ -354,6 +354,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		// Event Plane Q vector
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			event.qx += cos(2*phi); event.qy += sin(2*phi);
+		}
+
+		// Fill PID plots
+		de_dx_pq_hist->Fill(charge*p, track->dEdx());
+		if(beta > 1.e-5) {
+			beta_pq_hist->Fill(charge*p, 1 / beta);
 		}
 
 		// Calculate dca_xy variables
@@ -413,8 +419,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 	}
 
+	cout << "post-track loop ref2: " << event.refmult2 << "  ref3: " << event.refmult3 << endl;
+
 	// Calculate and set dca_xy variables in event
-	if(dca_xy_count > 0) { event.dca_xy_avg /= dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
+	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
 }
