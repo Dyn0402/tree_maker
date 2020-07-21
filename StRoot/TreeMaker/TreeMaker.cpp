@@ -125,7 +125,7 @@ Int_t TreeMaker::Init() {
 	event_cut_hist->GetXaxis()->SetBinLabel(8, "Vertex Non-Zero");
 	event_cut_hist->GetXaxis()->SetBinLabel(9, "Good VPD Vz");
 
-	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 17, -0.5, 16.5);
+	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 19, -0.5, 18.5);
 	track_cut_hist->GetXaxis()->SetBinLabel(1, "Tracks Read");
 	track_cut_hist->GetXaxis()->SetBinLabel(2, "Is Track");
 	track_cut_hist->GetXaxis()->SetBinLabel(3, "Vertex Index 0");
