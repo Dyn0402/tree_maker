@@ -296,7 +296,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
 		track_cut_hist->Fill("Primary Flag", 1);
 
-		if(muDst->globalTracks(track->index2Global()) < 0) continue;  // Check global track flag, still unsure what it is
+		if(muDst->globalTracks(track->index2Global())->flag() < 0) continue;  // Check global track flag, still unsure what it is
 		track_cut_hist->Fill("Global Flag", 1);
 
 		charge = track->charge();
