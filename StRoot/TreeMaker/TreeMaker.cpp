@@ -281,8 +281,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	double beta, p, m;
 	short charge;
 
-	cout << "pre-track loop ref2: " << event.refmult2 << "  ref3: " << event.refmult3 << endl;
-
 	for(int track_index = 0; track_index < num_primary; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
@@ -409,8 +407,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		}
 
 	}
-
-	cout << "post-track loop ref2: " << event.refmult2 << "  ref3: " << event.refmult3 << endl;
 
 	// Calculate and set dca_xy variables in event
 	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
