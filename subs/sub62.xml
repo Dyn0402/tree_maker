@@ -5,7 +5,7 @@
 <!ENTITY trig_sufix "">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
-<job simulateSubmission ="false" minEvents="30000" maxEvents="150000" maxFilesPerProcess="150" softLimits="true" fileListSyntax="xrootd">
+<job simulateSubmission ="false" minEvents="10000" maxEvents="150000" softLimits="true" fileListSyntax="xrootd">
   
   <command>
       starver pro
