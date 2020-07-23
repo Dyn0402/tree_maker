@@ -289,7 +289,7 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
-	StMuTrack* track, track_glob;
+	StMuTrack *track, *track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
