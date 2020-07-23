@@ -340,7 +340,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		eta = track->eta();
 		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
 		dca = track->dcaGlobal().mag();
-		dca_prim = track->dca.mag();
+		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
 
 		nHitsFit = track_glob->nHitsFit();
