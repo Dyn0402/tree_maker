@@ -5,18 +5,18 @@
 <!ENTITY trig_sufix "_2011">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
-<job simulateSubmission ="false" minEvents="30000" maxEvents="150000" softLimits="true" fileListSyntax="xrootd">
+<job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
   
   <command>
       starver pro
-      root4star -l -b -q readMuDst.C\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;\)
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;\)
   </command>
 
   
   <SandBox>
     <Package>
       <File>file:/star/u/dneff/git/tree_maker/.sl73_gcc485</File>
-      <File>file:/star/u/dneff/git/tree_maker/readMuDst.C</File>
+      <File>file:/star/u/dneff/git/tree_maker/Make_Trees.cpp</File>
     </Package>
   </SandBox>
 
