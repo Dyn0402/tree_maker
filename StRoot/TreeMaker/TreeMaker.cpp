@@ -416,7 +416,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi <= 1.0)) {
+			} if(fabs(nsigmapi) <= 1.0) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
