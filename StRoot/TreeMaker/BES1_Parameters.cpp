@@ -14,7 +14,7 @@
 
 namespace pars {
 
-	int branch_buffer = 256000;
+	int branch_buffer = 500000;
 	int branch_split = 1;
 
 	map<int, float> vz_max {

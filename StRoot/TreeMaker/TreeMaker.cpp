@@ -26,10 +26,15 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	beta_pq_hist = NULL;
 
 	// Temp QA plots
-	flag_diff_hist = NULL;
-	nHitsFit_diff_hist = NULL;
-	nHitsPoss_diff_hist = NULL;
-	dca_diff_hist = NULL;
+//	flag_diff_hist = NULL;
+//	nHitsFit_diff_hist = NULL;
+//	nHitsPoss_diff_hist = NULL;
+//	dca_diff_hist = NULL;
+//	dca_prim_glob_hist = NULL;
+//	nHitsFit_diff_post_hist = NULL;
+//	nHitsPoss_diff_post_hist = NULL;
+//	dca_diff_post_hist = NULL;
+//	dca_prim_glob_post_hist = NULL;
 
 	events_read = 0;
 	events_processed = 0;
@@ -49,11 +54,17 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in) : StMaker(
 	de_dx_pq_hist = NULL;
 	beta_pq_hist = NULL;
 
+
 	// Temp QA plots
-	flag_diff_hist = NULL;
-	nHitsFit_diff_hist = NULL;
-	nHitsPoss_diff_hist = NULL;
-	dca_diff_hist = NULL;
+//	flag_diff_hist = NULL;
+//	nHitsFit_diff_hist = NULL;
+//	nHitsPoss_diff_hist = NULL;
+//	dca_diff_hist = NULL;
+//	dca_prim_glob_hist = NULL;
+//	nHitsFit_diff_post_hist = NULL;
+//	nHitsPoss_diff_post_hist = NULL;
+//	dca_diff_post_hist = NULL;
+//	dca_prim_glob_post_hist = NULL;
 
 	events_read = 0;
 	events_processed = 0;
@@ -150,15 +161,15 @@ Int_t TreeMaker::Init() {
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
 
 	// Temp QA plots
-	flag_diff_hist = new TH1D("flag_diff_hist", "Flag Primary - Flag Global", 801, -400.5, 400.5);
-	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
-	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
-	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
-	nHitsFit_diff_post_hist = new TH1D("nHitsFit_diff_post_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
-	nHitsPoss_diff_post_hist = new TH1D("nHitsPoss_diff_post_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
-	dca_diff_post_hist = new TH1D("dca_diff_post_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
+//	flag_diff_hist = new TH1D("flag_diff_hist", "Flag Primary - Flag Global", 801, -400.5, 400.5);
+//	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
+//	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
+//	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
+//	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
+//	nHitsFit_diff_post_hist = new TH1D("nHitsFit_diff_post_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
+//	nHitsPoss_diff_post_hist = new TH1D("nHitsPoss_diff_post_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
+//	dca_diff_post_hist = new TH1D("dca_diff_post_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
+//	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
 
 	return kStOK;
 }
@@ -221,13 +232,13 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
     // Check if run number is good
     event.run_num = mu_event->runId();
-    vector<int> bad_runs_energy = pars::bad_runs[energy];
-    int num_bad_runs = (int) bad_runs_energy.size();
-    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
-    	if(event.run_num == bad_runs_energy[bad_run_index]) {
-    		return true;
-    	}
-    }
+//    vector<int> bad_runs_energy = pars::bad_runs[energy];
+//    int num_bad_runs = (int) bad_runs_energy.size();
+//    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
+//    	if(event.run_num == bad_runs_energy[bad_run_index]) {
+//    		return true;
+//    	}
+//    }
     event_cut_hist->Fill("Good Run", 1);
 
     // Get x,y,z components of primary vertex
@@ -278,10 +289,10 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
-	StMuTrack* track;
+	StMuTrack* track, track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
-	float dca, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -302,10 +313,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(index_2g < 0) continue;  // Check that global index non negative
 		track_cut_hist->Fill("Global Index > 0", 1);
 
+		track_glob = (StMuTrack*) muDst->globalTracks(index_2g);
+
 		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
 		track_cut_hist->Fill("Primary Flag", 1);
 
-		if(muDst->globalTracks(track->index2Global())->flag() < 0) continue;  // Check global track flag, still unsure what it is
+		if(track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
 		track_cut_hist->Fill("Global Flag", 1);
 
 		charge = track->charge();
@@ -313,11 +326,11 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("Charge", 1);
 
 		// Temp QA plots
-		flag_diff_hist->Fill(fabs(track->flag() - muDst->globalTracks(track->index2Global())->flag()));
-		nHitsFit_diff_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//		flag_diff_hist->Fill(fabs(track->flag() - track_glob->flag()));
+//		nHitsFit_diff_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
+//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
+//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 
 		// Get main track variables
@@ -327,9 +340,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		eta = track->eta();
 		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
 		dca = track->dcaGlobal().mag();
+		dca_prim = track->dca.mag();
 		nsigmapr = track->nSigmaProton();
 
-		nHitsFit = track->nHitsFit();
+		nHitsFit = track_glob->nHitsFit();
 
 		btofMatch = track->btofPidTraits().matchFlag();
 		beta = track->btofPidTraits().beta();
@@ -338,16 +352,16 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		// Event track counters
 
-		if(btofMatch > 0 && fabs(eta) < 0.5 && dca < 3.0 && nHitsFit > 10) {
+		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
 			tofmatched++;
 			if(beta > 0.1) tofmatchedbeta++;
 		}
 
-		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca < 3. && nHitsFit > 10) event.refmult2++;
-		if(fabs(eta) < 1. && nHitsFit > 10 && dca < 3. && nsigmapr < -3. && m < 0.4) event.refmult3++;
+		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) event.refmult2++;
+		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) event.refmult3++;
 
 		// Cut on ratio of nHitsFit to nHitsPossible
-		ratio = (double) nHitsFit / (double) track->nHitsPoss();
+		ratio = (double) nHitsFit / (double) track_glob->nHitsPoss();
 		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
@@ -388,10 +402,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("pt_high", 1);
 
 		// Temp QA plots
-		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - muDst->globalTracks(track->index2Global())->nHitsFit());
-		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - muDst->globalTracks(track->index2Global())->nHitsPoss());
-		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
+//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
+//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
 
 		nsigmapi = track->nSigmaPion();
 

@@ -3,8 +3,9 @@
 <!ENTITY energy "62">
 <!ENTITY prod "P10ik">
 <!ENTITY trig_sufix "">
+<!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
-<job simulateSubmission ="false" maxFilesPerProcess="10"  fileListSyntax="xrootd">
+<job simulateSubmission ="false" minEvents="30000" maxEvents="150000" softLimits="true" fileListSyntax="xrootd">
   
   <command>
       starver pro
@@ -20,15 +21,15 @@
   </SandBox>
 
 <input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="all" />
-  <stderr URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
-  <stdout URL="file:/gpfs01/star/pwg/dneff/scratch/trees/log/&energy;GeV/log_&energy;GeV$JOBID.out" />
+  <stderr URL="file:&out_path;log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
+  <stdout URL="file:&out_path;log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 
-    <output fromScratch="*.root" toURL="file:/gpfs01/star/pwg/dneff/scratch/trees/output/&energy;GeV/" />
+    <output fromScratch="*.root" toURL="file:&out_path;output/&energy;GeV/" />
  
   <Generator>
-    <Location>/gpfs01/star/pwg/dneff/scratch/trees/log/</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/scratch/trees/script/62GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/scratch/trees/list/62GeV/</ListLocation>
+    <Location>/gpfs01/star/pwg/dneff/data/BES1/trees/log/</Location>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/data/BES1/trees/script/62GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/data/BES1/trees/list/62GeV/</ListLocation>
   </Generator>
   
 </job>
