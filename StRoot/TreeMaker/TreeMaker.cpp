@@ -420,7 +420,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
 				}
 			}
 		} else {
@@ -434,7 +434,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
 				}
 			}
 		}
