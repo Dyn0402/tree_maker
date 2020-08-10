@@ -357,6 +357,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			if(beta > 0.1) tofmatchedbeta++;
 		}
 
+//		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
+
 		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) event.refmult2++;
 		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) event.refmult3++;
 

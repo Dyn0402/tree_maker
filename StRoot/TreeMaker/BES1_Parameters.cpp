@@ -62,12 +62,10 @@ namespace pars {
 			{200, 3.0}
 		};
 
-//	static const int trig7_arr[] = {290001, 290004}; vector<int> trig7(trig7_arr, trig7_arr + sizeof(trig7_arr) / sizeof(trig7_arr[0]));
-
 	map<int, vector<int>> triggers {
 		{7, {290001, 290004}},  // Conflict with Roli Original
 		{11, {310004, 310014}},  // Conflict with Xiaofeng Analysis Note
-		{15, {440001, 440004, 440005}},  // Conflict with Xiaofeng Analysis Note
+		{15, {440005, 440006, 440015, 440016}},  // Conflict with Xiaofeng Analysis Note
 		{19, {340001, 340011, 340021}},
 		{27, {360001}},
 		{39, {280001}},
