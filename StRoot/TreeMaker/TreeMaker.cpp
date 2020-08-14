@@ -12,9 +12,9 @@ ClassImp(TreeMaker)
 
 
 // Structors
-TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
-	muDst_maker = maker;
-	muDst = muDst_maker->muDst();
+TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
+	picoDst_maker = maker;
+	picoDst = picoDst_maker->picoDst();
 
 	out_file_name = "";
 	out_file = NULL;
@@ -41,9 +41,9 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	energy = 0;
 }
 
-TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in) : StMaker("TreeMaker") {
-	muDst_maker = maker;
-	muDst = muDst_maker->muDst();
+TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in) : StMaker("TreeMaker") {
+	picoDst_maker = maker;
+	picoDst = picoDst_maker->picoDst();
 
 	out_file_name = name;
 	out_file = NULL;
@@ -128,7 +128,7 @@ Int_t TreeMaker::Init() {
 	event_cut_hist = new TH1D("Event Cut Hist", "Event Cut Hist", 9, -0.5, 8.5);
 	event_cut_hist->GetXaxis()->SetBinLabel(1, "Expected");
 	event_cut_hist->GetXaxis()->SetBinLabel(2, "Events Read");
-	event_cut_hist->GetXaxis()->SetBinLabel(3, "Is muEvent");
+	event_cut_hist->GetXaxis()->SetBinLabel(3, "Is picoEvent");
 	event_cut_hist->GetXaxis()->SetBinLabel(4, "Good Trigger");
 	event_cut_hist->GetXaxis()->SetBinLabel(5, "Good Run");
 	event_cut_hist->GetXaxis()->SetBinLabel(6, "Good Vz");
@@ -136,26 +136,23 @@ Int_t TreeMaker::Init() {
 	event_cut_hist->GetXaxis()->SetBinLabel(8, "Vertex Non-Zero");
 	event_cut_hist->GetXaxis()->SetBinLabel(9, "Good VPD Vz");
 
-	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 19, -0.5, 18.5);
+	track_cut_hist = new TH1D("Track Cut Hist", "Track Cut Hist", 16, -0.5, 15.5);
 	track_cut_hist->GetXaxis()->SetBinLabel(1, "Tracks Read");
 	track_cut_hist->GetXaxis()->SetBinLabel(2, "Is Track");
-	track_cut_hist->GetXaxis()->SetBinLabel(3, "Vertex Index 0");
-	track_cut_hist->GetXaxis()->SetBinLabel(4, "Global Index > 0");
-	track_cut_hist->GetXaxis()->SetBinLabel(5, "Primary Flag");
-	track_cut_hist->GetXaxis()->SetBinLabel(6, "Global Flag");
-	track_cut_hist->GetXaxis()->SetBinLabel(7, "Charge");
-	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsRatio Min");
-	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsRatio Max");
-	track_cut_hist->GetXaxis()->SetBinLabel(10, "eta");
-	track_cut_hist->GetXaxis()->SetBinLabel(11, "nHitsFit");
-	track_cut_hist->GetXaxis()->SetBinLabel(12, "nHitsDedx");
-	track_cut_hist->GetXaxis()->SetBinLabel(13, "dca");
-	track_cut_hist->GetXaxis()->SetBinLabel(14, "pt_low");
-	track_cut_hist->GetXaxis()->SetBinLabel(15, "pt_high");
-	track_cut_hist->GetXaxis()->SetBinLabel(16, "nsigma_proton");
-	track_cut_hist->GetXaxis()->SetBinLabel(17, "m_proton");
-	track_cut_hist->GetXaxis()->SetBinLabel(18, "nsigma_pion");
-	track_cut_hist->GetXaxis()->SetBinLabel(19, "m_pion");
+	track_cut_hist->GetXaxis()->SetBinLabel(3, "Primary Track");
+	track_cut_hist->GetXaxis()->SetBinLabel(4, "Charge");
+	track_cut_hist->GetXaxis()->SetBinLabel(5, "nHitsRatio Min");
+	track_cut_hist->GetXaxis()->SetBinLabel(6, "nHitsRatio Max");
+	track_cut_hist->GetXaxis()->SetBinLabel(7, "eta");
+	track_cut_hist->GetXaxis()->SetBinLabel(8, "nHitsFit");
+	track_cut_hist->GetXaxis()->SetBinLabel(9, "nHitsDedx");
+	track_cut_hist->GetXaxis()->SetBinLabel(10, "dca");
+	track_cut_hist->GetXaxis()->SetBinLabel(11, "pt_low");
+	track_cut_hist->GetXaxis()->SetBinLabel(12, "pt_high");
+	track_cut_hist->GetXaxis()->SetBinLabel(13, "nsigma_proton");
+	track_cut_hist->GetXaxis()->SetBinLabel(14, "m_proton");
+	track_cut_hist->GetXaxis()->SetBinLabel(15, "nsigma_pion");
+	track_cut_hist->GetXaxis()->SetBinLabel(16, "m_pion");
 
 	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
@@ -181,11 +178,11 @@ Int_t TreeMaker::Make() {
 
 	event.clear(); protons.clear(); pions.clear();  // Clear event/particle objects before processing new event
 
-	StMuEvent* mu_event = muDst->event();  // Get muEvent from maker
+	StPicoEvent* pico_event = picoDst->event();  // Get muEvent from maker
 
-	if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
+	if(is_bad_event(pico_event)) { return kStOk; }  // Check if event is good, save event vars to event
 
-	track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
+	track_loop(pico_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 
 	tree->Fill();  // Fill tree with event/protons/pions
 
@@ -213,15 +210,15 @@ Int_t TreeMaker::Finish() {
 
 
 // Doers
-bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
-	if(!mu_event) { return true; }
-	event_cut_hist->Fill("Is muEvent", 1);
+bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
+	if(!pico_event) { return true; }
+	event_cut_hist->Fill("Is picoEvent", 1);
 
 	// Check for good trigger
 	vector<int> good_triggers = pars::triggers[energy];
 	bool good_trig = false;
 	for(int trig_index = 0; trig_index < (int)pars::triggers[energy].size(); trig_index++) {
-		if(mu_event->triggerIdCollection().nominal().isTrigger(pars::triggers[energy][trig_index])) {
+		if(pico_event->isTrigger(pars::triggers[energy][trig_index])) {
 			good_trig = true;
 			break;
 		}
@@ -231,20 +228,20 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 
     // Check if run number is good
-    event.run_num = mu_event->runId();
-//    vector<int> bad_runs_energy = pars::bad_runs[energy];
-//    int num_bad_runs = (int) bad_runs_energy.size();
-//    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
-//    	if(event.run_num == bad_runs_energy[bad_run_index]) {
-//    		return true;
-//    	}
-//    }
+    event.run_num = pico_event->runId();
+    vector<int> bad_runs_energy = pars::bad_runs[energy];
+    int num_bad_runs = (int) bad_runs_energy.size();
+    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
+    	if(event.run_num == bad_runs_energy[bad_run_index]) {
+    		return true;
+    	}
+    }
     event_cut_hist->Fill("Good Run", 1);
 
     // Get x,y,z components of primary vertex
-	event.vx = mu_event->primaryVertexPosition().x();
-	event.vy = mu_event->primaryVertexPosition().y();
-	event.vz = mu_event->primaryVertexPosition().z();
+	event.vx = pico_event->primaryVertex().X();
+	event.vy = pico_event->primaryVertex().Y();
+	event.vz = pico_event->primaryVertex().Z();
 
 	// Check vertex is within pars::vz_max[energy] cm of detector center along beam pipe
 	if(fabs(event.vz) > pars::vz_max[energy]) { return true; }
@@ -266,12 +263,8 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 	// Filter out events with disagreement between vpd and vertex reconstruction.
 	if(pars::vpd_vz_max_diff.count(energy) > 0) {
-		if(muDst->btofHeader()) {
-			float vpd_vz = muDst->btofHeader()->vpdVz();
-			if(fabs(vpd_vz - event.vz) > pars::vpd_vz_max_diff[energy]) {
-				return true;
-			}
-		} else {
+		float vpd_vz = picoDst->vzVpd();
+		if(fabs(vpd_vz - event.vz) > pars::vpd_vz_max_diff[energy]) {
 			return true;
 		}
 	}
@@ -279,47 +272,38 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 
 
 	// Add other event variables to event
-	event.event_id = mu_event->eventId();
-	event.refmult = mu_event->refMult();
-	event.btof = mu_event->btofTrayMultiplicity();  // This what I want for pile up cut?
+	event.event_id = pico_event->eventId();
+	event.refmult = pico_event->refMult();
+	event.btof = pico_event->nBTOFMatch();
+	event.refmult2 = pico_event->refMult2();
+	event.refmult3 = pico_event->refMult3();
 
 
 	return false;  // If all above checks are passed, event is good
 }
 
-void TreeMaker::track_loop(StMuEvent *mu_event) {
-	int num_primary = muDst->primaryTracks()->GetEntries();
-	StMuTrack *track, *track_glob;
+void TreeMaker::track_loop(StPicoEvent *pico_event) {
+	int num_tracks = picoDst->numberOfTracks();
+	StPicoTrack *track, *track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
-	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
+	short refmult2 = 0, refmult3 = 0;
 
-	for(int track_index = 0; track_index < num_primary; track_index++) {
+	for(int track_index = 0; track_index < num_tracks; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
-		track = (StMuTrack*) muDst->primaryTracks(track_index);
+		track = (StPicoTrack*) picoDst->track(track_index);
 
 		// Initial track cuts
 
 		if(!track) continue;  // Check that track not NULL
 		track_cut_hist->Fill("Is Track", 1);
 
-		if(track->vertexIndex() != 0) continue;  // Check that vertex index is zero
-		track_cut_hist->Fill("Vertex Index 0", 1);
-
-		index_2g = track->index2Global();
-		if(index_2g < 0) continue;  // Check that global index non negative
-		track_cut_hist->Fill("Global Index > 0", 1);
-
-		track_glob = (StMuTrack*) muDst->globalTracks(index_2g);
-
-		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
-		track_cut_hist->Fill("Primary Flag", 1);
-
-		if(track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
-		track_cut_hist->Fill("Global Flag", 1);
+		if(!track->isPrimary()) continue;  // Check track is primary track
+		track_cut_hist->Fill("Primary Track", 1);
 
 		charge = track->charge();
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
@@ -335,35 +319,38 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		// Get main track variables
 
-		p = track->p().mag();
-		pt = track->pt();
-		eta = track->eta();
-		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
-		dca = track->dcaGlobal().mag();
-		dca_prim = track->dca().mag();
+		p = track->pMom().Mag();
+		pt = track->pMom().Perp();
+		eta = track->pMom().PseudoRapidity();
+		phi = track->pMom().Phi();  if(phi < 0) { phi += 2*M_PI; }
+		dca = track->gDCA(event.vx, event.vy, event.vz);
+		dcas = track->gDCAs(pico_event->primaryVertex());
+//		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
 
 		nHitsFit = track_glob->nHitsFit();
 
-		btofMatch = track->btofPidTraits().matchFlag();
-		beta = track->btofPidTraits().beta();
-		m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
-
+		int btof_pid_traits_index = track->bTofPidTraitsIndex();
+		if(btof_pid_traits_index >= 0) {
+			StPicoBTofPidTraits *btof_pid_traits = pico_dst->btofPidTraits(btof_pid_traits_index);
+			beta = btof_pid_traits->btofBeta();
+			m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
+		}
 
 		// Event track counters
 
-		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
-			tofmatched++;
-			if(beta > 0.1) tofmatchedbeta++;
-		}
+//		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
+//			tofmatched++;
+//			if(beta > 0.1) tofmatchedbeta++;
+//		}
 
 //		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
 
-		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) event.refmult2++;
-		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) event.refmult3++;
+//		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) refmult2++;
+//		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) refmult3++;
 
 		// Cut on ratio of nHitsFit to nHitsPossible
-		ratio = (double) nHitsFit / (double) track_glob->nHitsPoss();
+		ratio = (double) nHitsFit / (double) track_glob->nHitsMax();
 		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
@@ -381,9 +368,9 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		}
 
 		// Calculate dca_xy variables
-		if(track->dcaD() < 4 && track->dcaD() >= -4) {
-			dca_xy_avg += track->dcaD();
-			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
+		if(dcas < 4 && dcas >= -4) {
+			dca_xy_avg += dcas;
+			dca_xy_err += pow(dcas, 2);  // Calculate second raw moment first
 			dca_xy_count++;
 		}
 

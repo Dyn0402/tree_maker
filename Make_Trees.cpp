@@ -15,47 +15,42 @@
 using namespace std;
 
 class StChain;
-class StMuDstMaker;
+class StPicoDstMaker;
 class TreeMaker;
 
 
 void Make_Trees(string input_file_list, string output_dir, int energy) {
-	int num_files = 1e4;
 
 	// Load libraries
-	gROOT->Macro("loadMuDst.C");
+	cout << "Load" << endl;
+	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
+	loadSharedLibraries();
+
+	gSystem->Load("StPicoDstMaker");
+	gSystem->Load("StPicoEvent");
 	gSystem->Load("TreeMaker");
-//	gSystem->Load("St_base");
-//	gSystem->Load("StChain");
-//	gSystem->Load("StUtilities");
-//	gSystem->Load("StIOMaker");
-//	gSystem->Load("StarClassLibrary");
-//	gSystem->Load("StEvent");
-//	gSystem->Load("StBTofUtil");
 
 	StChain *chain = new StChain;
-	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);
+	StPicoDstMaker *picoDst_maker = new StPicoDstMaker(2, input_file_list.data());
 
 	// Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
-	muDst_maker->SetStatus("*", 0);  // Turn off all branches
-	muDst_maker->SetStatus("MuEvent", 1);  // Turn on the Event data (esp. Event number)
-	muDst_maker->SetStatus("PrimaryTracks", 1);  // Turn on the primary track data
-	muDst_maker->SetStatus("GlobalTracks", 1);
-	muDst_maker->SetStatus("BTofHeader", 1);
-	muDst_maker->SetStatus("BTofHit", 1);
+	picoDst_maker->SetStatus("*", 0);  // Turn off all branches
+	picoDst_maker->SetStatus("Event", 1);  // Turn on the Event data (esp. Event number)
+	picoDst_maker->SetStatus("Track", 1);  // Turn on the primary track data
+	picoDst_maker->SetStatus("BTofPidTraits", 1);
+	picoDst_maker->SetStatus("BTofHit", 1);
 
-	muDst_maker->SetDebug(0);  // Turn off debug information
+	picoDst_maker->SetDebug(0);  // Turn off debug information
 
-	TreeMaker *tree_maker = new TreeMaker(muDst_maker, output_dir, energy);
-
-	int num_events = 1e7;
-	num_events = muDst_maker->chain()->GetEntries();
-
-	cout<<"\n############################ Total Event in chain = "<< num_events << " fast entries = " << muDst_maker->chain()->GetEntriesFast() << "############################\n "<<endl;
-
+	TreeMaker *tree_maker = new TreeMaker(picoDst_maker, output_dir, energy);
 
 	int status = chain->Init() ;
 	if(status) chain->Fatal(status,"on chain init");
+
+	int num_events = 1e7;
+	num_events = picoDst_maker->chain()->GetEntries();
+
+	cout<<"\n############################ Total Event in chain = "<< num_events << " fast entries = " << picoDst_maker->chain()->GetEntriesFast() << "############################\n "<<endl;
 
 	status = 0;
 	int event_index = 0;
@@ -71,6 +66,8 @@ void Make_Trees(string input_file_list, string output_dir, int energy) {
 
 	chain->Finish();
 
+	delete tree_maker;
+	delete picoDst_maker;
 	delete chain;
 
 	if(event_index > num_events) { cout << endl << endl << "More events found than expected: " << event_index << "/" << num_events << endl << endl; }

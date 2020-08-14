@@ -11,11 +11,17 @@
 #include <iostream>
 #include <string>
 
-#include "StMuDSTMaker/COMMON/StMuTrack.h"
-#include "StMuDSTMaker/COMMON/StMuEvent.h"
-#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
-#include "StEvent/StBTofHeader.h"
 #include "StMaker.h"
+
+#include "StPicoDstMaker/StPicoDstMaker.h"
+
+#include "../StPicoEvent/StPicoDst.h"
+#include "../StPicoEvent/StPicoEvent.h"
+#include "../StPicoEvent/StPicoTrack.h"
+#include "../StPicoEvent/StPicoBTofPidTraits.h"
+#include "../StPicoEvent/StPicoEpdHit.h"
+
+#include "StEvent/StBTofHeader.h"
 
 #include "TROOT.h"
 #include "TFile.h"
@@ -29,10 +35,11 @@
 #include "BES1_Parameters.h"  // pull pars namespace from here
 
 class StMaker;
-class StMuDstMaker;
-class StMuDst;
-class StMuEvent;
-class StMuTrack;
+
+class StPicoDstMaker;
+class StPicoDst;
+class StPicoEvent;
+class StPicoTrack;
 
 using namespace std;
 
@@ -40,8 +47,8 @@ using namespace std;
 class TreeMaker : public StMaker {
 public:
 	// Structors
-	TreeMaker(StMuDstMaker* maker);
-	TreeMaker(StMuDstMaker* maker, string name, int energy_in);
+	TreeMaker(StPicoDstMaker* maker);
+	TreeMaker(StPicoDstMaker* maker, string name, int energy_in);
 	virtual ~TreeMaker();
 
 	// Setters
@@ -54,12 +61,12 @@ public:
 	Int_t Finish();  // Finish analysis, close files, clean up
 
 	// Doers
-	bool is_bad_event(StMuEvent *mu_event);
-	void track_loop(StMuEvent *mu_event);
+	bool is_bad_event(StPicoEvent *pico_event);
+	void track_loop(StPicoEvent *pico_event);
 
 private:
-	StMuDstMaker *muDst_maker;  // MuDstMaker passed in via constructor
-	StMuDst *muDst;
+	StPicoDstMaker *picoDst_maker;  // MuDstMaker passed in via constructor
+	StPicoDst *picoDst;
 
 	string out_file_name;  // Name of output root file
 	TFile* out_file;  // Root file to be written
