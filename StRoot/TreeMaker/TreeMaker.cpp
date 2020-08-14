@@ -263,7 +263,7 @@ bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
 
 	// Filter out events with disagreement between vpd and vertex reconstruction.
 	if(pars::vpd_vz_max_diff.count(energy) > 0) {
-		float vpd_vz = picoDst->vzVpd();
+		float vpd_vz = pico_event->vzVpd();
 		if(fabs(vpd_vz - event.vz) > pars::vpd_vz_max_diff[energy]) {
 			return true;
 		}
@@ -286,12 +286,11 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	int num_tracks = picoDst->numberOfTracks();
 	StPicoTrack *track, *track_glob;
 
-	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
-	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
+	int nHitsFit, dca_xy_count = 0;
+	float dca, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
-	short refmult2 = 0, refmult3 = 0;
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
@@ -332,7 +331,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 
 		int btof_pid_traits_index = track->bTofPidTraitsIndex();
 		if(btof_pid_traits_index >= 0) {
-			StPicoBTofPidTraits *btof_pid_traits = pico_dst->btofPidTraits(btof_pid_traits_index);
+			StPicoBTofPidTraits *btof_pid_traits = picoDst->btofPidTraits(btof_pid_traits_index);
 			beta = btof_pid_traits->btofBeta();
 			m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
 		}
