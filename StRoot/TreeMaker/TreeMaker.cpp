@@ -284,7 +284,7 @@ bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
 
 void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	int num_tracks = picoDst->numberOfTracks();
-	StPicoTrack *track, *track_glob;
+	StPicoTrack *track;
 
 	int nHitsFit, dca_xy_count = 0;
 	float dca, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
@@ -327,7 +327,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 //		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
 
-		nHitsFit = track_glob->nHitsFit();
+		nHitsFit = track->nHitsFit();
 
 		int btof_pid_traits_index = track->bTofPidTraitsIndex();
 		if(btof_pid_traits_index >= 0) {
@@ -349,7 +349,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 //		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) refmult3++;
 
 		// Cut on ratio of nHitsFit to nHitsPossible
-		ratio = (double) nHitsFit / (double) track_glob->nHitsMax();
+		ratio = (double) nHitsFit / (double) track->nHitsMax();
 		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
