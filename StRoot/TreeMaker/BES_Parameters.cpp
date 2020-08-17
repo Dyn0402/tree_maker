@@ -60,12 +60,12 @@ namespace pars {
 			{54, 3.0},
 			{62, 3.0},
 			{200, 3.0}
-		};
+	};
 
 	map<int, vector<int>> triggers {
 		{7, {290001, 290004}},  // Conflict with Roli Original
 		{11, {310004, 310014}},  // Conflict with Xiaofeng Analysis Note
-		{15, {440005, 440006, 440015, 440016}},  // Conflict with Xiaofeng Analysis Note
+		{15, {440005, 440006, 440015, 440016}},  // Conflict with Roli Original
 		{19, {340001, 340011, 340021}},
 		{27, {360001}},
 		{39, {280001}},

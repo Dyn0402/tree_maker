@@ -20,14 +20,14 @@ class StPicoDstMaker;
 class TreeMaker;
 
 
-void make_trees_mu(string input_file_list, string output_dir, int energy, string dst);
-void make_trees_pico(string input_file_list, string output_dir, int energy, string dst);
+void make_trees_mu(string input_file_list, string output_dir, int energy);
+void make_trees_pico(string input_file_list, string output_dir, int energy);
 
 
 
 void Make_Trees(string input_file_list, string output_dir, int energy, string dst) {
-	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, dst);
-	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, dst);
+	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy);
+	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy);
 	else { cout << "Input dst format not recognized: " << dst << endl; }
 
 	cout << "donzo" << endl;
@@ -88,7 +88,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy) {
 
 
 
-void make_trees_pico(string input_file_list, string output_dir, int energy, string dst) {
+void make_trees_pico(string input_file_list, string output_dir, int energy) {
 	// Load libraries
 	cout << "Load" << endl;
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
