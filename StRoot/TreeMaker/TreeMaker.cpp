@@ -376,7 +376,10 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 	event.refmult = mu_event->refMult();
 //	muDst->setVertexIndex(0);
 	muDst_maker->printArrays();
-	if(StMuPrimaryVertex *pv = muDst->primaryVertex()) {
+	StMuPrimaryVertex *pv = muDst->primaryVertex();
+	StMuPrimaryVertex *pv2 = muDst->primaryVertices()[0];
+	cout << muDst->primaryVertices()->GetEntriesFast() << " " << pv << " " << pv2 << endl;
+	if(pv) {
 		event.btof = pv->nBTOFMatch();
 	} else { event.btof = 0; }
 
