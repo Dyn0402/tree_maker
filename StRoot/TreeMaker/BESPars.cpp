@@ -57,7 +57,7 @@ void BESPars::set_pars() {
 	vz_max = vz_max_map[energy][bes_phase];
 	vr_max = vr_max_map[energy][bes_phase];
 	vy_offset = vy_offset_map[energy][bes_phase];
-	vpd_vz_max_diff = octopus[energy][bes_phase];
+//	vpd_vz_max_diff = octopus[energy][bes_phase];
 	triggers = triggers_map[energy][bes_phase];
 	bad_runs = bad_runs_map[energy][bes_phase];
 }
