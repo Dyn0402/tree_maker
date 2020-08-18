@@ -16,6 +16,7 @@
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
+#include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
 #include "StEvent/StBTofHeader.h"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"

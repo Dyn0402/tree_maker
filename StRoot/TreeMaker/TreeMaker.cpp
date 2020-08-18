@@ -653,7 +653,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		eta = track->pMom().PseudoRapidity();
 		phi = track->pMom().Phi();  if(phi < 0) { phi += 2*M_PI; }
 		dca = track->gDCA(event.vx, event.vy, event.vz);
-		dcas = track->gDCAs(pico_event->primaryVertex());
+		dcas = 0; // track->gDCAs(pico_event->primaryVertex());  Still in dev only version, hopefully will go to pro before I need it
 //		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
 
