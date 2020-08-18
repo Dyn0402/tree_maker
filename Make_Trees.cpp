@@ -54,13 +54,13 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);
 
 	// Turn off everything but Primary tracks in order to speed up the analysis and eliminate IO
-	muDst_maker->SetStatus("*", 0);  // Turn off all branches
-	muDst_maker->SetStatus("MuEvent", 1);  // Turn on the Event data (esp. Event number)
-	muDst_maker->SetStatus("PrimaryTracks", 1);  // Turn on the primary track data
-	muDst_maker->SetStatus("GlobalTracks", 1);
-	muDst_maker->SetStatus("BTofHeader", 1);
-	muDst_maker->SetStatus("BTofHit", 1);
-	muDst_maker->SetStatus("PrimaryVertices", 1);
+	muDst_maker->SetStatus("*", 1);  // Turn off all branches
+//	muDst_maker->SetStatus("MuEvent", 1);  // Turn on the Event data (esp. Event number)
+//	muDst_maker->SetStatus("PrimaryTracks", 1);  // Turn on the primary track data
+//	muDst_maker->SetStatus("GlobalTracks", 1);
+//	muDst_maker->SetStatus("BTofHeader", 1);
+//	muDst_maker->SetStatus("BTofHit", 1);
+//	muDst_maker->SetStatus("PrimaryVertices", 1);
 
 	muDst_maker->SetDebug(0);  // Turn off debug information
 
