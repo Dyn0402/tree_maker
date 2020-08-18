@@ -30,6 +30,10 @@ BESPars::BESPars(int energy, int bes_phase) {
 	set_pars();
 }
 
+BESPars::~BESPars() {
+	// Nothing
+}
+
 
 // Getters
 
