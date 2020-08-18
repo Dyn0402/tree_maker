@@ -89,7 +89,7 @@ private:
 		{200, {{1, 0.0}, {2, 0.0}}}
 	};
 
-	map<int, map<int, float>> vpd_vz_max_diff_map {
+	map<int, map<int, float>> octopus {
 		{7, {{1, -1.0}, {2, -1.0}}},  // -1 ignore code
 		{11, {{1, -1.0}, {2, -1.0}}},
 		{15, {{1, -1.0}, {2, -1.0}}},
