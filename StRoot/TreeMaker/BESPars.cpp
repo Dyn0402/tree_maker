@@ -57,7 +57,11 @@ void BESPars::set_pars() {
 	vz_max = vz_max_map[energy][bes_phase];
 	vr_max = vr_max_map[energy][bes_phase];
 	vy_offset = vy_offset_map[energy][bes_phase];
-	vpd_vz_max_diff = vpd_vz_max_diff_map[energy][bes_phase];
+	if(vpd_vz_max_diff_map.count(energy) > 0 && vpd_vz_max_diff_map[energy].count(bes_phase) > 0) {
+		vpd_vz_max_diff = vpd_vz_max_diff_map[energy][bes_phase];
+	} else {
+		vpd_vz_max_diff = -1;  // -1 ignore code, had to put here since getting compile error with - sign in initialization.
+	}
 	triggers = triggers_map[energy][bes_phase];
 	bad_runs = bad_runs_map[energy][bes_phase];
 }
