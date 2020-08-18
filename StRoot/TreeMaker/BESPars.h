@@ -1,5 +1,5 @@
 /*
- * BES1_Parameters.h
+ * BES_Pars.h
  *
  *  Created on: Jul 16, 2020
  *      Author: Dylan Neff

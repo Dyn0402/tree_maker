@@ -1,5 +1,5 @@
 /*
- * BES1_Parameters.cpp
+ * BES_Pars.cpp
  *
  *  Created on: Jul 20, 2020
  *      Author: Dylan Neff
