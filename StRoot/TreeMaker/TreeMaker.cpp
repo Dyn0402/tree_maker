@@ -378,7 +378,7 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 	muDst_maker->printArrays();
 	StMuPrimaryVertex *pv = muDst->primaryVertex();
 	StMuPrimaryVertex *pv2 = (StMuPrimaryVertex*)muDst->primaryVertices()->UncheckedAt(0);
-	cout << muDst->primaryVertices()->GetEntriesFast() << " " << pv << " " << pv2 << endl;
+	cout << muDst->primaryVertices()->GetEntriesFast() << " " << pv << " " << pv2 << " " << pv->nBTOFMatch() << endl;
 	if(pv) {
 		event.btof = pv->nBTOFMatch();
 	} else { event.btof = 0; }
