@@ -26,13 +26,13 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 
 
 void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst) {
-//	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
-//	loadSharedLibraries();
-//
-//	gSystem->Load("StPicoDstMaker");
-//	gSystem->Load("StPicoEvent");
-//	gROOT->Macro("loadMuDst.C");
-//	gSystem->Load("TreeMaker");
+	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
+	loadSharedLibraries();
+
+	gSystem->Load("StPicoDstMaker");
+	gSystem->Load("StPicoEvent");
+	gROOT->Macro("loadMuDst.C");
+	gSystem->Load("TreeMaker");
 
 	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase);
 	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase);
@@ -47,8 +47,8 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	int num_files = 1e4;
 
 	// Load libraries
-	gROOT->Macro("loadMuDst.C");
-	gSystem->Load("TreeMaker");
+//	gROOT->Macro("loadMuDst.C");
+//	gSystem->Load("TreeMaker");
 
 	StChain *chain = new StChain;
 	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);
@@ -60,6 +60,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	muDst_maker->SetStatus("GlobalTracks", 1);
 	muDst_maker->SetStatus("BTofHeader", 1);
 	muDst_maker->SetStatus("BTofHit", 1);
+	muDst_maker->SetStatus("PrimaryVertices", 1);
 
 	muDst_maker->SetDebug(0);  // Turn off debug information
 
@@ -89,6 +90,10 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	chain->Finish();
 
 	delete chain;
+
+	cout << "Deleting tree_maker: " << endl;
+	delete tree_maker;
+	cout << "tree_maker deleted. " << en
 
 	if(event_index > num_events) { cout << endl << endl << "More events found than expected: " << event_index << "/" << num_events << endl << endl; }
 	if(event_index < num_events) { cout << endl << endl << "More events found than expected: " << event_index << "/" << num_events << endl << endl; }

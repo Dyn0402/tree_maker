@@ -19,12 +19,12 @@
 #include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
 #include "StEvent/StBTofHeader.h"
 
-//#include "StPicoDstMaker/StPicoDstMaker.h"
-//#include "StPicoEvent/StPicoDst.h"
-//#include "StPicoEvent/StPicoEvent.h"
-//#include "StPicoEvent/StPicoTrack.h"
-//#include "StPicoEvent/StPicoBTofPidTraits.h"
-//#include "StPicoEvent/StPicoEpdHit.h"
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoEvent/StPicoDst.h"
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
+#include "StPicoEvent/StPicoEpdHit.h"
 
 #include "StEvent/StBTofHeader.h"
 
@@ -35,7 +35,7 @@
 #include "TH1.h"
 #include "TObjArray.h"
 
-#include "BESPars.h"  // pull pars namespace from here
+#include "BESPars.h"
 #include "EventVars.h"
 #include "ParticleVars.h"
 
@@ -47,10 +47,10 @@ class StMuEvent;
 class StMuTrack;
 class StMuPrimaryVertex;
 
-//class StPicoDstMaker;
-//class StPicoDst;
-//class StPicoEvent;
-//class StPicoTrack;
+class StPicoDstMaker;
+class StPicoDst;
+class StPicoEvent;
+class StPicoTrack;
 
 using namespace std;
 
@@ -60,8 +60,8 @@ public:
 	// Structors
 	TreeMaker(StMuDstMaker* maker);
 	TreeMaker(StMuDstMaker* maker, string name, int energy_in, int bes_phase);
-//	TreeMaker(StPicoDstMaker* maker);
-//	TreeMaker(StPicoDstMaker* maker, string name, int energy_in, int bes_phase);
+	TreeMaker(StPicoDstMaker* maker);
+	TreeMaker(StPicoDstMaker* maker, string name, int energy_in, int bes_phase);
 	virtual ~TreeMaker();
 
 	// Setters
@@ -76,14 +76,14 @@ public:
 	// Doers
 	bool is_bad_event(StMuEvent *mu_event);
 	void track_loop(StMuEvent *mu_event);
-//	bool is_bad_event(StPicoEvent *pico_event);
-//	void track_loop(StPicoEvent *pico_event);
+	bool is_bad_event(StPicoEvent *pico_event);
+	void track_loop(StPicoEvent *pico_event);
 
 private:
 	StMuDstMaker *muDst_maker;  // MuDstMaker passed in via constructor
 	StMuDst *muDst;
-//	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
-//	StPicoDst *picoDst;
+	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
+	StPicoDst *picoDst;
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 
