@@ -29,8 +29,8 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
 
-	gSystem->Load("StPicoDstMaker");
 	gSystem->Load("StPicoEvent");
+	gSystem->Load("StPicoDstMaker");
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
 
