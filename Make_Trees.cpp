@@ -26,13 +26,13 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 
 
 void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst) {
-	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
-	loadSharedLibraries();
-
-	gSystem->Load("StPicoDstMaker");
-	gSystem->Load("StPicoEvent");
-	gROOT->Macro("loadMuDst.C");
-	gSystem->Load("TreeMaker");
+//	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
+//	loadSharedLibraries();
+//
+//	gSystem->Load("StPicoDstMaker");
+//	gSystem->Load("StPicoEvent");
+//	gROOT->Macro("loadMuDst.C");
+//	gSystem->Load("TreeMaker");
 
 	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase);
 	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase);
@@ -47,8 +47,8 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	int num_files = 1e4;
 
 	// Load libraries
-//	gROOT->Macro("loadMuDst.C");
-//	gSystem->Load("TreeMaker");
+	gROOT->Macro("loadMuDst.C");
+	gSystem->Load("TreeMaker");
 
 	StChain *chain = new StChain;
 	StMuDstMaker *muDst_maker = new StMuDstMaker(0, 0, "", input_file_list.data(), "MuDst", num_files);

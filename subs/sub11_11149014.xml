@@ -3,13 +3,15 @@
 <!ENTITY energy "11">
 <!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
+<!ENTITY bes_phase "1">
+<!ENTITY dst "mu">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/Tests/11GeV_Run/">
 ]>
 <job simulateSubmission ="false" minEvents="30000" maxEvents="80000" fileListSyntax="xrootd">
   
   <command>
-      starver dev
-      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;\)
+      starver pro
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\"\)
   </command>
 
   
@@ -20,7 +22,7 @@
     </Package>
   </SandBox>
 
-<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,runnumber=11149014,storage!=HPSS,filetype=daq_reco_picoDst,filename~st_physics,sanity=1" nFiles="all" />
+<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,runnumber=11149014,storage!=HPSS,filetype=daq_reco_&dst;Dst,filename~st_physics,sanity=1" nFiles="all" />
   <stderr URL="file:&out_path;log/err_&energy;GeV$JOBID.err"></stderr>
   <stdout URL="file:&out_path;log/log_&energy;GeV$JOBID.out" />
 

@@ -11,84 +11,12 @@
 ClassImp(TreeMaker)
 
 
-// Structors
-TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
-	picoDst_maker = maker;
-	picoDst = picoDst_maker->picoDst();
-
-	muDst_maker = NULL;
-	muDst = NULL;
-
-	out_file_name = "";
-	out_file = NULL;
-	tree = NULL;
-
-	event_cut_hist = NULL;
-	track_cut_hist = NULL;
-	de_dx_pq_hist = NULL;
-	beta_pq_hist = NULL;
-
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
-
-	events_read = 0;
-	events_processed = 0;
-	energy = 0;
-	bes_phase = 1;
-
-	pars.set_energy_bes(energy, bes_phase);
-}
-
-TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
-	picoDst_maker = maker;
-	picoDst = picoDst_maker->picoDst();
-
-	muDst_maker = NULL;
-	muDst = NULL;
-
-	out_file_name = name;
-	out_file = NULL;
-	tree = NULL;
-
-	event_cut_hist = NULL;
-	track_cut_hist = NULL;
-	de_dx_pq_hist = NULL;
-	beta_pq_hist = NULL;
-
-
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
-
-	events_read = 0;
-	events_processed = 0;
-	energy = energy_in;
-	this->bes_phase = bes_phase;
-
-	pars.set_energy_bes(energy, bes_phase);
-}
-
 TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	muDst_maker = maker;
 	muDst = muDst_maker->muDst();
 
-	picoDst_maker = NULL;
-	picoDst = NULL;
+//	picoDst_maker = NULL;
+//	picoDst = NULL;
 
 	out_file_name = "";
 	out_file = NULL;
@@ -122,8 +50,8 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 	muDst_maker = maker;
 	muDst = muDst_maker->muDst();
 
-	picoDst_maker = NULL;
-	picoDst = NULL;
+//	picoDst_maker = NULL;
+//	picoDst = NULL;
 
 	out_file_name = name;
 	out_file = NULL;
@@ -153,6 +81,79 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 
 	pars.set_energy_bes(energy, bes_phase);
 }
+
+
+// Structors
+//TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
+//	picoDst_maker = maker;
+//	picoDst = picoDst_maker->picoDst();
+//
+//	muDst_maker = NULL;
+//	muDst = NULL;
+//
+//	out_file_name = "";
+//	out_file = NULL;
+//	tree = NULL;
+//
+//	event_cut_hist = NULL;
+//	track_cut_hist = NULL;
+//	de_dx_pq_hist = NULL;
+//	beta_pq_hist = NULL;
+//
+//	// Temp QA plots
+////	flag_diff_hist = NULL;
+////	nHitsFit_diff_hist = NULL;
+////	nHitsPoss_diff_hist = NULL;
+////	dca_diff_hist = NULL;
+////	dca_prim_glob_hist = NULL;
+////	nHitsFit_diff_post_hist = NULL;
+////	nHitsPoss_diff_post_hist = NULL;
+////	dca_diff_post_hist = NULL;
+////	dca_prim_glob_post_hist = NULL;
+//
+//	events_read = 0;
+//	events_processed = 0;
+//	energy = 0;
+//	bes_phase = 1;
+//
+//	pars.set_energy_bes(energy, bes_phase);
+//}
+//
+//TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
+//	picoDst_maker = maker;
+//	picoDst = picoDst_maker->picoDst();
+//
+//	muDst_maker = NULL;
+//	muDst = NULL;
+//
+//	out_file_name = name;
+//	out_file = NULL;
+//	tree = NULL;
+//
+//	event_cut_hist = NULL;
+//	track_cut_hist = NULL;
+//	de_dx_pq_hist = NULL;
+//	beta_pq_hist = NULL;
+//
+//
+//	// Temp QA plots
+////	flag_diff_hist = NULL;
+////	nHitsFit_diff_hist = NULL;
+////	nHitsPoss_diff_hist = NULL;
+////	dca_diff_hist = NULL;
+////	dca_prim_glob_hist = NULL;
+////	nHitsFit_diff_post_hist = NULL;
+////	nHitsPoss_diff_post_hist = NULL;
+////	dca_diff_post_hist = NULL;
+////	dca_prim_glob_post_hist = NULL;
+//
+//	events_read = 0;
+//	events_processed = 0;
+//	energy = energy_in;
+//	this->bes_phase = bes_phase;
+//
+//	pars.set_energy_bes(energy, bes_phase);
+//}
 
 TreeMaker::~TreeMaker() {
 	// Nothing
@@ -269,13 +270,13 @@ Int_t TreeMaker::Make() {
 		track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 	}
 
-	else if(picoDst) {
-		StPicoEvent* pico_event = picoDst->event();  // Get picoEvent from maker
-
-		if(is_bad_event(pico_event)) { return kStOk; }  // Check if event is good, save event vars to event
-
-		track_loop(pico_event);  // Loop over tracks in pico_event, save track vars to protons/pions
-	}
+//	else if(picoDst) {
+//		StPicoEvent* pico_event = picoDst->event();  // Get picoEvent from maker
+//
+//		if(is_bad_event(pico_event)) { return kStOk; }  // Check if event is good, save event vars to event
+//
+//		track_loop(pico_event);  // Loop over tracks in pico_event, save track vars to protons/pions
+//	}
 
 	tree->Fill();  // Fill tree with event/protons/pions
 
@@ -378,77 +379,77 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 }
 
 
-bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
-	if(!pico_event) { return true; }
-	event_cut_hist->Fill("Is dstEvent", 1);
-
-	// Check for good trigger
-	vector<int> good_triggers = pars.triggers;
-	bool good_trig = false;
-	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
-		if(pico_event->isTrigger(pars.triggers[trig_index])) {
-			good_trig = true;
-			break;
-		}
-	}
-	if(!good_trig) { return true; }
-	event_cut_hist->Fill("Good Trigger", 1);
-
-
-    // Check if run number is good
-    event.run_num = pico_event->runId();
-    vector<int> bad_runs_energy = pars.bad_runs;
-    int num_bad_runs = (int) bad_runs_energy.size();
-    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
-    	if(event.run_num == bad_runs_energy[bad_run_index]) {
-    		return true;
-    	}
-    }
-    event_cut_hist->Fill("Good Run", 1);
-
-    // Get x,y,z components of primary vertex
-	event.vx = pico_event->primaryVertex().X();
-	event.vy = pico_event->primaryVertex().Y();
-	event.vz = pico_event->primaryVertex().Z();
-
-	// Check vertex is within pars.vz_max cm of detector center along beam pipe
-	if(fabs(event.vz) > pars.vz_max) { return true; }
-	event_cut_hist->Fill("Good Vz", 1);
-
-	// Check that vertex is within x cm radially (x-y plane) of detector axis
-	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
-		return true;
-	}
-	event_cut_hist->Fill("Good Vr", 1);
-
-	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
-	if(fabs(event.vx) < pars.vertex_min &&
-			fabs(event.vy) < pars.vertex_min &&
-			fabs(event.vz) < pars.vertex_min) {
-		return true;
-	}
-	event_cut_hist->Fill("Vertex Non-Zero", 1);
-
-	// Filter out events with disagreement between vpd and vertex reconstruction.
-	if(pars.vpd_vz_max_diff > 0) {  // -1 ignore code
-		float vpd_vz = pico_event->vzVpd();
-		if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
-			return true;
-		}
-	}
-	event_cut_hist->Fill("Good VPD Vz", 1);
-
-
-	// Add other event variables to event
-	event.event_id = pico_event->eventId();
-	event.refmult = pico_event->refMult();
-	event.btof = pico_event->nBTOFMatch();
-	event.refmult2 = pico_event->refMult2();
-	event.refmult3 = pico_event->refMult3();
-
-
-	return false;  // If all above checks are passed, event is good
-}
+//bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
+//	if(!pico_event) { return true; }
+//	event_cut_hist->Fill("Is dstEvent", 1);
+//
+//	// Check for good trigger
+//	vector<int> good_triggers = pars.triggers;
+//	bool good_trig = false;
+//	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
+//		if(pico_event->isTrigger(pars.triggers[trig_index])) {
+//			good_trig = true;
+//			break;
+//		}
+//	}
+//	if(!good_trig) { return true; }
+//	event_cut_hist->Fill("Good Trigger", 1);
+//
+//
+//    // Check if run number is good
+//    event.run_num = pico_event->runId();
+//    vector<int> bad_runs_energy = pars.bad_runs;
+//    int num_bad_runs = (int) bad_runs_energy.size();
+//    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
+//    	if(event.run_num == bad_runs_energy[bad_run_index]) {
+//    		return true;
+//    	}
+//    }
+//    event_cut_hist->Fill("Good Run", 1);
+//
+//    // Get x,y,z components of primary vertex
+//	event.vx = pico_event->primaryVertex().X();
+//	event.vy = pico_event->primaryVertex().Y();
+//	event.vz = pico_event->primaryVertex().Z();
+//
+//	// Check vertex is within pars.vz_max cm of detector center along beam pipe
+//	if(fabs(event.vz) > pars.vz_max) { return true; }
+//	event_cut_hist->Fill("Good Vz", 1);
+//
+//	// Check that vertex is within x cm radially (x-y plane) of detector axis
+//	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
+//		return true;
+//	}
+//	event_cut_hist->Fill("Good Vr", 1);
+//
+//	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
+//	if(fabs(event.vx) < pars.vertex_min &&
+//			fabs(event.vy) < pars.vertex_min &&
+//			fabs(event.vz) < pars.vertex_min) {
+//		return true;
+//	}
+//	event_cut_hist->Fill("Vertex Non-Zero", 1);
+//
+//	// Filter out events with disagreement between vpd and vertex reconstruction.
+//	if(pars.vpd_vz_max_diff > 0) {  // -1 ignore code
+//		float vpd_vz = pico_event->vzVpd();
+//		if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
+//			return true;
+//		}
+//	}
+//	event_cut_hist->Fill("Good VPD Vz", 1);
+//
+//
+//	// Add other event variables to event
+//	event.event_id = pico_event->eventId();
+//	event.refmult = pico_event->refMult();
+//	event.btof = pico_event->nBTOFMatch();
+//	event.refmult2 = pico_event->refMult2();
+//	event.refmult3 = pico_event->refMult3();
+//
+//
+//	return false;  // If all above checks are passed, event is good
+//}
 
 
 void TreeMaker::track_loop(StMuEvent *mu_event) {
@@ -612,155 +613,155 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 }
 
 
-void TreeMaker::track_loop(StPicoEvent *pico_event) {
-	int num_tracks = picoDst->numberOfTracks();
-	StPicoTrack *track;
-
-	int nHitsFit, dca_xy_count = 0;
-	float dca, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
-	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
-	double beta, p, m;
-	short charge;
-
-	for(int track_index = 0; track_index < num_tracks; track_index++) {
-		track_cut_hist->Fill("Tracks Read", 1);
-		track = (StPicoTrack*) picoDst->track(track_index);
-
-		// Initial track cuts
-
-		if(!track) continue;  // Check that track not NULL
-		track_cut_hist->Fill("Is Track", 1);
-
-		if(!track->isPrimary()) continue;  // Check track is primary track
-		track_cut_hist->Fill("Primary Track/Flags", 1);
-
-		charge = track->charge();
-		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
-		track_cut_hist->Fill("Charge", 1);
-
-		// Temp QA plots
-//		flag_diff_hist->Fill(fabs(track->flag() - track_glob->flag()));
-//		nHitsFit_diff_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
-
-		// Get main track variables
-
-		p = track->pMom().Mag();
-		pt = track->pMom().Perp();
-		eta = track->pMom().PseudoRapidity();
-		phi = track->pMom().Phi();  if(phi < 0) { phi += 2*M_PI; }
-		dca = track->gDCA(event.vx, event.vy, event.vz);
-		dcas = 0; // track->gDCAs(pico_event->primaryVertex());  Still in dev only version, hopefully will go to pro before I need it
-//		dca_prim = track->dca().mag();
-		nsigmapr = track->nSigmaProton();
-
-		nHitsFit = track->nHitsFit();
-
-		int btof_pid_traits_index = track->bTofPidTraitsIndex();
-		if(btof_pid_traits_index >= 0) {
-			StPicoBTofPidTraits *btof_pid_traits = picoDst->btofPidTraits(btof_pid_traits_index);
-			beta = btof_pid_traits->btofBeta();
-			m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
-		}
-
-		// Event track counters
-
-//		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
-//			tofmatched++;
-//			if(beta > 0.1) tofmatchedbeta++;
+//void TreeMaker::track_loop(StPicoEvent *pico_event) {
+//	int num_tracks = picoDst->numberOfTracks();
+//	StPicoTrack *track;
+//
+//	int nHitsFit, dca_xy_count = 0;
+//	float dca, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
+//	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
+//	double beta, p, m;
+//	short charge;
+//
+//	for(int track_index = 0; track_index < num_tracks; track_index++) {
+//		track_cut_hist->Fill("Tracks Read", 1);
+//		track = (StPicoTrack*) picoDst->track(track_index);
+//
+//		// Initial track cuts
+//
+//		if(!track) continue;  // Check that track not NULL
+//		track_cut_hist->Fill("Is Track", 1);
+//
+//		if(!track->isPrimary()) continue;  // Check track is primary track
+//		track_cut_hist->Fill("Primary Track/Flags", 1);
+//
+//		charge = track->charge();
+//		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
+//		track_cut_hist->Fill("Charge", 1);
+//
+//		// Temp QA plots
+////		flag_diff_hist->Fill(fabs(track->flag() - track_glob->flag()));
+////		nHitsFit_diff_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
+////		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
+////		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+////		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//
+//
+//		// Get main track variables
+//
+//		p = track->pMom().Mag();
+//		pt = track->pMom().Perp();
+//		eta = track->pMom().PseudoRapidity();
+//		phi = track->pMom().Phi();  if(phi < 0) { phi += 2*M_PI; }
+//		dca = track->gDCA(event.vx, event.vy, event.vz);
+//		dcas = 0; // track->gDCAs(pico_event->primaryVertex());  Still in dev only version, hopefully will go to pro before I need it
+////		dca_prim = track->dca().mag();
+//		nsigmapr = track->nSigmaProton();
+//
+//		nHitsFit = track->nHitsFit();
+//
+//		int btof_pid_traits_index = track->bTofPidTraitsIndex();
+//		if(btof_pid_traits_index >= 0) {
+//			StPicoBTofPidTraits *btof_pid_traits = picoDst->btofPidTraits(btof_pid_traits_index);
+//			beta = btof_pid_traits->btofBeta();
+//			m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
 //		}
-
-//		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
-
-//		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) refmult2++;
-//		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) refmult3++;
-
-		// Cut on ratio of nHitsFit to nHitsPossible
-		ratio = (double) nHitsFit / (double) track->nHitsMax();
-		if(ratio < 0.52) continue;
-		track_cut_hist->Fill("nHitsRatio Min", 1);
-		if(ratio > 1.05) continue;
-		track_cut_hist->Fill("nHitsRatio Max", 1);
-
-		// Event Plane Q vector
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			event.qx += cos(2*phi); event.qy += sin(2*phi);
-		}
-
-		// Fill PID plots
-		de_dx_pq_hist->Fill(charge*p, track->dEdx());
-		if(beta > 1.e-5) {
-			beta_pq_hist->Fill(charge*p, 1 / beta);
-		}
-
-		// Calculate dca_xy variables
-		if(dcas < 4 && dcas >= -4) {
-			dca_xy_avg += dcas;
-			dca_xy_err += pow(dcas, 2);  // Calculate second raw moment first
-			dca_xy_count++;
-		}
-
-		if(fabs(eta) > 1.0) continue;
-		track_cut_hist->Fill("eta", 1);
-
-		if(nHitsFit <= 20) continue;
-		track_cut_hist->Fill("nHitsFit", 1);
-		if(track->nHitsDedx() <= 5) continue;
-		track_cut_hist->Fill("nHitsDedx", 1);
-
-		if(dca < 0 || dca > 3.0) continue;
-		track_cut_hist->Fill("dca", 1);
-
-		if(pt < 0.3) continue;
-		track_cut_hist->Fill("pt_low", 1);
-		if(pt > 2.2) continue;
-		track_cut_hist->Fill("pt_high", 1);
-
-		// Temp QA plots
-//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
-		nsigmapi = track->nSigmaPion();
-
-		if(energy == 27) {
-			if(fabs(nsigmapr) <= 1.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi) <= 1.0) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
-				}
-			}
-		} else {
-			if(fabs(nsigmapr) <= 2.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi) <= 2.0) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
-				}
-			}
-		}
-
-	}
-
-	// Calculate and set dca_xy variables in event
-	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
-	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
-
-}
+//
+//		// Event track counters
+//
+////		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
+////			tofmatched++;
+////			if(beta > 0.1) tofmatchedbeta++;
+////		}
+//
+////		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
+//
+////		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) refmult2++;
+////		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) refmult3++;
+//
+//		// Cut on ratio of nHitsFit to nHitsPossible
+//		ratio = (double) nHitsFit / (double) track->nHitsMax();
+//		if(ratio < 0.52) continue;
+//		track_cut_hist->Fill("nHitsRatio Min", 1);
+//		if(ratio > 1.05) continue;
+//		track_cut_hist->Fill("nHitsRatio Max", 1);
+//
+//		// Event Plane Q vector
+//		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+//			event.qx += cos(2*phi); event.qy += sin(2*phi);
+//		}
+//
+//		// Fill PID plots
+//		de_dx_pq_hist->Fill(charge*p, track->dEdx());
+//		if(beta > 1.e-5) {
+//			beta_pq_hist->Fill(charge*p, 1 / beta);
+//		}
+//
+//		// Calculate dca_xy variables
+//		if(dcas < 4 && dcas >= -4) {
+//			dca_xy_avg += dcas;
+//			dca_xy_err += pow(dcas, 2);  // Calculate second raw moment first
+//			dca_xy_count++;
+//		}
+//
+//		if(fabs(eta) > 1.0) continue;
+//		track_cut_hist->Fill("eta", 1);
+//
+//		if(nHitsFit <= 20) continue;
+//		track_cut_hist->Fill("nHitsFit", 1);
+//		if(track->nHitsDedx() <= 5) continue;
+//		track_cut_hist->Fill("nHitsDedx", 1);
+//
+//		if(dca < 0 || dca > 3.0) continue;
+//		track_cut_hist->Fill("dca", 1);
+//
+//		if(pt < 0.3) continue;
+//		track_cut_hist->Fill("pt_low", 1);
+//		if(pt > 2.2) continue;
+//		track_cut_hist->Fill("pt_high", 1);
+//
+//		// Temp QA plots
+////		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
+////		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
+////		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
+////		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
+//
+//		nsigmapi = track->nSigmaPion();
+//
+//		if(energy == 27) {
+//			if(fabs(nsigmapr) <= 1.2) {
+//				track_cut_hist->Fill("nsigma_proton", 1);
+//				if( (m > 0.6 && m < 1.2) || m == -999) {
+//					track_cut_hist->Fill("m_proton", 1);
+//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			} if(fabs(nsigmapi) <= 1.0) {
+//				track_cut_hist->Fill("nsigma_pion", 1);
+//				if( (m > -0.15 && m < 0.15) || m == -999) {
+//					track_cut_hist->Fill("m_pion", 1);
+//					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+//				}
+//			}
+//		} else {
+//			if(fabs(nsigmapr) <= 2.2) {
+//				track_cut_hist->Fill("nsigma_proton", 1);
+//				if( (m > 0.6 && m < 1.2) || m == -999) {
+//					track_cut_hist->Fill("m_proton", 1);
+//					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+//				}
+//			} if(fabs(nsigmapi) <= 2.0) {
+//				track_cut_hist->Fill("nsigma_pion", 1);
+//				if( (m > -0.15 && m < 0.15) || m == -999) {
+//					track_cut_hist->Fill("m_pion", 1);
+//					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+//				}
+//			}
+//		}
+//
+//	}
+//
+//	// Calculate and set dca_xy variables in event
+//	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
+//	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
+//
+//}
