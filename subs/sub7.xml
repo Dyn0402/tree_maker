@@ -3,6 +3,7 @@
 <!ENTITY energy "7">
 <!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
+<!ENTITY bes_phase "1">
 <!ENTITY dst "mu">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
@@ -10,7 +11,7 @@
   
   <command>
       starver dev
-      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&dst;\)
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,&dst;\)
   </command>
 
   

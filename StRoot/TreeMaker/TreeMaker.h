@@ -34,7 +34,7 @@
 #include "TH1.h"
 #include "TObjArray.h"
 
-#include "BES_Parameters.h"  // pull pars namespace from here
+#include "BESPars.h"  // pull pars namespace from here
 #include "EventVars.h"
 #include "ParticleVars.h"
 
@@ -57,9 +57,9 @@ class TreeMaker : public StMaker {
 public:
 	// Structors
 	TreeMaker(StMuDstMaker* maker);
-	TreeMaker(StMuDstMaker* maker, string name, int energy_in);
+	TreeMaker(StMuDstMaker* maker, string name, int energy_in, int bes_phase);
 	TreeMaker(StPicoDstMaker* maker);
-	TreeMaker(StPicoDstMaker* maker, string name, int energy_in);
+	TreeMaker(StPicoDstMaker* maker, string name, int energy_in, int bes_phase);
 	virtual ~TreeMaker();
 
 	// Setters
@@ -82,6 +82,8 @@ private:
 	StMuDst *muDst;
 	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
 	StPicoDst *picoDst;
+
+	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 
 	string out_file_name;  // Name of output root file
 	TFile* out_file;  // Root file to be written
@@ -107,6 +109,7 @@ private:
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed
 	int energy;  // Energy of dataset being read
+	int bes_phase;  // Phase of Beam Energy Scan of dataset, 1 (I) or 2 (II)
 
 	EventVars event;
 	ParticleVars protons;
