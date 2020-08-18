@@ -372,8 +372,9 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 	// Add other event variables to event
 	event.event_id = mu_event->eventId();
 	event.refmult = mu_event->refMult();
-	event.btof = muDst->primaryVertex()->nBTOFMatch();
-
+	if(StMuPrimaryVertex *pv = muDst->primaryVertex()) {
+		event.btof = pv->nBTOFMatch();
+	} else { event.btof = 0; }
 
 	return false;  // If all above checks are passed, event is good
 }

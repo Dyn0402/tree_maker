@@ -45,6 +45,7 @@ class StMuDstMaker;
 class StMuDst;
 class StMuEvent;
 class StMuTrack;
+class StMuPrimaryVertex;
 
 //class StPicoDstMaker;
 //class StPicoDst;
