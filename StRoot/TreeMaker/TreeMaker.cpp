@@ -13,7 +13,7 @@ ClassImp(TreeMaker)
 
 TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	muDst_maker = maker;
-	muDst = muDst_maker->muDst();
+	muDst = NULL;
 
 	picoDst_maker = NULL;
 	picoDst = NULL;
@@ -48,7 +48,7 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 
 TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
 	muDst_maker = maker;
-	muDst = muDst_maker->muDst();
+	muDst = NULL;
 
 	picoDst_maker = NULL;
 	picoDst = NULL;
@@ -86,7 +86,7 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 // Structors
 TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 	picoDst_maker = maker;
-	picoDst = picoDst_maker->picoDst();
+	picoDst = NULL;
 
 	muDst_maker = NULL;
 	muDst = NULL;
@@ -121,7 +121,7 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 
 TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
 	picoDst_maker = maker;
-	picoDst = picoDst_maker->picoDst();
+	picoDst = NULL;
 
 	muDst_maker = NULL;
 	muDst = NULL;
@@ -262,7 +262,8 @@ Int_t TreeMaker::Make() {
 
 	event.clear(); protons.clear(); pions.clear();  // Clear event/particle objects before processing new event
 
-	if(muDst) {
+	if(muDst_maker) {
+		muDst = muDst_maker->muDst();
 		StMuEvent* mu_event = muDst->event();  // Get muEvent from maker
 
 		if(is_bad_event(mu_event)) { return kStOk; }  // Check if event is good, save event vars to event
@@ -270,13 +271,14 @@ Int_t TreeMaker::Make() {
 		track_loop(mu_event);  // Loop over tracks in mu_event, save track vars to protons/pions
 	}
 
-//	else if(picoDst) {
-//		StPicoEvent* pico_event = picoDst->event();  // Get picoEvent from maker
-//
-//		if(is_bad_event(pico_event)) { return kStOk; }  // Check if event is good, save event vars to event
-//
-//		track_loop(pico_event);  // Loop over tracks in pico_event, save track vars to protons/pions
-//	}
+	else if(picoDst_maker) {
+		picoDst = picoDst_maker->picoDst();
+		StPicoEvent* pico_event = picoDst->event();  // Get picoEvent from maker
+
+		if(is_bad_event(pico_event)) { return kStOk; }  // Check if event is good, save event vars to event
+
+		track_loop(pico_event);  // Loop over tracks in pico_event, save track vars to protons/pions
+	}
 
 	tree->Fill();  // Fill tree with event/protons/pions
 
@@ -372,7 +374,8 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 	// Add other event variables to event
 	event.event_id = mu_event->eventId();
 	event.refmult = mu_event->refMult();
-	muDst->setVertexIndex(0);
+//	muDst->setVertexIndex(0);
+	muDst_maker->printArrays();
 	if(StMuPrimaryVertex *pv = muDst->primaryVertex()) {
 		event.btof = pv->nBTOFMatch();
 	} else { event.btof = 0; }
