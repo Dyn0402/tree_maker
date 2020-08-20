@@ -618,7 +618,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
-	event.btof = tof_matched;
+	event.btof = tofmatched;
 
 }
 
