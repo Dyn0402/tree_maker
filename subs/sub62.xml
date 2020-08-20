@@ -3,13 +3,15 @@
 <!ENTITY energy "62">
 <!ENTITY prod "P10ik">
 <!ENTITY trig_sufix "">
+<!ENTITY bes_phase "1">
+<!ENTITY dst "mu">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
   
   <command>
       starver pro
-      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;\)
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\"\)
   </command>
 
   
@@ -20,7 +22,7 @@
     </Package>
   </SandBox>
 
-<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage=local,filetype=daq_reco_MuDst,filename~st_physics,sanity=1" nFiles="all" />
+<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage!=HPSS,filetype=daq_reco_&dst;Dst,filename~st_physics,sanity=1" nFiles="all" />
   <stderr URL="file:&out_path;log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
   <stdout URL="file:&out_path;log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 
