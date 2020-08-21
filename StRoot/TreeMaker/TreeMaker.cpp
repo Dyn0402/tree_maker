@@ -566,7 +566,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(track->nHitsDedx() <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
 
-		if(dca < 0 || dca > 1.2) continue;
+		if(dca < 0 || dca > 3.0) continue;
 		track_cut_hist->Fill("dca", 1);
 
 		if(pt < 0.3) continue;
