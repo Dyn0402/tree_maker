@@ -184,7 +184,8 @@ Int_t TreeMaker::Init() {
 	tree->Branch("refmult", &event.refmult, "refmult/S");
 	tree->Branch("refmult2", &event.refmult2, "refmult2/S");
 	tree->Branch("refmult3", &event.refmult3, "refmult3/S");
-	tree->Branch("btof", &event.btof, "btof/S");
+	tree->Branch("btof_multi", &event.btof_multi, "btof_multi/S");
+	tree->Branch("btof_match", &event.btof_match, "btof_match/S");
 	tree->Branch("vx", &event.vx, "vx/F");
 	tree->Branch("vy", &event.vy, "vy/F");
 	tree->Branch("vz", &event.vz, "vz/F");
@@ -382,6 +383,7 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 //	if(pv) {
 //		event.btof = pv->nBTOFMatch();
 //	} else { event.btof = 0; }
+	event.btof_multi = mu_event->btofTrayMultiplicity();
 
 	return false;  // If all above checks are passed, event is good
 }
@@ -451,7 +453,8 @@ bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
 	// Add other event variables to event
 	event.event_id = pico_event->eventId();
 	event.refmult = pico_event->refMult();
-	event.btof = pico_event->nBTOFMatch();
+	event.btof_match = pico_event->nBTOFMatch();
+	event.btof_multi = pico_event->btofTrayMultiplicity();
 	event.refmult2 = pico_event->refMult2();
 	event.refmult3 = pico_event->refMult3();
 

@@ -28,7 +28,8 @@ void EventVars::clear() {
 	refmult = 0;
 	refmult2 = 0;
 	refmult3 = 0;
-	btof = 0;
+	btof_multi = 0;
+	btof_match = 0;
 
 	vx = 0.;
 	vy = 0.;

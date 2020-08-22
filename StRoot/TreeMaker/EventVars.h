@@ -24,7 +24,8 @@ public:
 	short refmult;
 	short refmult2;
 	short refmult3;
-	short btof;
+	short btof_match;
+	short btof_multi;
 
 	float vx, vy, vz;
 	float qx, qy;
