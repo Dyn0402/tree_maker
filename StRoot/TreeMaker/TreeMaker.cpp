@@ -381,8 +381,8 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 //	StMuPrimaryVertex *pv2 = (StMuPrimaryVertex*)muDst->primaryVertices()->UncheckedAt(0);
 //	cout << muDst->primaryVertices()->GetEntriesFast() << " " << pv << " " << pv2 << " " << pv->nBTOFMatch() << endl;
 //	if(pv) {
-//		event.btof = pv->nBTOFMatch();
-//	} else { event.btof = 0; }
+//		event.btof_match = pv->nBTOFMatch();
+//	} else { event.btof_match = 0; }
 	event.btof_multi = mu_event->btofTrayMultiplicity();
 
 	return false;  // If all above checks are passed, event is good
@@ -621,7 +621,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
-	event.btof = tofmatched;
+	event.btof_match = tofmatched;
 
 }
 
