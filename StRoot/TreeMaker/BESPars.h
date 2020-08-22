@@ -35,6 +35,8 @@ public:
 
 	float vertex_min = 1e-5;
 
+	int min_14GeV_run = 15049041;  // From Toshihiro's code
+
 	float vz_max;
 	float vr_max;
 	float vy_offset;

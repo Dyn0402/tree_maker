@@ -333,6 +333,9 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
     		return true;
     	}
     }
+    if(energy == 14) {
+    	if(event.run_num <= pars.min_14GeV_run) { return true; }
+    }
     event_cut_hist->Fill("Good Run", 1);
 
     // Get x,y,z components of primary vertex
