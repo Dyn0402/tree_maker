@@ -7,7 +7,7 @@
 <!ENTITY dst "mu">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/Tests/11GeV_Run/">
 ]>
-<job simulateSubmission ="false" minEvents="30000" maxEvents="80000" fileListSyntax="xrootd">
+<job simulateSubmission ="false" minEvents="30000" maxEvents="80000" fileListSyntax="paths">
   
   <command>
       starver pro
