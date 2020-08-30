@@ -558,7 +558,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	StPicoTrack *track;
 
 	int nHitsFit, dca_xy_count = 0;
-	float dca, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_z, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -578,14 +578,6 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		charge = track->charge();
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
 		track_cut_hist->Fill("Charge", 1);
-
-		// Temp QA plots
-//		flag_diff_hist->Fill(fabs(track->flag() - track_glob->flag()));
-//		nHitsFit_diff_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
 
 		// Get main track variables
 
@@ -660,26 +652,21 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		if(pt > 2.2) continue;
 		track_cut_hist->Fill("pt_high", 1);
 
-		// Temp QA plots
-//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
 		nsigmapi = track->nSigmaPion();
+		dca_z = track->gDCAz(event.vx, event.vy, event.vz);
 
 		if(energy == 27) {
 			if(fabs(nsigmapr) <= 1.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
 				if( (m > 0.6 && m < 1.2) || m == -999) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
 			} if(fabs(nsigmapi) <= 1.0) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
 			}
 		} else {
@@ -687,13 +674,13 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 				track_cut_hist->Fill("nsigma_proton", 1);
 				if( (m > 0.6 && m < 1.2) || m == -999) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
 			} if(fabs(nsigmapi) <= 2.0) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
 			}
 		}
