@@ -27,17 +27,6 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	de_dx_pq_hist = NULL;
 	beta_pq_hist = NULL;
 
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
-
 	events_read = 0;
 	events_processed = 0;
 	energy = 0;
@@ -61,18 +50,6 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 	track_cut_hist = NULL;
 	de_dx_pq_hist = NULL;
 	beta_pq_hist = NULL;
-
-
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
 
 	events_read = 0;
 	events_processed = 0;
@@ -100,17 +77,6 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 	de_dx_pq_hist = NULL;
 	beta_pq_hist = NULL;
 
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
-
 	events_read = 0;
 	events_processed = 0;
 	energy = 0;
@@ -134,18 +100,6 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_
 	track_cut_hist = NULL;
 	de_dx_pq_hist = NULL;
 	beta_pq_hist = NULL;
-
-
-	// Temp QA plots
-//	flag_diff_hist = NULL;
-//	nHitsFit_diff_hist = NULL;
-//	nHitsPoss_diff_hist = NULL;
-//	dca_diff_hist = NULL;
-//	dca_prim_glob_hist = NULL;
-//	nHitsFit_diff_post_hist = NULL;
-//	nHitsPoss_diff_post_hist = NULL;
-//	dca_diff_post_hist = NULL;
-//	dca_prim_glob_post_hist = NULL;
 
 	events_read = 0;
 	events_processed = 0;
@@ -198,6 +152,7 @@ Int_t TreeMaker::Init() {
 	tree->Branch("proton.phi", &protons.phi, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.eta", &protons.eta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.dca", &protons.dca, pars.branch_buffer, pars.branch_split);
+	tree->Branch("proton.dca_z", &protons.dca_z, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.nsigma", &protons.nsigma, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.beta", &protons.beta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.charge", &protons.charge, pars.branch_buffer, pars.branch_split);
@@ -206,6 +161,7 @@ Int_t TreeMaker::Init() {
 	tree->Branch("pion.phi", &pions.phi, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.eta", &pions.eta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.dca", &pions.dca, pars.branch_buffer, pars.branch_split);
+	tree->Branch("pion.dca_z", &pions.dca_z, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.nsigma", &pions.nsigma, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.beta", &pions.beta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.charge", &pions.charge, pars.branch_buffer, pars.branch_split);
@@ -241,17 +197,6 @@ Int_t TreeMaker::Init() {
 
 	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
-
-	// Temp QA plots
-//	flag_diff_hist = new TH1D("flag_diff_hist", "Flag Primary - Flag Global", 801, -400.5, 400.5);
-//	nHitsFit_diff_hist = new TH1D("nHitsFit_diff_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
-//	nHitsPoss_diff_hist = new TH1D("nHitsPoss_diff_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
-//	dca_diff_hist = new TH1D("dca_diff_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-//	dca_prim_glob_hist = new TH2D("dca_prim_glob_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
-//	nHitsFit_diff_post_hist = new TH1D("nHitsFit_diff_post_hist", "nHitsFit Primary - nHitsFit Global", 16, -10.5, 5.5);
-//	nHitsPoss_diff_post_hist = new TH1D("nHitsPoss_diff_post_hist", "nHitsPoss Primary - nHitsPoss Global", 16, -10.5, 5.5);
-//	dca_diff_post_hist = new TH1D("dca_diff_post_hist", "Dca Primary - Dca Global", 200, -10.0, 2.0);
-//	dca_prim_glob_post_hist = new TH2D("dca_prim_glob_post_hist", "Dca Primary vs Dca Global", 1000, 0, 5, 2000, 0, 10);
 
 	return kStOK;
 }
@@ -378,14 +323,6 @@ bool TreeMaker::is_bad_event(StMuEvent *mu_event) {
 	// Add other event variables to event
 	event.event_id = mu_event->eventId();
 	event.refmult = mu_event->refMult();
-//	muDst->setVertexIndex(0);
-//	muDst_maker->printArrays();
-//	StMuPrimaryVertex *pv = muDst->primaryVertex();
-//	StMuPrimaryVertex *pv2 = (StMuPrimaryVertex*)muDst->primaryVertices()->UncheckedAt(0);
-//	cout << muDst->primaryVertices()->GetEntriesFast() << " " << pv << " " << pv2 << " " << pv->nBTOFMatch() << endl;
-//	if(pv) {
-//		event.btof_match = pv->nBTOFMatch();
-//	} else { event.btof_match = 0; }
 	event.btof_multi = mu_event->btofTrayMultiplicity();
 
 	return false;  // If all above checks are passed, event is good
@@ -471,7 +408,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	StMuTrack *track, *track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
-	float dca, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_z, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -501,14 +438,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		charge = track->charge();
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
 		track_cut_hist->Fill("Charge", 1);
-
-		// Temp QA plots
-//		flag_diff_hist->Fill(fabs(track->flag() - track_glob->flag()));
-//		nHitsFit_diff_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
 
 		// Get main track variables
 
@@ -580,26 +509,21 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(pt > 2.2) continue;
 		track_cut_hist->Fill("pt_high", 1);
 
-		// Temp QA plots
-//		nHitsFit_diff_post_hist->Fill(track->nHitsFit() - track_glob->nHitsFit());
-//		nHitsPoss_diff_post_hist->Fill(track->nHitsPoss() - track_glob->nHitsPoss());
-//		dca_diff_post_hist->Fill(track->dca().mag() - track->dcaGlobal().mag());
-//		dca_prim_glob_post_hist->Fill(track->dca().mag(), track->dcaGlobal().mag());
-
 		nsigmapi = track->nSigmaPion();
+		dca_z = track->dcaZ();
 
 		if(energy == 27) {
 			if(fabs(nsigmapr) <= 1.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
 				if( (m > 0.6 && m < 1.2) || m == -999) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
 			} if(fabs(nsigmapi) <= 1.0) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
 			}
 		} else {
@@ -607,13 +531,13 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 				track_cut_hist->Fill("nsigma_proton", 1);
 				if( (m > 0.6 && m < 1.2) || m == -999) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
 			} if(fabs(nsigmapi) <= 2.0) {
 				track_cut_hist->Fill("nsigma_pion", 1);
 				if( (m > -0.15 && m < 0.15) || m == -999) {
 					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, nsigmapi, beta, charge);
+					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
 			}
 		}
