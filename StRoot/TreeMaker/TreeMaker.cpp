@@ -653,7 +653,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		track_cut_hist->Fill("pt_high", 1);
 
 		nsigmapi = track->nSigmaPion();
-		dca_z = track->gDCAz(event.vx, event.vy, event.vz);
+		dca_z = track->gDCAz(event.vz);
 
 		if(energy == 27) {
 			if(fabs(nsigmapr) <= 1.2) {
