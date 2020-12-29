@@ -25,7 +25,7 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 
 
 
-void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst) {
+void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst, bool read_pions=true) {
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
 
@@ -34,8 +34,8 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
 
-	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase);
-	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase);
+	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase, read_pions);
+	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase, read_pions);
 	else { cout << "Input dst format not recognized: " << dst << endl; }
 
 	cout << "donzo" << endl;
@@ -43,7 +43,7 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 
 
 
-void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase) {
+void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true) {
 	int num_files = 1e4;
 
 	// Load libraries
@@ -64,7 +64,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 
 	muDst_maker->SetDebug(0);  // Turn off debug information
 
-	TreeMaker *tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase);
+	TreeMaker *tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions);
 
 	int num_events = 1e7;
 	num_events = muDst_maker->chain()->GetEntries();
@@ -97,7 +97,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 
 
 
-void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase) {
+void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true) {
 	// Load libraries
 //	cout << "Load" << endl;
 //	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
@@ -119,7 +119,7 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 
 	picoDst_maker->SetDebug(0);  // Turn off debug information
 
-	TreeMaker *tree_maker = new TreeMaker(picoDst_maker, output_dir, energy, bes_phase);
+	TreeMaker *tree_maker = new TreeMaker(picoDst_maker, output_dir, energy, bes_phase, read_pions);
 
 	int status = chain->Init() ;
 	if(status) chain->Fatal(status,"on chain init");

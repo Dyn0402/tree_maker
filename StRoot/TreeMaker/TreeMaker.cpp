@@ -32,10 +32,12 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	energy = 0;
 	bes_phase = 1;
 
+	read_pions = true;
+
 	pars.set_energy_bes(energy, bes_phase);
 }
 
-TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
+TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
 	muDst_maker = maker;
 	muDst = NULL;
 
@@ -55,6 +57,8 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 	events_processed = 0;
 	energy = energy_in;
 	this->bes_phase = bes_phase;
+
+	this->read_pions = read_pions;
 
 	pars.set_energy_bes(energy, bes_phase);
 }
@@ -82,10 +86,12 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 	energy = 0;
 	bes_phase = 1;
 
+	read_pions = true;
+
 	pars.set_energy_bes(energy, bes_phase);
 }
 
-TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("TreeMaker") {
+TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
 	picoDst_maker = maker;
 	picoDst = NULL;
 
@@ -105,6 +111,8 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_
 	events_processed = 0;
 	energy = energy_in;
 	this->bes_phase = bes_phase;
+
+	this->read_pions = read_pions;
 
 	pars.set_energy_bes(energy, bes_phase);
 }
@@ -408,7 +416,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	StMuTrack *track, *track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
-	float dca, dca_z, dca_prim, eta, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -493,7 +501,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			dca_xy_count++;
 		}
 
-		if(fabs(eta) > 1.0) continue;
+		if(fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
 
 		if(nHitsFit <= 20) continue;
@@ -515,13 +523,14 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(energy == 27) {
 			if(fabs(nsigmapr) <= 1.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
+				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 1.0) {
+			} if(fabs(nsigmapi) <= 1.0 && read_pions) {
 				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
+				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 					track_cut_hist->Fill("m_pion", 1);
 					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
@@ -529,13 +538,14 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		} else {
 			if(fabs(nsigmapr) <= 2.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
+				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 2.0) {
+			} if(fabs(nsigmapi) <= 2.0 && read_pions) {
 				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
+				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 					track_cut_hist->Fill("m_pion", 1);
 					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
@@ -558,7 +568,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	StPicoTrack *track;
 
 	int nHitsFit, dca_xy_count = 0;
-	float dca, dca_z, eta, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
+	float dca, dca_z, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -636,7 +646,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 			dca_xy_count++;
 		}
 
-		if(fabs(eta) > 1.0) continue;
+		if(fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
 
 		if(nHitsFit <= 20) continue;
@@ -658,13 +668,14 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		if(energy == 27) {
 			if(fabs(nsigmapr) <= 1.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
+				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 1.0) {
+			} if(fabs(nsigmapi) <= 1.0 && read_pions) {
 				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
+				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 					track_cut_hist->Fill("m_pion", 1);
 					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}
@@ -672,13 +683,14 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		} else {
 			if(fabs(nsigmapr) <= 2.2) {
 				track_cut_hist->Fill("nsigma_proton", 1);
-				if( (m > 0.6 && m < 1.2) || m == -999) {
+				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 2.0) {
+			} if(fabs(nsigmapi) <= 2.0 && read_pions) {
 				track_cut_hist->Fill("nsigma_pion", 1);
-				if( (m > -0.15 && m < 0.15) || m == -999) {
+				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 					track_cut_hist->Fill("m_pion", 1);
 					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 				}

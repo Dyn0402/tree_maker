@@ -59,9 +59,9 @@ class TreeMaker : public StMaker {
 public:
 	// Structors
 	TreeMaker(StMuDstMaker* maker);
-	TreeMaker(StMuDstMaker* maker, string name, int energy_in, int bes_phase);
+	TreeMaker(StMuDstMaker* maker, string name, int energy_in, int bes_phase, bool read_pions);
 	TreeMaker(StPicoDstMaker* maker);
-	TreeMaker(StPicoDstMaker* maker, string name, int energy_in, int bes_phase);
+	TreeMaker(StPicoDstMaker* maker, string name, int energy_in, int bes_phase, bool read_pions);
 	virtual ~TreeMaker();
 
 	// Setters
@@ -100,6 +100,8 @@ private:
 	int events_processed;  // Number of events processed
 	int energy;  // Energy of dataset being read
 	int bes_phase;  // Phase of Beam Energy Scan of dataset, 1 (I) or 2 (II)
+
+	bool read_pions;  // True to read pions, false to skip.
 
 	EventVars event;
 	ParticleVars protons;

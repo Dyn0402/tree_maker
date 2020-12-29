@@ -34,6 +34,7 @@ public:
 	int branch_split = 1;
 
 	float vertex_min = 1e-5;
+	float m_proton = 0.93827;  // GeV
 
 	int min_14GeV_run = 15049041;  // From Toshihiro's code
 
