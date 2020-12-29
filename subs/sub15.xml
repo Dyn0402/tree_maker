@@ -12,7 +12,7 @@
   
   <command>
       starver pro
-      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\"\,&pions;)
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\",&pions;\)
   </command>
 
   
