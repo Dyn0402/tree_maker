@@ -417,6 +417,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+	float nsigmapr_eff;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -456,6 +457,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		dca = track->dcaGlobal().mag();
 		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
+		nsigmapr_eff = nsigmapr;
+		if(energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
 
 		nHitsFit = track_glob->nHitsFit();
 
@@ -474,7 +477,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 //		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
 
 		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
-		if(fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
+		if(fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
 
 		// Cut on ratio of nHitsFit to nHitsPossible
 		ratio = (double) nHitsFit / (double) track_glob->nHitsPoss();
@@ -520,35 +523,18 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->dcaZ();
 
-		if(energy == 27) {
-			if(fabs(nsigmapr) <= 1.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+		if(fabs(nsigmapr_eff) < 2.2) {
+			track_cut_hist->Fill("nsigma_proton", 1);
+			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 1.0 && read_pions) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
-				}
-			}
-		} else {
-			if(fabs(nsigmapr) <= 2.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi) <= 2.0 && read_pions) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
-				}
+		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
+			track_cut_hist->Fill("nsigma_pion", 1);
+			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
+				track_cut_hist->Fill("m_pion", 1);
+				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 			}
 		}
 
@@ -569,6 +555,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 
 	int nHitsFit, dca_xy_count = 0;
 	float dca, dca_z, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
+	float nsigmapr_eff;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
@@ -599,6 +586,8 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		dcas = 0; // track->gDCAs(pico_event->primaryVertex());  Still in dev only version, hopefully will go to pro before I need it
 //		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
+		nsigmapr_eff = nsigmapr;
+		if(energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
 
 		nHitsFit = track->nHitsFit();
 
@@ -665,35 +654,19 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->gDCAz(event.vz);
 
-		if(energy == 27) {
-			if(fabs(nsigmapr) <= 1.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+
+		if(fabs(nsigmapr_eff) < 2.2) {
+			track_cut_hist->Fill("nsigma_proton", 1);
+			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
 					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
 				}
-			} if(fabs(nsigmapi) <= 1.0 && read_pions) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
-				}
-			}
-		} else {
-			if(fabs(nsigmapr) <= 2.2) {
-				track_cut_hist->Fill("nsigma_proton", 1);
-				rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
-				}
-			} if(fabs(nsigmapi) <= 2.0 && read_pions) {
-				track_cut_hist->Fill("nsigma_pion", 1);
-				if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
-					track_cut_hist->Fill("m_pion", 1);
-					pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
-				}
+		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
+			track_cut_hist->Fill("nsigma_pion", 1);
+			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
+				track_cut_hist->Fill("m_pion", 1);
+				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
 			}
 		}
 
