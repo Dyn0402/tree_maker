@@ -164,6 +164,7 @@ Int_t TreeMaker::Init() {
 	tree->Branch("proton.nsigma", &protons.nsigma, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.beta", &protons.beta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("proton.charge", &protons.charge, pars.branch_buffer, pars.branch_split);
+	tree->Branch("proton.nhits_fit", &protons.nhits_fit, pars.branch_buffer, pars.branch_split);
 
 	tree->Branch("pion.pt", &pions.pt, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.phi", &pions.phi, pars.branch_buffer, pars.branch_split);
@@ -173,6 +174,7 @@ Int_t TreeMaker::Init() {
 	tree->Branch("pion.nsigma", &pions.nsigma, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.beta", &pions.beta, pars.branch_buffer, pars.branch_split);
 	tree->Branch("pion.charge", &pions.charge, pars.branch_buffer, pars.branch_split);
+	tree->Branch("pion.nhits_fit", &pions.nhits_fit, pars.branch_buffer, pars.branch_split);
 
 	event_cut_hist = new TH1D("Event Cut Hist", "Event Cut Hist", 9, -0.5, 8.5);
 	event_cut_hist->GetXaxis()->SetBinLabel(1, "Expected");
