@@ -21,7 +21,7 @@ public:
 	~ParticleVars();
 
 	// Doers
-	void add_event(float pt, float phi, float eta, float dca, float dca_z, float nsigma, float beta, short charge);
+	void add_event(float pt, float phi, float eta, float dca, float dca_z, float nsigma, float beta, short charge, short nhits_fit);
 	void clear();
 
 	// Public Members
@@ -33,6 +33,7 @@ public:
 	vector<float> nsigma;
 	vector<float> beta;
 	vector<short> charge;
+	vector<short> nhits_fit;
 };
 
 

@@ -21,7 +21,7 @@ ParticleVars::~ParticleVars() {
 
 
 // Doers
-void ParticleVars::add_event(float pt, float phi, float eta, float dca, float dca_z, float nsigma, float beta, short charge) {
+void ParticleVars::add_event(float pt, float phi, float eta, float dca, float dca_z, float nsigma, float beta, short charge, short nhits_fit) {
 	this->pt.push_back(pt);
 	this->phi.push_back(phi);
 	this->eta.push_back(eta);
@@ -30,6 +30,7 @@ void ParticleVars::add_event(float pt, float phi, float eta, float dca, float dc
 	this->nsigma.push_back(nsigma);
 	this->beta.push_back(beta);
 	this->charge.push_back(charge);
+	this->nhits_fit.push_back(nhits_fit);
 }
 
 void ParticleVars::clear() {
@@ -41,4 +42,5 @@ void ParticleVars::clear() {
 	nsigma.clear();
 	beta.clear();
 	charge.clear();
+	nhits_fit.clear();
 }

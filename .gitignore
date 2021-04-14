@@ -69,3 +69,6 @@ Release/
 .scala_dependencies
 .worksheet
 /.project
+
+# Ignore Visual Studio property folder
+.vs/
