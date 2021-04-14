@@ -507,7 +507,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
 
-		if(nHitsFit <= 20) continue;
+		if(nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
 		if(track->nHitsDedx() <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
@@ -523,18 +523,18 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->dcaZ();
 
-		if(fabs(nsigmapr_eff) < 2.2) {
+		if(fabs(nsigmapr_eff) < 2.5) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
+				if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
 				}
 		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
 			track_cut_hist->Fill("nsigma_pion", 1);
 			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
-				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
+				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
 		}
 
@@ -638,7 +638,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		if(fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
 
-		if(nHitsFit <= 20) continue;
+		if(nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
 		if(track->nHitsDedx() <= 5) continue;
 		track_cut_hist->Fill("nHitsDedx", 1);
@@ -655,18 +655,18 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		dca_z = track->gDCAz(event.vz);
 
 
-		if(fabs(nsigmapr_eff) < 2.2) {
+		if(fabs(nsigmapr_eff) < 2.5) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 1) {
+				if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
 					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge);
+					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
 				}
 		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
 			track_cut_hist->Fill("nsigma_pion", 1);
 			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
-				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge);
+				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
 		}
 
