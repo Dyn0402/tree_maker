@@ -122,7 +122,7 @@ Int_t FlattenerPhiEp::Init() {
 		for (int cent_bin : cent_bins) {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
 				string name = "phi_dist_" + phi_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin);
-				phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI);
+				phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI));
 			}
 		}
 	}
@@ -379,9 +379,9 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		if (fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
 	}
 
-	// Get centrality bin for event from ref_multn value
-	refmultCorrUtil->init(event.get_run());
-	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
+	// Get centrality bin for event from ref_mult3 value
+	refmultCorrUtil->init(event.run_num);
+	refmultCorrUtil->initEvent((int)event.refmult3, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int eta_bin;
@@ -448,9 +448,9 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	int num_tracks = picoDst->numberOfTracks();
 	StPicoTrack *track;
 
-	// Get centrality bin for event from ref_multn value
-	refmultCorrUtil->init(event.get_run());
-	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
+	// Get centrality bin for event from ref_mult3 value
+	refmultCorrUtil->init(event.run_num);
+	refmultCorrUtil->initEvent((int)event.refmult3, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int nHitsFit;
