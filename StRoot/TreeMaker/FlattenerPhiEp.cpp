@@ -29,6 +29,7 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+	phi_types = { "protons", "non-protons" };
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
@@ -53,6 +54,7 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+	phi_types = { "protons", "non-protons" };
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
@@ -79,6 +81,7 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+	phi_types = { "protons", "non-protons" };
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
@@ -103,6 +106,7 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+	phi_types = { "protons", "non-protons" };
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 

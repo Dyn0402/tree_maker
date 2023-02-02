@@ -98,7 +98,7 @@ private:
 	float eta_min = -1.0;
 	float eta_max = 1.0;
 	int eta_bins = 20;
-	vector<string> phi_types{ "protons", "non-protons" };
+	vector<string> phi_types;
 	vector<int> cent_bins;
 
 	map<string, map<int, vector<TH1D*>>> phi_dists;  // Phi distribution of particles [particle_type][centrality][ep_bin]
