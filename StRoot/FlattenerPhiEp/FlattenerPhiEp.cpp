@@ -206,7 +206,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 			break;
 		}
 	}
-	if (!good_trig) { cout << "Bad trigger " << endl;  return true; }
+	//if (!good_trig) { cout << "Bad trigger " << endl;  return true; }
 
 
     // Check if run number is good
