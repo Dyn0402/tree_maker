@@ -28,6 +28,9 @@
 
 #include "StEvent/StBTofHeader.h"
 
+#include "./StRefMultCorr/CentralityMaker.h"
+#include "./StRefMultCorr/StRefMultCorr.h"
+
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -84,6 +87,7 @@ private:
 	StMuDst *muDst;
 	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
 	StPicoDst *picoDst;
+	StRefMultCorr* refmultCorrUtil;
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 
@@ -100,6 +104,7 @@ private:
 	int events_processed;  // Number of events processed
 	int energy;  // Energy of dataset being read
 	int bes_phase;  // Phase of Beam Energy Scan of dataset, 1 (I) or 2 (II)
+	int ref_num;  // Reference multiplicity to use for centrality definition
 
 	bool read_pions;  // True to read pions, false to skip.
 

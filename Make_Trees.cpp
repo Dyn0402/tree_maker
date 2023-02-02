@@ -18,14 +18,15 @@ class StChain;
 class StMuDstMaker;
 class StPicoDstMaker;
 class TreeMaker;
+class FlattenerPhiEp;
 
 
-void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase);
-void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase);
+void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase, string run_type);
+void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase, string run_type);
 
 
 
-void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst, bool read_pions=true) {
+void Make_Trees(string input_file_list, string output_dir, int energy, int bes_phase, string dst, bool read_pions=true, string run_type="TreeMaker") {
 	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
 	loadSharedLibraries();
 
@@ -33,9 +34,10 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 	gSystem->Load("StPicoDstMaker");
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
+	gSystem->Load("FlattenerPhiEp");
 
-	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase, read_pions);
-	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase, read_pions);
+	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase, read_pions, run_type);
+	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase, read_pions, run_type);
 	else { cout << "Input dst format not recognized: " << dst << endl; }
 
 	cout << "donzo" << endl;
@@ -43,7 +45,7 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 
 
 
-void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true) {
+void make_trees_mu(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true, string run_type = "TreeMaker") {
 	int num_files = 1e4;
 
 	// Load libraries
@@ -64,7 +66,10 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 
 	muDst_maker->SetDebug(0);  // Turn off debug information
 
-	TreeMaker *tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions);
+	if (run_type == "TreeMaker") { TreeMaker* tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions); }
+	else if (run_type == "PhiDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else if (run_type == "EpDist") { FlattenerPhiEp* ep_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else { cout << "run_type '" << run_type << "' not recognized! Exiting"; return; }
 
 	int num_events = 1e7;
 	num_events = muDst_maker->chain()->GetEntries();
@@ -97,7 +102,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 
 
 
-void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true) {
+void make_trees_pico(string input_file_list, string output_dir, int energy, int bes_phase, bool read_pions=true, string run_type = "TreeMaker") {
 	// Load libraries
 //	cout << "Load" << endl;
 //	gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
@@ -119,7 +124,10 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 
 	picoDst_maker->SetDebug(0);  // Turn off debug information
 
-	TreeMaker *tree_maker = new TreeMaker(picoDst_maker, output_dir, energy, bes_phase, read_pions);
+	if (run_type == "TreeMaker") { TreeMaker* tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions); }
+	else if (run_type == "PhiDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else if (run_type == "EpDist") { FlattenerPhiEp* ep_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else { cout << "run_type '" << run_type << "' not recognized! Exiting"; return; }
 
 	int status = chain->Init() ;
 	if(status) chain->Fatal(status,"on chain init");

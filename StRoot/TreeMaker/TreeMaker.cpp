@@ -31,8 +31,11 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	events_processed = 0;
 	energy = 0;
 	bes_phase = 1;
+	ref_num = 3;
 
 	read_pions = true;
+	
+	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
 }
@@ -57,9 +60,12 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 	events_processed = 0;
 	energy = energy_in;
 	this->bes_phase = bes_phase;
+	ref_num = 3;
 
 	this->read_pions = read_pions;
 
+	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
+	
 	pars.set_energy_bes(energy, bes_phase);
 }
 
@@ -85,8 +91,11 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 	events_processed = 0;
 	energy = 0;
 	bes_phase = 1;
+	ref_num = 3;
 
 	read_pions = true;
+
+	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
 }
@@ -111,8 +120,11 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_
 	events_processed = 0;
 	energy = energy_in;
 	this->bes_phase = bes_phase;
+	ref_num = 3;
 
 	this->read_pions = read_pions;
+
+	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
 }
@@ -417,6 +429,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
 	StMuTrack *track, *track_glob;
 
+	// Get centrality bin for event from ref_multn value
+	refmultCorrUtil->init(event.get_run());
+	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
+	int cent16_corr = refmultCorrUtil->getCentralityBin16();
+	int cent9_corr = refmultCorrUtil->getCentralityBin9();
+
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	float nsigmapr_eff;
@@ -554,6 +572,12 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	int num_tracks = picoDst->numberOfTracks();
 	StPicoTrack *track;
+
+	// Get centrality bin for event from ref_multn value
+	refmultCorrUtil->init(event.get_run());
+	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
+	int cent16_corr = refmultCorrUtil->getCentralityBin16();
+	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int nHitsFit, dca_xy_count = 0;
 	float dca, dca_z, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dcas, dca_xy_avg = 0, dca_xy_err = 0.;
