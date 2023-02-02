@@ -27,6 +27,9 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	bes_phase = 1;
 	ref_num = 3;
 
+	cent_bins = vector<int>(10);
+	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
@@ -47,6 +50,9 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	energy = energy_in;
 	this->bes_phase = bes_phase;
 	ref_num = 3;
+
+	cent_bins = vector<int>(10);
+	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
@@ -71,6 +77,9 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	bes_phase = 1;
 	ref_num = 3;
 
+	cent_bins = vector<int>(10);
+	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
@@ -91,6 +100,9 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 	energy = energy_in;
 	this->bes_phase = bes_phase;
 	ref_num = 3;
+
+	cent_bins = vector<int>(10);
+	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
@@ -160,173 +172,158 @@ Int_t FlattenerPhiEp::Make() {
 }
 
 
-//Int_t FlattenerPhiEp::Finish() {
-//	cout << endl;
-//	cout << "Finishing and writing histograms to file... " << endl;
-//	cout << endl;
-//
-//	out_file->Write();
-//	out_file->Close();
-//
-//	cout <<"\n ======> Finished <======"<<endl;
-//	cout<<" Acutal #Events Read = " << events_read << endl ;
-//	cout<<" Acutal #Events Processed = " << events_processed << endl ;
-//
-//	return kStOk;
-//}
+Int_t FlattenerPhiEp::Finish() {
+	cout << endl;
+	cout << "Finishing and writing histograms to file... " << endl;
+	cout << endl;
+
+	out_file->Write();
+	out_file->Close();
+
+	cout <<"\n ======> Finished <======"<<endl;
+	cout<<" Acutal #Events Read = " << events_read << endl ;
+	cout<<" Acutal #Events Processed = " << events_processed << endl ;
+
+	return kStOk;
+}
 
 
 
 // Doers
-//bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
-//	if(!mu_event) { return true; }
-//	event_cut_hist->Fill("Is dstEvent", 1);
-//
-//	// Check for good trigger
-//	vector<int> good_triggers = pars.triggers;
-//	bool good_trig = false;
-//	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
-//		if(mu_event->triggerIdCollection().nominal().isTrigger(pars.triggers[trig_index])) {
-//			good_trig = true;
-//			break;
-//		}
-//	}
-//	if(!good_trig) { return true; }
-//	event_cut_hist->Fill("Good Trigger", 1);
-//
-//
-//    // Check if run number is good
-//    event.run_num = mu_event->runId();
-//    vector<int> bad_runs_energy = pars.bad_runs;
-//    int num_bad_runs = (int) bad_runs_energy.size();
-//    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
-//    	if(event.run_num == bad_runs_energy[bad_run_index]) {
-//    		return true;
-//    	}
-//    }
-//    if(energy == 14) {
-//    	if(event.run_num <= pars.min_14GeV_run) { return true; }
-//    }
-//    event_cut_hist->Fill("Good Run", 1);
-//
-//    // Get x,y,z components of primary vertex
-//	event.vx = mu_event->primaryVertexPosition().x();
-//	event.vy = mu_event->primaryVertexPosition().y();
-//	event.vz = mu_event->primaryVertexPosition().z();
-//
-//	// Check vertex is within pars.vz_max cm of detector center along beam pipe
-//	if(fabs(event.vz) > pars.vz_max) { return true; }
-//	event_cut_hist->Fill("Good Vz", 1);
-//
-//	// Check that vertex is within x cm radially (x-y plane) of detector axis
-//	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
-//		return true;
-//	}
-//	event_cut_hist->Fill("Good Vr", 1);
-//
-//	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
-//	if(fabs(event.vx) < pars.vertex_min &&
-//			fabs(event.vy) < pars.vertex_min &&
-//			fabs(event.vz) < pars.vertex_min) {
-//		return true;
-//	}
-//	event_cut_hist->Fill("Vertex Non-Zero", 1);
-//
-//	// Filter out events with disagreement between vpd and vertex reconstruction.
-//	if(pars.vpd_vz_max_diff > 0) {  // -1 error code
-//		if(muDst->btofHeader()) {
-//			float vpd_vz = muDst->btofHeader()->vpdVz();
-//			if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
-//				return true;
-//			}
-//		} else {
-//			return true;
-//		}
-//	}
-//	event_cut_hist->Fill("Good VPD Vz", 1);
-//
-//
-//	// Add other event variables to event
-//	event.event_id = mu_event->eventId();
-//	event.refmult = mu_event->refMult();
-//	event.btof_multi = mu_event->btofTrayMultiplicity();
-//
-//	return false;  // If all above checks are passed, event is good
-//}
+bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
+	if(!mu_event) { return true; }
+
+	// Check for good trigger
+	vector<int> good_triggers = pars.triggers;
+	bool good_trig = false;
+	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
+		if(mu_event->triggerIdCollection().nominal().isTrigger(pars.triggers[trig_index])) {
+			good_trig = true;
+			break;
+		}
+	}
+	if(!good_trig) { return true; }
 
 
-//bool FlattenerPhiEp::is_bad_event(StPicoEvent *pico_event) {
-//	if(!pico_event) { return true; }
-//	event_cut_hist->Fill("Is dstEvent", 1);
-//
-//	// Check for good trigger
-//	vector<int> good_triggers = pars.triggers;
-//	bool good_trig = false;
-//	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
-//		if(pico_event->isTrigger(pars.triggers[trig_index])) {
-//			good_trig = true;
-//			break;
-//		}
-//	}
-//	if(!good_trig) { return true; }
-//	event_cut_hist->Fill("Good Trigger", 1);
-//
-//
-//    // Check if run number is good
-//    event.run_num = pico_event->runId();
-//    vector<int> bad_runs_energy = pars.bad_runs;
-//    int num_bad_runs = (int) bad_runs_energy.size();
-//    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
-//    	if(event.run_num == bad_runs_energy[bad_run_index]) {
-//    		return true;
-//    	}
-//    }
-//    event_cut_hist->Fill("Good Run", 1);
-//
-//    // Get x,y,z components of primary vertex
-//	event.vx = pico_event->primaryVertex().X();
-//	event.vy = pico_event->primaryVertex().Y();
-//	event.vz = pico_event->primaryVertex().Z();
-//
-//	// Check vertex is within pars.vz_max cm of detector center along beam pipe
-//	if(fabs(event.vz) > pars.vz_max) { return true; }
-//	event_cut_hist->Fill("Good Vz", 1);
-//
-//	// Check that vertex is within x cm radially (x-y plane) of detector axis
-//	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
-//		return true;
-//	}
-//	event_cut_hist->Fill("Good Vr", 1);
-//
-//	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
-//	if(fabs(event.vx) < pars.vertex_min &&
-//			fabs(event.vy) < pars.vertex_min &&
-//			fabs(event.vz) < pars.vertex_min) {
-//		return true;
-//	}
-//	event_cut_hist->Fill("Vertex Non-Zero", 1);
-//
-//	// Filter out events with disagreement between vpd and vertex reconstruction.
-//	if(pars.vpd_vz_max_diff > 0) {  // -1 ignore code
-//		float vpd_vz = pico_event->vzVpd();
-//		if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
-//			return true;
-//		}
-//	}
-//	event_cut_hist->Fill("Good VPD Vz", 1);
-//
-//
-//	// Add other event variables to event
-//	event.event_id = pico_event->eventId();
-//	event.refmult = pico_event->refMult();
-//	event.btof_match = pico_event->nBTOFMatch();
-//	event.btof_multi = pico_event->btofTrayMultiplicity();
-//	event.refmult2 = pico_event->refMult2();
-//	event.refmult3 = pico_event->refMult3();
-//
-//
-//	return false;  // If all above checks are passed, event is good
-//}
+    // Check if run number is good
+    event.run_num = mu_event->runId();
+    vector<int> bad_runs_energy = pars.bad_runs;
+    int num_bad_runs = (int) bad_runs_energy.size();
+    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
+    	if(event.run_num == bad_runs_energy[bad_run_index]) {
+    		return true;
+    	}
+    }
+    if(energy == 14) {
+    	if(event.run_num <= pars.min_14GeV_run) { return true; }
+    }
+
+    // Get x,y,z components of primary vertex
+	event.vx = mu_event->primaryVertexPosition().x();
+	event.vy = mu_event->primaryVertexPosition().y();
+	event.vz = mu_event->primaryVertexPosition().z();
+
+	// Check vertex is within pars.vz_max cm of detector center along beam pipe
+	if(fabs(event.vz) > pars.vz_max) { return true; }
+
+	// Check that vertex is within x cm radially (x-y plane) of detector axis
+	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
+		return true;
+	}
+
+	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
+	if(fabs(event.vx) < pars.vertex_min &&
+			fabs(event.vy) < pars.vertex_min &&
+			fabs(event.vz) < pars.vertex_min) {
+		return true;
+	}
+
+	// Filter out events with disagreement between vpd and vertex reconstruction.
+	if(pars.vpd_vz_max_diff > 0) {  // -1 error code
+		if(muDst->btofHeader()) {
+			float vpd_vz = muDst->btofHeader()->vpdVz();
+			if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+
+	// Add other event variables to event
+	event.event_id = mu_event->eventId();
+	event.refmult = mu_event->refMult();
+	event.btof_multi = mu_event->btofTrayMultiplicity();
+
+	return false;  // If all above checks are passed, event is good
+}
+
+
+bool FlattenerPhiEp::is_bad_event(StPicoEvent *pico_event) {
+	if(!pico_event) { return true; }
+
+	// Check for good trigger
+	vector<int> good_triggers = pars.triggers;
+	bool good_trig = false;
+	for(int trig_index = 0; trig_index < (int)pars.triggers.size(); trig_index++) {
+		if(pico_event->isTrigger(pars.triggers[trig_index])) {
+			good_trig = true;
+			break;
+		}
+	}
+	if(!good_trig) { return true; }
+
+
+    // Check if run number is good
+    event.run_num = pico_event->runId();
+    vector<int> bad_runs_energy = pars.bad_runs;
+    int num_bad_runs = (int) bad_runs_energy.size();
+    for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
+    	if(event.run_num == bad_runs_energy[bad_run_index]) {
+    		return true;
+    	}
+    }
+
+    // Get x,y,z components of primary vertex
+	event.vx = pico_event->primaryVertex().X();
+	event.vy = pico_event->primaryVertex().Y();
+	event.vz = pico_event->primaryVertex().Z();
+
+	// Check vertex is within pars.vz_max cm of detector center along beam pipe
+	if(fabs(event.vz) > pars.vz_max) { return true; }
+
+	// Check that vertex is within x cm radially (x-y plane) of detector axis
+	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
+		return true;
+	}
+
+	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
+	if(fabs(event.vx) < pars.vertex_min &&
+			fabs(event.vy) < pars.vertex_min &&
+			fabs(event.vz) < pars.vertex_min) {
+		return true;
+	}
+
+	// Filter out events with disagreement between vpd and vertex reconstruction.
+	if(pars.vpd_vz_max_diff > 0) {  // -1 ignore code
+		float vpd_vz = pico_event->vzVpd();
+		if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
+			return true;
+		}
+	}
+
+	// Add other event variables to event
+	event.event_id = pico_event->eventId();
+	event.refmult = pico_event->refMult();
+	event.btof_match = pico_event->nBTOFMatch();
+	event.btof_multi = pico_event->btofTrayMultiplicity();
+	event.refmult2 = pico_event->refMult2();
+	event.refmult3 = pico_event->refMult3();
+
+
+	return false;  // If all above checks are passed, event is good
+}
 
 
 void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
@@ -381,7 +378,8 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 
 	// Get centrality bin for event from ref_mult3 value
 	refmultCorrUtil->init(event.run_num);
-	refmultCorrUtil->initEvent((int)event.refmult3, (double)event.vz);
+	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
+	refmultCorrUtil->initEvent(refn, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int eta_bin;
@@ -450,7 +448,8 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 
 	// Get centrality bin for event from ref_mult3 value
 	refmultCorrUtil->init(event.run_num);
-	refmultCorrUtil->initEvent((int)event.refmult3, (double)event.vz);
+	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
+	refmultCorrUtil->initEvent(refn, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int nHitsFit;

@@ -8,55 +8,54 @@
 #ifndef FlattenerPhiEp_H_
 #define FlattenerPhiEp_H_
 
-//#include <iostream>
-//#include <string>
-//
-//#include "StMaker.h"
-//
-//#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
-//#include "StMuDSTMaker/COMMON/StMuTrack.h"
-//#include "StMuDSTMaker/COMMON/StMuEvent.h"
-//#include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
-//#include "StEvent/StBTofHeader.h"
-//
-//#include "StPicoDstMaker/StPicoDstMaker.h"
-//#include "StPicoEvent/StPicoDst.h"
-//#include "StPicoEvent/StPicoEvent.h"
-//#include "StPicoEvent/StPicoTrack.h"
-//#include "StPicoEvent/StPicoBTofPidTraits.h"
-//#include "StPicoEvent/StPicoEpdHit.h"
-//
-//#include "StEvent/StBTofHeader.h"
-//
-//#include "TROOT.h"
-//#include "TFile.h"
-//#include "TTree.h"
-//#include "TH2.h"
-//#include "TH1.h"
-//#include "TObjArray.h"
-//
-//#include "BESPars.h"
-//#include "EventVars.h"
-//#include "ParticleVars.h"
-#include "TreeMaker.h"
+#include <iostream>
+#include <string>
 
-//class StMaker;
-//
-//class StMuDstMaker;
-//class StMuDst;
-//class StMuEvent;
-//class StMuTrack;
-//class StMuPrimaryVertex;
-//
-//class StPicoDstMaker;
-//class StPicoDst;
-//class StPicoEvent;
-//class StPicoTrack;
+#include "StMaker.h"
+
+#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
+#include "StMuDSTMaker/COMMON/StMuTrack.h"
+#include "StMuDSTMaker/COMMON/StMuEvent.h"
+#include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
+#include "StEvent/StBTofHeader.h"
+
+#include "StPicoDstMaker/StPicoDstMaker.h"
+#include "StPicoEvent/StPicoDst.h"
+#include "StPicoEvent/StPicoEvent.h"
+#include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoBTofPidTraits.h"
+#include "StPicoEvent/StPicoEpdHit.h"
+
+#include "StEvent/StBTofHeader.h"
+
+#include "TROOT.h"
+#include "TFile.h"
+#include "TTree.h"
+#include "TH2.h"
+#include "TH1.h"
+#include "TObjArray.h"
+
+#include "BESPars.h"
+#include "EventVars.h"
+#include "ParticleVars.h"
+
+class StMaker;
+
+class StMuDstMaker;
+class StMuDst;
+class StMuEvent;
+class StMuTrack;
+class StMuPrimaryVertex;
+
+class StPicoDstMaker;
+class StPicoDst;
+class StPicoEvent;
+class StPicoTrack;
 
 using namespace std;
 
 
-class FlattenerPhiEp : public TreeMaker {
+class FlattenerPhiEp : public StMaker {
 public:
 	// Structors
 	FlattenerPhiEp(StMuDstMaker* maker);
@@ -72,12 +71,12 @@ public:
 	// St Doers
 	Int_t Init();  // Initialize analysis tools, done once
 	Int_t Make();  // Main analysis, performed for each event
-	//Int_t Finish();  // Finish analysis, close files, clean up
+	Int_t Finish();  // Finish analysis, close files, clean up
 
 	// Doers
-	//bool is_bad_event(StMuEvent *mu_event);
+	bool is_bad_event(StMuEvent *mu_event);
 	void track_loop(StMuEvent *mu_event);
-	//bool is_bad_event(StPicoEvent *pico_event);
+	bool is_bad_event(StPicoEvent *pico_event);
 	void track_loop(StPicoEvent *pico_event);
 	int get_eta_bin(float eta);
 
@@ -97,8 +96,7 @@ private:
 	float eta_max = 1.0;
 	int eta_bins = 20;
 	vector<string> phi_types{ "protons", "non-protons" };
-	vector<int> cent_bins(10);
-	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
+	vector<int> cent_bins;
 
 	map<string, map<int, vector<TH1D*>>> phi_dists;  // Phi distribution of particles [particle_type][centrality][ep_bin]
 
@@ -106,6 +104,7 @@ private:
 	int events_processed;  // Number of events processed
 	int energy;  // Energy of dataset being read
 	int bes_phase;  // Phase of Beam Energy Scan of dataset, 1 (I) or 2 (II)
+	int ref_num;  // Reference multiplicity to use for centrality definition
 
 	EventVars event;
 
