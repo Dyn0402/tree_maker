@@ -28,6 +28,9 @@
 
 #include "StEvent/StBTofHeader.h"
 
+#include "./StRefMultCorr/CentralityMaker.h"
+#include "./StRefMultCorr/StRefMultCorr.h"
+
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -85,7 +88,7 @@ private:
 	StMuDst *muDst;
 	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
 	StPicoDst *picoDst;
-	StRefMultCorr* refmultCorrUtil;
+	StRefMultCorr *refmultCorrUtil;
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 
