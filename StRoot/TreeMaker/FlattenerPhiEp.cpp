@@ -122,7 +122,7 @@ Int_t FlattenerPhiEp::Init() {
 		for (int cent_bin : cent_bins) {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
 				string name = "phi_dist_" + phi_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin);
-				phi_dists[phi_type][cent_bin].push_back(new TH1D(name, "Phi_Dist", 1000, 0, 2 * M_PI);
+				phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI);
 			}
 		}
 	}
@@ -454,7 +454,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int nHitsFit;
-	float dca, dca_z, eta, rapidity, pt, nsigmapr, phi;
+	float dca, eta, rapidity, pt, nsigmapr, phi;
 	float nsigmapr_eff;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
@@ -463,19 +463,15 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	int eta_bin;
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
-		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StPicoTrack*) picoDst->track(track_index);
 
 		// Initial track cuts
 		if(!track) continue;  // Check that track not NULL
-		track_cut_hist->Fill("Is Track", 1);
 
 		if(!track->isPrimary()) continue;  // Check track is primary track
-		track_cut_hist->Fill("Primary Track/Flags", 1);
 
 		charge = track->charge();
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
-		track_cut_hist->Fill("Charge", 1);
 
 		// Get main track variables
 		p = track->pMom().Mag();
@@ -499,9 +495,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 		// Cut on ratio of nHitsFit to nHitsPossible
 		ratio = (double) nHitsFit / (double) track->nHitsMax();
 		if(ratio < 0.52) continue;
-		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
-		track_cut_hist->Fill("nHitsRatio Max", 1);
 
 		// Fill phi distributions
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
