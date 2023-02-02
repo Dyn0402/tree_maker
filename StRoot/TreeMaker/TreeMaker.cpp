@@ -615,9 +615,9 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	StPicoTrack *track;
 
 	// Get centrality bin for event from ref_multn value
-	refmultCorrUtil->init(event.get_run());
-	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
-	int cent16_corr = refmultCorrUtil->getCentralityBin16();
+	refmultCorrUtil->init(event.run_num);
+	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
+	refmultCorrUtil->initEvent(refn, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	int nHitsFit, dca_xy_count = 0;
