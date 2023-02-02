@@ -206,7 +206,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 			break;
 		}
 	}
-	if(!good_trig) { return true; }
+	if (!good_trig) { cout << "Bad trigger " << endl;  return true; }
 
 
     // Check if run number is good
@@ -215,7 +215,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
     int num_bad_runs = (int) bad_runs_energy.size();
     for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
     	if(event.run_num == bad_runs_energy[bad_run_index]) {
-    		return true;
+			cout << "Bad run " << endl; return true;
     	}
     }
     if(energy == 14) {
@@ -228,18 +228,18 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 	event.vz = mu_event->primaryVertexPosition().z();
 
 	// Check vertex is within pars.vz_max cm of detector center along beam pipe
-	if(fabs(event.vz) > pars.vz_max) { return true; }
+	if(fabs(event.vz) > pars.vz_max) { cout << "Bad vz " << endl; return true; }
 
 	// Check that vertex is within x cm radially (x-y plane) of detector axis
 	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
-		return true;
+		cout << "Bad vr " << endl; return true;
 	}
 
 	// On old tapes, no-vertex gets reported as VtxPosition=(0,0,0)
 	if(fabs(event.vx) < pars.vertex_min &&
 			fabs(event.vy) < pars.vertex_min &&
 			fabs(event.vz) < pars.vertex_min) {
-		return true;
+		cout << "Bad vr small " << endl; return true;
 	}
 
 	// Filter out events with disagreement between vpd and vertex reconstruction.
@@ -247,10 +247,10 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 		if(muDst->btofHeader()) {
 			float vpd_vz = muDst->btofHeader()->vpdVz();
 			if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
-				return true;
+				cout << "Bad vz vpd " << endl; return true;
 			}
 		} else {
-			return true;
+			cout << "Bad btof " << endl; return true;
 		}
 	}
 
