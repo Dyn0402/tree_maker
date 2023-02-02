@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE note [
-<!ENTITY energy "62">
-<!ENTITY prod "P10ik">
+<!ENTITY energy "11">
+<!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
 <!ENTITY bes_phase "1">
 <!ENTITY dst "mu">
@@ -31,8 +31,8 @@
  
   <Generator>
     <Location>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/log/</Location>
-    <ScriptLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/script/62GeV/</ScriptLocation>
-    <ListLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/list/62GeV/</ListLocation>
+    <ScriptLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/script/11GeV/</ScriptLocation>
+    <ListLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/list/11GeV/</ListLocation>
   </Generator>
   
 </job>
