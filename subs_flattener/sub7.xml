@@ -23,7 +23,7 @@
     </Package>
   </SandBox>
 
-<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage!=HPSS,filetype=daq_reco_&dst;Dst,filename~st_physics,sanity=1" nFiles="all" />
+<input URL="catalog:star.bnl.gov?production=&prod;,trgsetupname=AuAu&energy;_production&trig_sufix;,storage!=HPSS,filetype=daq_reco_&dst;Dst,filename~st_physics,sanity=1" nFiles="50" />
   <stderr URL="file:&out_path;log/&energy;GeV/err_&energy;GeV$JOBID.err"></stderr>
   <stdout URL="file:&out_path;log/&energy;GeV/log_&energy;GeV$JOBID.out" />
 
