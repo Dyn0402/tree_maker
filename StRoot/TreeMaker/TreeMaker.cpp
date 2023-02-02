@@ -429,18 +429,59 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
 	StMuTrack *track, *track_glob;
 
-	// Get centrality bin for event from ref_multn value
-	refmultCorrUtil->init(event.get_run());
-	refmultCorrUtil->initEvent((int)event.get_refn(), (double)event.get_vz());
-	int cent16_corr = refmultCorrUtil->getCentralityBin16();
-	int cent9_corr = refmultCorrUtil->getCentralityBin9();
-
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
 	float nsigmapr_eff;
 	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
 	double beta, p, m;
 	short charge;
+
+	for (int track_index = 0; track_index < num_primary; track_index++) {  // Do refmult counting to get centrality
+		track = (StMuTrack*)muDst->primaryTracks(track_index);
+
+		// Initial track cuts
+		if (!track) continue;  // Check that track not NULL
+
+		if (track->vertexIndex() != 0) continue;  // Check that vertex index is zero
+
+		index_2g = track->index2Global();
+		if (index_2g < 0) continue;  // Check that global index non negative
+
+		track_glob = (StMuTrack*)muDst->globalTracks(index_2g);
+
+		if (track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
+
+		if (track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
+
+		charge = track->charge();
+		if (fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
+
+		// Get main track variables
+		p = track->p().mag();
+		pt = track->pt();
+		eta = track->eta();
+		phi = track->phi();  if (phi < 0) { phi += 2 * M_PI; }
+		dca_prim = track->dca().mag();
+		nsigmapr = track->nSigmaProton();
+		nsigmapr_eff = nsigmapr;
+		if (energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
+
+		nHitsFit = track_glob->nHitsFit();
+
+		beta = track->btofPidTraits().beta();
+		m = (beta > 1.e-5) ? p * p * (1. / beta / beta - 1.) : -999;
+
+		if (fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
+		if (fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
+	}
+
+	// Get centrality bin for event from ref_multn value
+	refmultCorrUtil->init(event.run_num);
+	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
+	refmultCorrUtil->initEvent(refn, (double)event.vz);
+	int cent9_corr = refmultCorrUtil->getCentralityBin9();
+
+	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
 
 	for(int track_index = 0; track_index < num_primary; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);

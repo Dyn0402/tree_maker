@@ -376,7 +376,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		if (fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
 	}
 
-	// Get centrality bin for event from ref_mult3 value
+	// Get centrality bin for event from ref_multn value
 	refmultCorrUtil->init(event.run_num);
 	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
 	refmultCorrUtil->initEvent(refn, (double)event.vz);
@@ -446,7 +446,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	int num_tracks = picoDst->numberOfTracks();
 	StPicoTrack *track;
 
-	// Get centrality bin for event from ref_mult3 value
+	// Get centrality bin for event from ref_multn value
 	refmultCorrUtil->init(event.run_num);
 	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
 	refmultCorrUtil->initEvent(refn, (double)event.vz);
