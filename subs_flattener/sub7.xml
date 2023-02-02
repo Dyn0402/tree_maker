@@ -5,14 +5,14 @@
 <!ENTITY trig_sufix "">
 <!ENTITY bes_phase "1">
 <!ENTITY dst "mu">
-<!ENTITY run_type "PhiDist">
+<!ENTITY run_type "TreeMaker">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/flow_dists/">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
   
   <command>
       starver pro
-      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\",false,\"&run_type;\"\)
+      root4star -l -b -q Make_Trees.cpp\(\"$FILELIST\",\"auau_$JOBID.root\",&energy;,&bes_phase;,\"&dst;\",0,\"&run_type;\"\)
   </command>
 
   
