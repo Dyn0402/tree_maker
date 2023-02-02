@@ -206,7 +206,14 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 			break;
 		}
 	}
-	if (!good_trig) { cout << "Bad trigger " << mu_event->triggerIdCollection().nominal() << endl;  return true; }
+	if (!good_trig) { 
+		cout << "Bad trigger:  " << flush;
+		for (auto trigger_id : mu_event->triggerIdCollection().nominal().triggerIds()) {
+			if trigger_id == 0  { break;  }
+			cout << trigger_id << ",  " << flush;
+		}
+		cout << endl;
+	return true; }
 
 
     // Check if run number is good
@@ -215,7 +222,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
     int num_bad_runs = (int) bad_runs_energy.size();
     for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
     	if(event.run_num == bad_runs_energy[bad_run_index]) {
-			cout << "Bad run " << endl; return true;
+			cout << "Bad run " << event.run_num << endl; return true;
     	}
     }
     if(energy == 14) {
