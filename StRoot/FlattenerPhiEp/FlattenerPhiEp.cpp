@@ -209,7 +209,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 	if (!good_trig) { 
 		cout << "Bad trigger:  " << flush;
 		for (auto trigger_id : mu_event->triggerIdCollection().nominal().triggerIds()) {
-			if trigger_id == 0  { break;  }
+			if (trigger_id == 0)  { break; }
 			cout << trigger_id << ",  " << flush;
 		}
 		cout << endl;
