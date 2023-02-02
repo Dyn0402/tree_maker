@@ -4,7 +4,7 @@
 <!ENTITY prod "P10ih">
 <!ENTITY trig_sufix "">
 <!ENTITY bes_phase "1">
-<!ENTITY dst "pico">
+<!ENTITY dst "mu">
 <!ENTITY run_type "PhiDist">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/flow_dists/">
 ]>
