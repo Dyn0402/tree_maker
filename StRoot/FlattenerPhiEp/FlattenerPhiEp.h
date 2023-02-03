@@ -82,6 +82,7 @@ public:
 	void track_loop(StMuEvent *mu_event);
 	bool is_bad_event(StPicoEvent *pico_event);
 	void track_loop(StPicoEvent *pico_event);
+	void calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi);
 	int get_eta_bin(float eta);
 	int get_run_bin_key(int run_num);
 
