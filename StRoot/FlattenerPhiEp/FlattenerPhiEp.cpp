@@ -139,8 +139,8 @@ Int_t FlattenerPhiEp::Init() {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
 				//string name = "phi_dist_" + phi_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin);
 				//phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI));
-				sin_terms[phi_type][cent_bin].push_back(map<int, TProfile*>);
-				cos_terms[phi_type][cent_bin].push_back(map<int, TProfile*>);
+				sin_terms[phi_type][cent_bin].push_back({});
+				cos_terms[phi_type][cent_bin].push_back({});
 			}
 		}
 	}
