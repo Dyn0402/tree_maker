@@ -105,8 +105,8 @@ private:
 	vector<string> phi_types;
 	vector<int> cent_bins;
 
-	map<string, map<int, map<int, vector<TProfile*>>>> sin_terms;  // Sine values of particles [particle_type][centrality][run_key][ep_bin]
-	map<string, map<int, map<int, vector<TProfile*>>>> cos_terms;  // Cosine values of particles [particle_type][centrality][run_key][ep_bin]
+	map<string, map<int, vector<map<int, TProfile*>>>> sin_terms;  // Sine values of particles [particle_type][centrality][ep_bin][run_key]
+	map<string, map<int, vector<map<int, TProfile*>>>> cos_terms;  // Cosine values of particles [particle_type][centrality][ep_bin][run_key]
 
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed

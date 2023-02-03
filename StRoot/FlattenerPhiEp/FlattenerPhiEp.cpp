@@ -440,28 +440,28 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
 				//phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
-				if (sin_terms["protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
-					string sin_name = "sine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+				if (sin_terms["protons"][cent9_corr][eta_bin].count(run_bin_key) < 1) {
+					string sin_name = "sine_terms_protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
-					string cos_name = "cosine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					string cos_name = "cosine_terms_protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
 				}
 				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-					sin_terms->Fill(n, sin(n * phi));
-					cos_terms->Fill(n, cos(n * phi));
+					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, sin(n * phi));
+					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, cos(n * phi));
 				}
 			}
 			else {
 				//phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
-				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
-					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(run_bin_key) < 1) {
+					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
-					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
 				}
 				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-					sin_terms->Fill(n, sin(n * phi));
-					cos_terms->Fill(n, cos(n * phi));
+					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, sin(n * phi));
+					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, cos(n * phi));
 				}
 			}
 		}
@@ -487,7 +487,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	double beta, p, m;
 	short charge;
 
-	int eta_bin;
+	int eta_bin, run_bin_key;
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
 		track = (StPicoTrack*) picoDst->track(track_index);
@@ -525,37 +525,38 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 		if(ratio > 1.05) continue;
 
 		// Fill phi distributions
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			eta_bin = get_eta_bin(eta);
 			run_bin_key = get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
 				//phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
-				if (sin_terms["protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
-					string sin_name = "sine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+				if (sin_terms["protons"][cent9_corr][eta_bin].count(run_bin_key) < 1) {
+					string sin_name = "sine_terms_protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
-					string cos_name = "cosine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					string cos_name = "cosine_terms_protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
 				}
 				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-					sin_terms->Fill(n, sin(n * phi));
-					cos_terms->Fill(n, cos(n * phi));
+					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, sin(n * phi));
+					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, cos(n * phi));
 				}
 			}
 			else {
 				//phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
-				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
-					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(run_bin_key) < 1) {
+					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
-					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent9_corr) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
 					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
 				}
 				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-					sin_terms->Fill(n, sin(n * phi));
-					cos_terms->Fill(n, cos(n * phi));
+					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, sin(n * phi));
+					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key]->Fill(n, cos(n * phi));
 				}
 			}
+		}
 	}
 }
 
