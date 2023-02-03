@@ -5,7 +5,7 @@
 <!ENTITY trig_sufix "">
 <!ENTITY bes_phase "1">
 <!ENTITY dst "mu">
-<!ENTITY run_type "TreeMaker">
+<!ENTITY run_type "PhiDist">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/flow_dists/">
 ]>
 <job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">

@@ -137,8 +137,10 @@ Int_t FlattenerPhiEp::Init() {
 	for (string phi_type : phi_types) {
 		for (int cent_bin : cent_bins) {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
-				string name = "phi_dist_" + phi_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin);
-				phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI));
+				//string name = "phi_dist_" + phi_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin);
+				//phi_dists[phi_type][cent_bin].push_back(new TH1D(name.data(), "Phi_Dist", 1000, 0, 2 * M_PI));
+				sin_terms[phi_type][cent_bin].push_back(map<int, TProfile*>);
+				cos_terms[phi_type][cent_bin].push_back(map<int, TProfile*>);
 			}
 		}
 	}
@@ -206,14 +208,7 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 			break;
 		}
 	}
-	if (!good_trig) { 
-		//cout << "Bad trigger:  " << flush;
-		//for (auto trigger_id : mu_event->triggerIdCollection().nominal().triggerIds()) {
-		//	if (trigger_id == 0)  { break; }
-		//	cout << trigger_id << ",  " << flush;
-		//}
-		//cout << endl;
-	return true; }
+	if (!good_trig) { return true; }
 
 
     // Check if run number is good
@@ -222,7 +217,6 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
     int num_bad_runs = (int) bad_runs_energy.size();
     for(int bad_run_index = 0; bad_run_index < num_bad_runs; bad_run_index++) {
     	if(event.run_num == bad_runs_energy[bad_run_index]) {
-			//cout << "Bad run " << event.run_num << endl; 
 			return true;
     	}
     }
@@ -237,12 +231,10 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 
 	// Check vertex is within pars.vz_max cm of detector center along beam pipe
 	if(fabs(event.vz) > pars.vz_max) { 
-		//cout << "Bad vz " << endl; 
 		return true; }
 
 	// Check that vertex is within x cm radially (x-y plane) of detector axis
 	if(sqrt(pow(event.vx, 2) + pow(event.vy + pars.vy_offset, 2)) > pars.vr_max) {
-		//cout << "Bad vr " << endl; 
 		return true;
 	}
 
@@ -250,7 +242,6 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 	if(fabs(event.vx) < pars.vertex_min &&
 			fabs(event.vy) < pars.vertex_min &&
 			fabs(event.vz) < pars.vertex_min) {
-		//cout << "Bad vr small " << endl; 
 		return true;
 	}
 
@@ -259,11 +250,9 @@ bool FlattenerPhiEp::is_bad_event(StMuEvent *mu_event) {
 		if(muDst->btofHeader()) {
 			float vpd_vz = muDst->btofHeader()->vpdVz();
 			if(fabs(vpd_vz - event.vz) > pars.vpd_vz_max_diff) {
-				//cout << "Bad vz vpd " << endl; 
 				return true;
 			}
 		} else {
-			//cout << "Bad btof " << endl; 
 			return true;
 		}
 	}
@@ -400,7 +389,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 	refmultCorrUtil->initEvent(refn, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
-	int eta_bin;
+	int eta_bin, run_bin_key;
 
 	for (int track_index = 0; track_index < num_primary; track_index++) {  // Get phi distribution
 		track = (StMuTrack*)muDst->primaryTracks(track_index);
@@ -446,13 +435,34 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		// Fill phi distributions
 		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			eta_bin = get_eta_bin(eta);
+			run_bin_key = get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
+				//phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
+				if (sin_terms["protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
+					string sin_name = "sine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+					string cos_name = "cosine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+				}
+				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+					sin_terms->Fill(n, sin(n * phi));
+					cos_terms->Fill(n, cos(n * phi));
+				}
 			}
 			else {
-				phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
+				//phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
+				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
+					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+				}
+				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+					sin_terms->Fill(n, sin(n * phi));
+					cos_terms->Fill(n, cos(n * phi));
+				}
 			}
 		}
 	}
@@ -517,15 +527,35 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 		// Fill phi distributions
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			eta_bin = get_eta_bin(eta);
+			run_bin_key = get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
+				//phi_dists["protons"][cent9_corr][eta_bin]->Fill(phi);
+				if (sin_terms["protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
+					string sin_name = "sine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					sin_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+					string cos_name = "cosine_terms_protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					cos_terms["protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+				}
+				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+					sin_terms->Fill(n, sin(n * phi));
+					cos_terms->Fill(n, cos(n * phi));
+				}
 			}
 			else {
-				phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
+				//phi_dists["non-protons"][cent9_corr][eta_bin]->Fill(phi);
+				if (sin_terms["non-protons"][cent9_corr][eta_bin].count(event.run_num) < 1) {
+					string sin_name = "sine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					sin_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+					string cos_name = "cosine_terms_non-protons_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_bin_key);
+					cos_terms["non-protons"][cent9_corr][eta_bin][run_bin_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high - 0.5);
+				}
+				for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+					sin_terms->Fill(n, sin(n * phi));
+					cos_terms->Fill(n, cos(n * phi));
+				}
 			}
-		}
 	}
 }
 
@@ -535,4 +565,10 @@ int FlattenerPhiEp::get_eta_bin(float eta) {
 	if (eta == eta_max)  return eta_bins - 1;
 	float eta_range = eta_max - eta_min;
 	return int((eta - eta_min) / eta_range * eta_bins);
+}
+
+
+// Get map key for run_num. For now just truncate last digit of run
+int FlattenerPhiEp::get_run_bin_key(int run_num) {
+	return int(run_num / 10);
 }

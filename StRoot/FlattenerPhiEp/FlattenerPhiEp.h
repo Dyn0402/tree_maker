@@ -37,6 +37,7 @@
 #include "TH2.h"
 #include "TH1.h"
 #include "TObjArray.h"
+#include "TProfile.h"
 
 #include "BESPars.h"
 #include "EventVars.h"
@@ -82,6 +83,7 @@ public:
 	bool is_bad_event(StPicoEvent *pico_event);
 	void track_loop(StPicoEvent *pico_event);
 	int get_eta_bin(float eta);
+	int get_run_bin_key(int run_num);
 
 private:
 	StMuDstMaker *muDst_maker;  // MuDstMaker passed in via constructor
@@ -98,10 +100,13 @@ private:
 	float eta_min = -1.0;
 	float eta_max = 1.0;
 	int eta_bins = 20;
+	int n_harmonic_low = 1;
+	int n_harmonic_high = 12;
 	vector<string> phi_types;
 	vector<int> cent_bins;
 
-	map<string, map<int, vector<TH1D*>>> phi_dists;  // Phi distribution of particles [particle_type][centrality][ep_bin]
+	map<string, map<int, map<int, vector<TProfile*>>>> sin_terms;  // Sine values of particles [particle_type][centrality][run_key][ep_bin]
+	map<string, map<int, map<int, vector<TProfile*>>>> cos_terms;  // Cosine values of particles [particle_type][centrality][run_key][ep_bin]
 
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed
