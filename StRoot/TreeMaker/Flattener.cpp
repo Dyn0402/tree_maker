@@ -87,7 +87,7 @@ void Flattener::init_phi_terms() {
 
 // Fill TProfiles with harmonic terms of phi
 void Flattener::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi) {
-	if (sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
+	if (phi_sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
 		phi_file->cd();
 		string sin_name = "sine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
 		phi_sin_terms[particle_type][cent_bin][eta_bin][run_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
