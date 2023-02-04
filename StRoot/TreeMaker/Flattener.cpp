@@ -110,7 +110,9 @@ void Flattener::init_ep_terms() {
 
 // Read phi Fourier coefficient TProfiles from file to memory
 void Flattener::read_phi_terms() {
-	for (TObject* key : *phi_file->GetListOfKeys()) {
+	TKey* key;
+	TIter key_list(phi_file->GetListOfKeys());
+	while ((key = (TKey*)key_list)) {
 		string file_name = (string)key->GetName();
 		vector<string> file_name_split = split(file_name, '_');
 		if (file_name_split.size() != 9) { 
@@ -122,10 +124,10 @@ void Flattener::read_phi_terms() {
 		int eta_bin = stoi(file_name_split[7]);
 		int run_key = stoi(file_name_split[9]);
 		if (file_name_split[0] == "Sine") {
-			phi_sin_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)((TKey*)key)->ReadObj();
+			phi_sin_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
 		}
 		else if (file_name_split[0] == "Cosine") {
-			phi_cos_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)((TKey*)key)->ReadObj();
+			phi_cos_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
 		}
 		else {
 			cout << "Bad sine/cosine read of phi file!" << endl;
