@@ -8,6 +8,7 @@
 
 #include "TFile.h"
 #include "TProfile.h"
+#include "TObject.h"
 
 using namespace std;
 
@@ -23,10 +24,13 @@ public:
 
 	// Doers
 	void test();
+	void draw_phi_term(string particle_type, int cent_bin, int eta_bin, int run_key);
 	void init_phi_flattener();
 	void init_ep_flattener();
-	void init_phi_terms();
 	void init_treemaker();
+	void init_phi_terms();
+	void init_ep_terms();
+	void read_phi_terms();
 	void calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi);
 	void write_phi();
 	void write_ep();
@@ -46,10 +50,23 @@ private:
 	int n_harmonic_low = 1;
 	int n_harmonic_high = 12;
 	vector<string> phi_types;
+	vector<string> ep_types;
 	vector<int> cent_bins;
 
 	map<string, map<int, vector<map<int, TProfile*>>>> phi_sin_terms;  // Sine values of particles [particle_type][centrality][ep_bin][run_key]
 	map<string, map<int, vector<map<int, TProfile*>>>> phi_cos_terms;  // Cosine values of particles [particle_type][centrality][ep_bin][run_key]
+
+	map<string, map<string, map<int, vector<map<int, TProfile*>>>>> ep_sin_terms;  // Sine values of event planes [ep_type][particle_type][centrality][ep_bin][run_key]
+	map<string, map<string, map<int, vector<map<int, TProfile*>>>>> ep_cos_terms;  // Cosine values of event planes [ep_type][particle_type][centrality][ep_bin][run_key]
 };
+
+
+// Other functions
+// Coppied from Fluctuation_Lib fio_io 2/3/23
+bool in_string(string main, string sub);
+bool in_string(string main, vector<string> subs, bool all = false);
+vector<string> split(string main, char delim = ' ');
+vector<string> split(string main, string delim = " ");
+
 
 #endif /* FLATTENER_H_ */
