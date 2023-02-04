@@ -131,7 +131,7 @@ void Flattener::read_phi_terms() {
 			phi_cos_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
 		}
 		else {
-			cout << "Bad sine/cosine read of phi file!" << endl;
+			cout << "Bad sine/cosine read of phi file! " << file_name_split[0] << "  " << file_name << endl;
 		}
 	}
 }
