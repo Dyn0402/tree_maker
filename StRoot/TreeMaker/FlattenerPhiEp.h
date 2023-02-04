@@ -42,6 +42,7 @@
 #include "BESPars.h"
 #include "EventVars.h"
 #include "ParticleVars.h"
+#include "Flattener.h"
 
 class StMaker;
 
@@ -82,9 +83,6 @@ public:
 	void track_loop(StMuEvent *mu_event);
 	bool is_bad_event(StPicoEvent *pico_event);
 	void track_loop(StPicoEvent *pico_event);
-	void calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi);
-	int get_eta_bin(float eta);
-	int get_run_bin_key(int run_num);
 
 private:
 	StMuDstMaker *muDst_maker;  // MuDstMaker passed in via constructor
@@ -94,32 +92,16 @@ private:
 	StRefMultCorr *refmultCorrUtil;
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
-
-	string phi_file_name;  // Name of output root file for phi coefficients
-	TFile* phi_file;  // Root file to be written for phi coefficients
-	string ep_file_name;  // Name of output root file for event plane coefficients
-	TFile* ep_file;  // Root file to be written for event plane coefficients
+	EventVars event;
+	Flattener flatten;  // Responsible for all flattening and flattening IO
 
 	string run_type;  // "PhiDist" to get Fourier coefficients for phi or "EpDist" for event plane
-
-	float eta_min = -1.0;
-	float eta_max = 1.0;
-	int eta_bins = 20;
-	int n_harmonic_low = 1;
-	int n_harmonic_high = 12;
-	vector<string> phi_types;
-	vector<int> cent_bins;
-
-	map<string, map<int, vector<map<int, TProfile*>>>> sin_terms;  // Sine values of particles [particle_type][centrality][ep_bin][run_key]
-	map<string, map<int, vector<map<int, TProfile*>>>> cos_terms;  // Cosine values of particles [particle_type][centrality][ep_bin][run_key]
 
 	int events_read;  // Number of events found and read from input
 	int events_processed;  // Number of events processed
 	int energy;  // Energy of dataset being read
 	int bes_phase;  // Phase of Beam Energy Scan of dataset, 1 (I) or 2 (II)
 	int ref_num;  // Reference multiplicity to use for centrality definition
-
-	EventVars event;
 
 	ClassDef(FlattenerPhiEp, 1)  // Macro for CINT compatibility
 };

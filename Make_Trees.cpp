@@ -34,7 +34,6 @@ void Make_Trees(string input_file_list, string output_dir, int energy, int bes_p
 	gSystem->Load("StPicoDstMaker");
 	gROOT->Macro("loadMuDst.C");
 	gSystem->Load("TreeMaker");
-	gSystem->Load("FlattenerPhiEp");
 
 	if(dst == "mu") make_trees_mu(input_file_list, output_dir, energy, bes_phase, read_pions, run_type);
 	else if(dst == "pico") make_trees_pico(input_file_list, output_dir, energy, bes_phase, read_pions, run_type);
@@ -67,8 +66,7 @@ void make_trees_mu(string input_file_list, string output_dir, int energy, int be
 	muDst_maker->SetDebug(0);  // Turn off debug information
 
 	if (run_type == "TreeMaker") { TreeMaker* tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions); }
-	else if (run_type == "PhiDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
-	else if (run_type == "EpDist") { FlattenerPhiEp* ep_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else if (run_type == "PhiDist" || run_type == "EpDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase, run_type); }
 	else { cout << "run_type '" << run_type << "' not recognized! Exiting"; return; }
 
 	int num_events = 1e7;
@@ -125,8 +123,7 @@ void make_trees_pico(string input_file_list, string output_dir, int energy, int 
 	picoDst_maker->SetDebug(0);  // Turn off debug information
 
 	if (run_type == "TreeMaker") { TreeMaker* tree_maker = new TreeMaker(muDst_maker, output_dir, energy, bes_phase, read_pions); }
-	else if (run_type == "PhiDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
-	else if (run_type == "EpDist") { FlattenerPhiEp* ep_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase); }
+	else if (run_type == "PhiDist" || run_type == "EpDist") { FlattenerPhiEp* phi_flattener = new FlattenerPhiEp(muDst_maker, output_dir, energy, bes_phase, run_type); }
 	else { cout << "run_type '" << run_type << "' not recognized! Exiting"; return; }
 
 	int status = chain->Init() ;

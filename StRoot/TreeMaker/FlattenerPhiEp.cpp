@@ -19,10 +19,6 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	picoDst_maker = NULL;
 	picoDst = NULL;
 
-	phi_file_name = "";
-	phi_file = NULL;
-	ep_file_name = "";
-	ep_file = NULL;
 	run_type = "PhiDist";
 
 	events_read = 0;
@@ -31,13 +27,12 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	bes_phase = 1;
 	ref_num = 3;
 
-	cent_bins = vector<int>(10);
-	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
-	phi_types = { "protons", "non-protons" };
-
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	if (run_type == "PhiDist") { flatten = Flattener(name); }
+	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
 FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, int bes_phase, string run_type) : StMaker("FlattenerPhiEp") {
@@ -47,10 +42,6 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	picoDst_maker = NULL;
 	picoDst = NULL;
 
-	phi_file_name = name;
-	phi_file = NULL;
-	ep_file_name = "";
-	ep_file = NULL;
 	this->run_type = run_type;
 
 	events_read = 0;
@@ -59,13 +50,12 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	this->bes_phase = bes_phase;
 	ref_num = 3;
 
-	cent_bins = vector<int>(10);
-	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
-	phi_types = { "protons", "non-protons" };
-
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	if (run_type == "PhiDist") { flatten = Flattener(name); }
+	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
 FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp") {
@@ -75,10 +65,6 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	muDst_maker = NULL;
 	muDst = NULL;
 
-	phi_file_name = "";
-	phi_file = NULL;
-	ep_file_name = "";
-	ep_file = NULL;
 	run_type = "PhiDist";
 
 	events_read = 0;
@@ -87,13 +73,12 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	bes_phase = 1;
 	ref_num = 3;
 
-	cent_bins = vector<int>(10);
-	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
-	phi_types = { "protons", "non-protons" };
-
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	if (run_type == "PhiDist") { flatten = Flattener(name); }
+	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
 FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in, int bes_phase, string run_type) : StMaker("FlattenerPhiEp") {
@@ -103,10 +88,6 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 	muDst_maker = NULL;
 	muDst = NULL;
 
-	phi_file_name = name;
-	phi_file = NULL;
-	ep_file_name = "";
-	ep_file = NULL;
 	this->run_type = run_type;
 
 	events_read = 0;
@@ -115,13 +96,12 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 	this->bes_phase = bes_phase;
 	ref_num = 3;
 
-	cent_bins = vector<int>(10);
-	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
-	phi_types = { "protons", "non-protons" };
-
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	if (run_type == "PhiDist") { flatten = Flattener(name); }
+	else if (run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
 FlattenerPhiEp::~FlattenerPhiEp() {
@@ -143,16 +123,9 @@ void FlattenerPhiEp::set_phi_file_name(string name) {
 
 // St Doers
 Int_t FlattenerPhiEp::Init() {
-	phi_file = new TFile(phi_file_name.data(),"UPDATE") ;
-
-	for (string phi_type : phi_types) {
-		for (int cent_bin : cent_bins) {
-			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
-				sin_terms[phi_type][cent_bin].push_back({});
-				cos_terms[phi_type][cent_bin].push_back({});
-			}
-		}
-	}
+	if (run_type == "PhiDist") { flatten.init_phi_flattener(); }
+	else if (run_type == "EpDist") { flatten.init_ep_flattener(); }
+	else { cout << "Don't recognize run_type, not initializing Flattener" << endl; }
 
 	return kStOK;
 }
@@ -192,8 +165,9 @@ Int_t FlattenerPhiEp::Finish() {
 	cout << "Finishing and writing histograms to file... " << endl;
 	cout << endl;
 
-	phi_file->Write();
-	phi_file->Close();
+	if (run_type == "PhiDist") { flatten.write_phi(); }
+	else if (run_type == "EpDist") { flatten.write_ep(); }
+	else { cout << "Don't recognize run_type, not writing Flattener" << endl; }
 
 	cout <<"\n ======> Finished <======"<<endl;
 	cout<<" Acutal #Events Read = " << events_read << endl ;
@@ -443,15 +417,15 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 
 		// Fill phi distributions
 		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			eta_bin = get_eta_bin(eta);
-			run_bin_key = get_run_bin_key(event.run_num);
+			eta_bin = flatten.get_eta_bin(eta);
+			run_bin_key = flatten.get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+				flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
 			}
 			else {
-				calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+				flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
 			}
 		}
 	}
@@ -515,46 +489,16 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 
 		// Fill phi distributions
 		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			eta_bin = get_eta_bin(eta);
-			run_bin_key = get_run_bin_key(event.run_num);
+			eta_bin = flatten.get_eta_bin(eta);
+			run_bin_key = flatten.get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				 calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+				 flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
 			}
 			else {
-				calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+				flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
 			}
 		}
 	}
-}
-
-
-// Fill TProfiles with harmonic terms of phi
-void FlattenerPhiEp::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi) {
-	if (sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
-		phi_file->cd();
-		string sin_name = "sine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
-		sin_terms[particle_type][cent_bin][eta_bin][run_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
-		string cos_name = "cosine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
-		cos_terms[particle_type][cent_bin][eta_bin][run_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
-	}
-	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-		sin_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, sin(n * phi));
-		cos_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, cos(n * phi));
-	}
-}
-
-
-// Calculate eta bin for given eta value
-int FlattenerPhiEp::get_eta_bin(float eta) {
-	if (eta == eta_max)  return eta_bins - 1;
-	float eta_range = eta_max - eta_min;
-	return int((eta - eta_min) / eta_range * eta_bins);
-}
-
-
-// Get map key for run_num. For now just truncate last digit of run
-int FlattenerPhiEp::get_run_bin_key(int run_num) {
-	return int(run_num / 10);
 }
