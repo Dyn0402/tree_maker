@@ -11,6 +11,7 @@
 ClassImp(FlattenerPhiEp)
 
 
+// Structors
 FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") {
 	muDst_maker = maker;
 	muDst = NULL;
@@ -18,8 +19,11 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	picoDst_maker = NULL;
 	picoDst = NULL;
 
-	out_file_name = "";
-	out_file = NULL;
+	phi_file_name = "";
+	phi_file = NULL;
+	ep_file_name = "";
+	ep_file = NULL;
+	run_type = "PhiDist";
 
 	events_read = 0;
 	events_processed = 0;
@@ -36,15 +40,18 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	pars.set_energy_bes(energy, bes_phase);
 }
 
-FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("FlattenerPhiEp") {
+FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, int bes_phase, string run_type) : StMaker("FlattenerPhiEp") {
 	muDst_maker = maker;
 	muDst = NULL;
 
 	picoDst_maker = NULL;
 	picoDst = NULL;
 
-	out_file_name = name;
-	out_file = NULL;
+	phi_file_name = name;
+	phi_file = NULL;
+	ep_file_name = "";
+	ep_file = NULL;
+	this->run_type = run_type;
 
 	events_read = 0;
 	events_processed = 0;
@@ -61,8 +68,6 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	pars.set_energy_bes(energy, bes_phase);
 }
 
-
-// Structors
 FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp") {
 	picoDst_maker = maker;
 	picoDst = NULL;
@@ -70,8 +75,11 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	muDst_maker = NULL;
 	muDst = NULL;
 
-	out_file_name = "";
-	out_file = NULL;
+	phi_file_name = "";
+	phi_file = NULL;
+	ep_file_name = "";
+	ep_file = NULL;
+	run_type = "PhiDist";
 
 	events_read = 0;
 	events_processed = 0;
@@ -88,15 +96,18 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	pars.set_energy_bes(energy, bes_phase);
 }
 
-FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in, int bes_phase) : StMaker("FlattenerPhiEp") {
+FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in, int bes_phase, string run_type) : StMaker("FlattenerPhiEp") {
 	picoDst_maker = maker;
 	picoDst = NULL;
 
 	muDst_maker = NULL;
 	muDst = NULL;
 
-	out_file_name = name;
-	out_file = NULL;
+	phi_file_name = name;
+	phi_file = NULL;
+	ep_file_name = "";
+	ep_file = NULL;
+	this->run_type = run_type;
 
 	events_read = 0;
 	events_processed = 0;
@@ -124,15 +135,15 @@ void FlattenerPhiEp::set_energy(int energy_in) {
 	energy = energy_in;
 }
 
-void FlattenerPhiEp::set_out_file_name(string name) {
-	out_file_name = name;
+void FlattenerPhiEp::set_phi_file_name(string name) {
+	phi_file_name = name;
 }
 
 
 
 // St Doers
 Int_t FlattenerPhiEp::Init() {
-	out_file = new TFile(out_file_name.data(),"UPDATE") ;
+	phi_file = new TFile(phi_file_name.data(),"UPDATE") ;
 
 	for (string phi_type : phi_types) {
 		for (int cent_bin : cent_bins) {
@@ -181,8 +192,8 @@ Int_t FlattenerPhiEp::Finish() {
 	cout << "Finishing and writing histograms to file... " << endl;
 	cout << endl;
 
-	out_file->Write();
-	out_file->Close();
+	phi_file->Write();
+	phi_file->Close();
 
 	cout <<"\n ======> Finished <======"<<endl;
 	cout<<" Acutal #Events Read = " << events_read << endl ;
@@ -522,7 +533,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 // Fill TProfiles with harmonic terms of phi
 void FlattenerPhiEp::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi) {
 	if (sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
-		out_file->cd();
+		phi_file->cd();
 		string sin_name = "sine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
 		sin_terms[particle_type][cent_bin][eta_bin][run_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
 		string cos_name = "cosine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);

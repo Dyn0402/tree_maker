@@ -63,14 +63,14 @@ class FlattenerPhiEp : public StMaker {
 public:
 	// Structors
 	FlattenerPhiEp(StMuDstMaker* maker);
-	FlattenerPhiEp(StMuDstMaker* maker, string name, int energy_in, int bes_phase);
+	FlattenerPhiEp(StMuDstMaker* maker, string name, int energy_in, int bes_phase, string run_type);
 	FlattenerPhiEp(StPicoDstMaker* maker);
-	FlattenerPhiEp(StPicoDstMaker* maker, string name, int energy_in, int bes_phase);
+	FlattenerPhiEp(StPicoDstMaker* maker, string name, int energy_in, int bes_phase, string run_type);
 	virtual ~FlattenerPhiEp();
 
 	// Setters
 	void set_energy(int energy_in);  // Set energy being run for cut purposes
-	void set_out_file_name(string name);  // Set output root file name
+	void set_phi_file_name(string name);  // Set output root file name
 
 	// St Doers
 	Int_t Init();  // Initialize analysis tools, done once
@@ -95,8 +95,12 @@ private:
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 
-	string out_file_name;  // Name of output root file
-	TFile* out_file;  // Root file to be written
+	string phi_file_name;  // Name of output root file for phi coefficients
+	TFile* phi_file;  // Root file to be written for phi coefficients
+	string ep_file_name;  // Name of output root file for event plane coefficients
+	TFile* ep_file;  // Root file to be written for event plane coefficients
+
+	string run_type;  // "PhiDist" to get Fourier coefficients for phi or "EpDist" for event plane
 
 	float eta_min = -1.0;
 	float eta_max = 1.0;

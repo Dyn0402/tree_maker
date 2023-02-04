@@ -41,6 +41,7 @@
 #include "BESPars.h"
 #include "EventVars.h"
 #include "ParticleVars.h"
+#include "../FlattenerPhiEp/Flattener.h"
 
 class StMaker;
 
@@ -88,6 +89,8 @@ private:
 	StPicoDstMaker *picoDst_maker;  // PicoDstMaker passed in via constructor
 	StPicoDst *picoDst;
 	StRefMultCorr* refmultCorrUtil;
+
+	Flattener flatten;
 
 	BESPars pars;  // Object with all hardcoded parameters/cuts, need to set_energy_bes(energy, bes_phase)
 

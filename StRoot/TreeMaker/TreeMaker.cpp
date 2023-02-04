@@ -436,6 +436,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	double beta, p, m;
 	short charge;
 
+	flatten.test();
+
 	for (int track_index = 0; track_index < num_primary; track_index++) {  // Do refmult counting to get centrality
 		track = (StMuTrack*)muDst->primaryTracks(track_index);
 
