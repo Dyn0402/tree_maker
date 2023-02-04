@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "TFile.h"
+
 using namespace std;
 
 class Flattener {
