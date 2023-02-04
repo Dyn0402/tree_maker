@@ -41,11 +41,13 @@ void Flattener::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, 
 	//	sin_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, sin(n * phi));
 	//	cos_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, cos(n * phi));
 	//}
+	return;
 }
 
 
 // Calculate eta bin for given eta value
 int Flattener::get_eta_bin(float eta) {
+	return 1;
 	//if (eta == eta_max)  return eta_bins - 1;
 	//float eta_range = eta_max - eta_min;
 	//return int((eta - eta_min) / eta_range * eta_bins);
