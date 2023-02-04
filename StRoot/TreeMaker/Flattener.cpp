@@ -120,18 +120,19 @@ void Flattener::read_phi_terms() {
 			cout << "Bad phi coef object name read, skipping! " << file_name << endl;
 			continue;
 		}
+		string sin_cos = file_name_split[0];
 		string phi_type = file_name_split[2];
 		int cent_bin = stoi(file_name_split[4]);
 		int eta_bin = stoi(file_name_split[7]);
 		int run_key = stoi(file_name_split[9]);
-		if (file_name_split[0] == "Sine") {
+		if (in_string(sin_cos, "sine")) {
 			phi_sin_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
 		}
-		else if (file_name_split[0] == "Cosine") {
+		else if (in_string(sin_cos, "cosine")) {
 			phi_cos_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
 		}
 		else {
-			cout << "Bad sine/cosine read of phi file! " << file_name_split[0] << "  " << file_name << endl;
+			cout << "Bad sine/cosine read of phi file! " << sin_cos.size() << " " << sin_cos << "  " << file_name << endl;
 		}
 	}
 }
