@@ -110,7 +110,7 @@ void Flattener::init_ep_terms() {
 
 // Read phi Fourier coefficient TProfiles from file to memory
 void Flattener::read_phi_terms() {
-	for (TObject* key : phi_file->GetListOfKeys()) {
+	for (TObject* key : *phi_file->GetListOfKeys()) {
 		string file_name = (string)key->GetName();
 		vector<string> file_name_split = split(file_name, '_');
 		if (file_name_split.size() != 9) { 
