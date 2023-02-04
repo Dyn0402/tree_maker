@@ -70,7 +70,6 @@ public:
 
 	// Setters
 	void set_energy(int energy_in);  // Set energy being run for cut purposes
-	void set_phi_file_name(string name);  // Set output root file name
 
 	// St Doers
 	Int_t Init();  // Initialize analysis tools, done once

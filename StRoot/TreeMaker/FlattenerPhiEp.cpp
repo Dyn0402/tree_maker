@@ -30,8 +30,8 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker) : StMaker("FlattenerPhiEp") 
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
-	if (run_type == "PhiDist") { flatten = Flattener(name); }
-	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	if (run_type == "PhiDist") { flatten = Flattener("out.root"); }
+	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "out.root"); }
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
@@ -76,8 +76,8 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker) : StMaker("FlattenerPhiEp"
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
-	if (run_type == "PhiDist") { flatten = Flattener(name); }
-	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	if (run_type == "PhiDist") { flatten = Flattener("out.root"); }
+	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "out.root"); }
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
@@ -113,10 +113,6 @@ FlattenerPhiEp::~FlattenerPhiEp() {
 // Setters
 void FlattenerPhiEp::set_energy(int energy_in) {
 	energy = energy_in;
-}
-
-void FlattenerPhiEp::set_phi_file_name(string name) {
-	phi_file_name = name;
 }
 
 
