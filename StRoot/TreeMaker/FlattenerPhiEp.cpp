@@ -418,10 +418,22 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+				if (run_type == "PhiDist") {
+					flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+				}
+				else if (run_type == "EpDist") {
+					phi =
+				}
+				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
 			else {
-				flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+				if (run_type == "PhiDist") {
+					flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+				}
+				else if (run_type == "EpDist") {
+					//
+				}
+				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
 		}
 	}

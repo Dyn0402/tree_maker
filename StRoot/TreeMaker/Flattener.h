@@ -36,6 +36,7 @@ public:
 	void write_phi();
 	void write_ep();
 	void close_phi_ep();
+	float flatten_phi(float phi, string particle_type, int cent_bin, int eta_bin, int run_key);
 	int get_eta_bin(float eta);
 	int get_run_bin_key(int run_num);
 

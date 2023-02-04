@@ -176,7 +176,6 @@ void Flattener::close_phi_ep() {
 
 // Calculate eta bin for given eta value
 int Flattener::get_eta_bin(float eta) {
-	return 1;
 	if (eta == eta_max)  return eta_bins - 1;
 	float eta_range = eta_max - eta_min;
 	return int((eta - eta_min) / eta_range * eta_bins);
