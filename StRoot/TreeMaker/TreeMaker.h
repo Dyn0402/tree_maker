@@ -41,7 +41,7 @@
 #include "BESPars.h"
 #include "EventVars.h"
 #include "ParticleVars.h"
-#include "../FlattenerPhiEp/Flattener.h"
+#include "../Flattener/Flattener.h"
 
 class StMaker;
 
