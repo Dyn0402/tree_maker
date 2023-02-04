@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <string>
+#include <numeric>
 
 #include "TFile.h"
+#incldue "TProfile.h"
 
 using namespace std;
 

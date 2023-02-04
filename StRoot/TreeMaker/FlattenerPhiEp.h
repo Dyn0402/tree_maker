@@ -37,7 +37,6 @@
 #include "TH2.h"
 #include "TH1.h"
 #include "TObjArray.h"
-#include "TProfile.h"
 
 #include "BESPars.h"
 #include "EventVars.h"

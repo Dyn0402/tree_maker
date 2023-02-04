@@ -116,7 +116,7 @@ void Flattener::write_ep() {
 }
 
 // Close input event plane and phi files
-void Flattener::write_ep() {
+void Flattener::close_phi_ep() {
 	ep_file->Close();
 	phi_file->Close();
 }
