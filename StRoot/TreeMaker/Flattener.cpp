@@ -71,6 +71,7 @@ void Flattener::init_ep_flattener() {
 	phi_file = new TFile(phi_file_name.data(), "READ");
 	ep_file = new TFile(ep_file_name.data(), "UPDATE");
 	init_phi_terms();
+	init_ep_terms();
 }
 
 // Initialize input phi and event plane coefficient files
@@ -115,7 +116,7 @@ void Flattener::read_phi_terms() {
 	while ((key = (TKey*)key_list())) {
 		string file_name = (string)key->GetName();
 		vector<string> file_name_split = split(file_name, '_');
-		if (file_name_split.size() != 9) { 
+		if (file_name_split.size() != 10) { 
 			cout << "Bad phi coef object name read, skipping! " << file_name << endl;
 			continue;
 		}
