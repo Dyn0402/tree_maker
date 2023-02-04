@@ -6,7 +6,7 @@
 #include <numeric>
 
 #include "TFile.h"
-#incldue "TProfile.h"
+#include "TProfile.h"
 
 using namespace std;
 
