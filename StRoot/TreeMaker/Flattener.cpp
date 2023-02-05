@@ -7,6 +7,7 @@ Flattener::Flattener() {
 	phi_file = NULL;
 	ep_file_name = "";
 	ep_file = NULL;
+	qa_file = NULL;
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
@@ -19,6 +20,7 @@ Flattener::Flattener(string phi_name) {
 	phi_file = NULL;
 	ep_file_name = "";
 	ep_file = NULL;
+	qa_file = NULL;
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
@@ -31,6 +33,7 @@ Flattener::Flattener(string phi_name, string ep_name) {
 	phi_file = NULL;
 	ep_file_name = ep_name;
 	ep_file = NULL;
+	qa_file = NULL;
 
 	cent_bins = vector<int>(10);
 	iota(cent_bins.begin(), cent_bins.end(), -1);  // Populate cent bins with -1, 0, 1, 2, ..., 8
@@ -39,12 +42,26 @@ Flattener::Flattener(string phi_name, string ep_name) {
 }
 
 Flattener::~Flattener() {
-	// Nothing
+	if (qa_file) {
+		qa_file->Write();
+		qa_file->Close();
+	}
 }
 
 
 // Setters
+void Flattener::set_qa(string name) {
+	qa_file = new TFile(name.data(), "UPDATE");
+	for (string phi_type : phi_types) {
+		for (int cent_bin : cent_bins) {
+			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
+				phi_sin_dists[phi_type][cent_bin].push_back({});
+				phi_cos_dists[phi_type][cent_bin].push_back({});
+			}
+		}
+	}
 
+}
 
 // Getters
 
@@ -158,7 +175,9 @@ void Flattener::read_ep_terms() {
 }
 
 // Fill TProfiles with harmonic terms of phi
-void Flattener::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi) {
+void Flattener::calc_phi_terms(string particle_type, int cent_bin, float eta, int run, float phi) {
+	int eta_bin = get_eta_bin(eta);
+	int run_key = run / run_mod;
 	if (phi_sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
 		phi_file->cd();
 		string sin_name = "sine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
@@ -173,7 +192,8 @@ void Flattener::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, 
 }
 
 // Fill TProfles with harmonic terms of psi
-void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run_key, float psi) {
+void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run, float psi) {
+	int run_key = run / run_mod;
 	if (ep_sin_terms[ep_type][cent_bin].count(run_key) < 1) {
 		ep_file->cd();
 		string sin_name = "sine_terms_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
@@ -188,7 +208,9 @@ void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run_key, float p
 }
 
 // Get shifted phi given original phi based on Fourier coefficients for specific event/track
-float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, int eta_bin, int run_key) {
+float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, float eta, int run) {
+	int eta_bin = get_eta_bin(eta);
+	int run_key = run / run_mod;
 	if (!phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]) {  // Hopefully just means specific run doesn't exist
 		cout << "No run info " << run_key << endl;
 		run_key = phi_sin_terms[particle_type][cent_bin][eta_bin].begin()->first;  // Just use any run

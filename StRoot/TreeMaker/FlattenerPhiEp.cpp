@@ -369,8 +369,6 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
-	int eta_bin;
-	int run_bin_key = flatten.get_run_bin_key(event.run_num);
 
 	for (int track_index = 0; track_index < num_primary; track_index++) {  // Get phi distribution
 		track = (StMuTrack*)muDst->primaryTracks(track_index);
@@ -415,12 +413,10 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 
 		// Fill Fourier coefficient profiles
 		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			eta_bin = flatten.get_eta_bin(eta);
-
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
 				if (run_type == "PhiDist") {
-					flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+					flatten.calc_phi_terms("protons", cent9_corr, eta, event.run_num, phi);
 				}
 				else if (run_type == "EpDist") {
 					// Do nothing
@@ -429,11 +425,11 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 			}
 			else {
 				if (run_type == "PhiDist") {
-					flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
 				else if (run_type == "EpDist") {
 					cout << "Shifting phi " << phi << endl;
-					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta_bin, run_bin_key);
+					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
 					cout << "phi " << phi << " shifted -> " << phi_shifted << endl;
 					if (eta < -0.2) {
 						qx_west += cos(2 * phi_shifted);
@@ -454,8 +450,8 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 	TVector2 q_west(qx_west, qy_west);
 	float psi_east = 0.5 * q_east.Phi();
 	float psi_west = 0.5 * q_west.Phi();
-	flatten.calc_ep_terms("east", cent9_corr, run_bin_key, psi_east);
-	flatten.calc_ep_terms("west", cent9_corr, run_bin_key, psi_west);
+	flatten.calc_ep_terms("east", cent9_corr, event.run_num, psi_east);
+	flatten.calc_ep_terms("west", cent9_corr, event.run_num, psi_west);
 	cout << "Event planes calculated" << endl;
 }
 
@@ -519,13 +515,13 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 			eta_bin = flatten.get_eta_bin(eta);
 			run_bin_key = flatten.get_run_bin_key(event.run_num);
 
-			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
-				 flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
-			}
-			else {
-				flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
-			}
+			//rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+			//if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
+			//	 flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
+			//}
+			//else {
+			//	flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
+			//}
 		}
 	}
 }
