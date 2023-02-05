@@ -176,7 +176,7 @@ void Flattener::read_ep_terms() {
 // Fill TProfiles with harmonic terms of phi
 void Flattener::calc_phi_terms(string particle_type, int cent_bin, float eta, int run, float phi) {
 	int eta_bin = get_eta_bin(eta);
-	int run_key = run / run_mod;
+	int run_key = get_run_bin_key(run);
 	if (phi_sin_terms[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
 		phi_file->cd();
 		string sin_name = "sine_terms_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
@@ -192,7 +192,7 @@ void Flattener::calc_phi_terms(string particle_type, int cent_bin, float eta, in
 
 // Fill TProfles with harmonic terms of psi
 void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run, float psi) {
-	int run_key = run / run_mod;
+	int run_key = get_run_bin_key(run);
 	if (ep_sin_terms[ep_type][cent_bin].count(run_key) < 1) {
 		ep_file->cd();
 		string sin_name = "sine_terms_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
@@ -209,7 +209,7 @@ void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run, float psi) 
 // Get shifted phi given original phi based on Fourier coefficients for specific event/track
 float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, float eta, int run) {
 	int eta_bin = get_eta_bin(eta);
-	int run_key = run / run_mod;
+	int run_key = get_run_bin_key(run);
 	if (!phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]) {  // Hopefully just means specific run doesn't exist
 		cout << "No run info " << run_key << endl;
 		run_key = phi_sin_terms[particle_type][cent_bin][eta_bin].begin()->first;  // Just use any run
@@ -263,7 +263,7 @@ int Flattener::get_eta_bin(float eta) {
 
 // Get map key for run_num. For now just truncate last digit of run
 int Flattener::get_run_bin_key(int run_num) {
-	return int(run_num / 10);
+	return int(run_num / run_mod);
 }
 
 

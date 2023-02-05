@@ -423,7 +423,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
-			else {
+			else {  // Non-proton track
 				if (run_type == "PhiDist") {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
