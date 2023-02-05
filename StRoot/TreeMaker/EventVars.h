@@ -28,7 +28,7 @@ public:
 	short btof_multi;
 
 	float vx, vy, vz;
-	float psi_east, psi_east;
+	float psi_east, psi_west;
 	float dca_xy_avg;
 	float dca_xy_err;
 };

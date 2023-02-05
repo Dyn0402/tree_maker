@@ -551,7 +551,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		// Event Plane Q vector
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			event.qx += cos(2*phi); event.qy += sin(2*phi);
+			//event.qx += cos(2*phi); event.qy += sin(2*phi);
 		}
 
 		// Fill PID plots
@@ -688,7 +688,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 
 		// Event Plane Q vector
 		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			event.qx += cos(2*phi); event.qy += sin(2*phi);
+			//event.qx += cos(2*phi); event.qy += sin(2*phi);
 		}
 
 		// Fill PID plots
