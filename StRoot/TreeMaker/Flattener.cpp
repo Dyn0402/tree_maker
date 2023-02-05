@@ -55,8 +55,7 @@ void Flattener::set_qa(string name) {
 	for (string phi_type : phi_types) {
 		for (int cent_bin : cent_bins) {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
-				phi_sin_dists[phi_type][cent_bin].push_back({});
-				phi_cos_dists[phi_type][cent_bin].push_back({});
+				phi_dists[phi_type][cent_bin].push_back({});
 			}
 		}
 	}
