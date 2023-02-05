@@ -30,13 +30,13 @@ public:
 	void init_ep_flattener();
 	void init_treemaker();
 	void init_phi_terms();
-	void init_ep_terms();
 	void read_phi_terms();
 	void calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi);
+	void calc_ep_terms(string ep_type, int cent_bin, int run_key, float psi);
 	void write_phi();
 	void write_ep();
 	void close_phi_ep();
-	float flatten_phi(float phi, string particle_type, int cent_bin, int eta_bin, int run_key);
+	float get_flat_phi(float phi, string particle_type, int cent_bin, int eta_bin, int run_key);
 	int get_eta_bin(float eta);
 	int get_run_bin_key(int run_num);
 
@@ -55,11 +55,11 @@ private:
 	vector<string> ep_types;
 	vector<int> cent_bins;
 
-	map<string, map<int, vector<map<int, TProfile*>>>> phi_sin_terms;  // Sine values of particles [particle_type][centrality][ep_bin][run_key]
-	map<string, map<int, vector<map<int, TProfile*>>>> phi_cos_terms;  // Cosine values of particles [particle_type][centrality][ep_bin][run_key]
+	map<string, map<int, vector<map<int, TProfile*>>>> phi_sin_terms;  // Sine values of particles [particle_type][centrality][eta_bin][run_key]
+	map<string, map<int, vector<map<int, TProfile*>>>> phi_cos_terms;  // Cosine values of particles [particle_type][centrality][eta_bin][run_key]
 
-	map<string, map<string, map<int, vector<map<int, TProfile*>>>>> ep_sin_terms;  // Sine values of event planes [ep_type][particle_type][centrality][ep_bin][run_key]
-	map<string, map<string, map<int, vector<map<int, TProfile*>>>>> ep_cos_terms;  // Cosine values of event planes [ep_type][particle_type][centrality][ep_bin][run_key]
+	map<string, map<int, map<int, TProfile*>>> ep_sin_terms;  // Sine values of event planes [ep_type][centrality][run_key]
+	map<string, map<int, map<int, TProfile*>>> ep_cos_terms;  // Cosine values of event planes [ep_type][centrality][run_key]
 };
 
 

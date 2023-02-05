@@ -34,8 +34,8 @@ void EventVars::clear() {
 	vx = 0.;
 	vy = 0.;
 	vz = 0.;
-	qx = 0.;
-	qy = 0.;
+	psi_east = 0.;
+	psi_west = 0.;
 	dca_xy_avg = 0.;
 	dca_xy_err = 0.;
 }

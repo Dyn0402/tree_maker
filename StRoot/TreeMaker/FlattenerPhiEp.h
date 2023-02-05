@@ -37,6 +37,7 @@
 #include "TH2.h"
 #include "TH1.h"
 #include "TObjArray.h"
+#include "TVector2.h"
 
 #include "BESPars.h"
 #include "EventVars.h"

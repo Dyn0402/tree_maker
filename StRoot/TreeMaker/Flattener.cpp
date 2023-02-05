@@ -71,7 +71,7 @@ void Flattener::init_ep_flattener() {
 	phi_file = new TFile(phi_file_name.data(), "READ");
 	ep_file = new TFile(ep_file_name.data(), "UPDATE");
 	init_phi_terms();
-	init_ep_terms();
+	read_phi_terms();
 }
 
 // Initialize input phi and event plane coefficient files
@@ -79,7 +79,6 @@ void Flattener::init_treemaker() {
 	phi_file = new TFile(phi_file_name.data(), "READ");
 	ep_file = new TFile(ep_file_name.data(), "READ");
 	init_phi_terms();
-	init_ep_terms();
 	read_phi_terms();
 }
 
@@ -90,20 +89,6 @@ void Flattener::init_phi_terms() {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
 				phi_sin_terms[phi_type][cent_bin].push_back({});
 				phi_cos_terms[phi_type][cent_bin].push_back({});
-			}
-		}
-	}
-}
-
-// Initialize phi_sin/cos_terms
-void Flattener::init_ep_terms() {
-	for (string ep_type : ep_types) {
-		for (string phi_type : phi_types) {
-			for (int cent_bin : cent_bins) {
-				for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
-					ep_sin_terms[ep_type][phi_type][cent_bin].push_back({});
-					ep_cos_terms[ep_type][phi_type][cent_bin].push_back({});
-				}
 			}
 		}
 	}
@@ -150,7 +135,38 @@ void Flattener::calc_phi_terms(string particle_type, int cent_bin, int eta_bin, 
 		phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, sin(n * phi));
 		phi_cos_terms[particle_type][cent_bin][eta_bin][run_key]->Fill(n, cos(n * phi));
 	}
-	return;
+}
+
+// Fill TProfles with harmonic terms of psi
+void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run_key, float psi) {
+	if (ep_sin_terms[ep_type][cent_bin].count(run_key) < 1) {
+		ep_file->cd();
+		string sin_name = "sine_terms_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
+		ep_sin_terms[ep_type][cent_bin][run_key] = new TProfile(sin_name.data(), "Sine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
+		string cos_name = "cosine_terms_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
+		ep_cos_terms[ep_type][cent_bin][run_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
+	}
+	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+		ep_sin_terms[ep_type][cent_bin][run_key]->Fill(n, sin(n * psi));
+		ep_cos_terms[ep_type][cent_bin][run_key]->Fill(n, cos(n * psi));
+	}
+}
+
+// Get shifted phi given original phi based on Fourier coefficients for specific event/track
+float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, int eta_bin, int run_key) {
+	if (!phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]) {  // Hopefully just means specific run doesn't exist
+		run_key = phi_sin_terms[particle_type][cent_bin][eta_bin].begin()->first();  // Just use any run
+	}
+
+	TProfile* sin_terms = phi_sin_terms[particle_type][cent_bin][eta_bin][run_key];
+	TProfile* cos_terms = phi_cos_terms[particle_type][cent_bin][eta_bin][run_key];
+
+	float dphi = 0.;
+	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+		dphi += 2 / n * (cos_terms->GetBinContent(n) * sin(n * phi) - sin_terms->GetBinContent(n) * cos(n * phi));
+	}
+
+	return phi + dphi;
 }
 
 

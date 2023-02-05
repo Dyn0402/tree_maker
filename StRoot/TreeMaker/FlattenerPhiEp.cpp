@@ -368,7 +368,9 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 	refmultCorrUtil->initEvent(refn, (double)event.vz);
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
-	int eta_bin, run_bin_key;
+	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
+	int eta_bin;
+	int run_bin_key = flatten.get_run_bin_key(event.run_num);
 
 	for (int track_index = 0; track_index < num_primary; track_index++) {  // Get phi distribution
 		track = (StMuTrack*)muDst->primaryTracks(track_index);
@@ -411,10 +413,9 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		if (ratio < 0.52) continue;
 		if (ratio > 1.05) continue;
 
-		// Fill phi distributions
+		// Fill Fourier coefficient profiles
 		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
 			eta_bin = flatten.get_eta_bin(eta);
-			run_bin_key = flatten.get_run_bin_key(event.run_num);
 
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
@@ -422,7 +423,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 					flatten.calc_phi_terms("protons", cent9_corr, eta_bin, run_bin_key, phi);
 				}
 				else if (run_type == "EpDist") {
-					phi =
+					// Do nothing
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
@@ -431,13 +432,27 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
 				}
 				else if (run_type == "EpDist") {
-					//
+					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta_bin, run_bin_key);
+					if (eta < -0.2) {
+						qx_west += cos(2 * phi_shifted);
+						qy_west += sin(2 * phi_shifted);
+					}
+					else if (eta > 0.2) {
+						qx_east += cos(2 * phi_shifted);
+						qy_east += sin(2 * phi_shifted);
+					}
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
 		}
 	}
-
+	// After track loop
+	TVector2 q_east(qx_east, qy_east);
+	TVector2 q_west(qx_west, qy_west);
+	float psi_east = 0.5 * q_east.Phi();
+	float psi_west = 0.5 * q_west.Phi();
+	flatten.calc_ep_terms("east", cent9_corr, run_bin_key, psi_east);
+	flatten.calc_ep_terms("west", cent9_corr, run_bin_key, psi_west);
 }
 
 
