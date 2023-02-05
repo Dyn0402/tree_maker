@@ -31,6 +31,7 @@ public:
 	void init_treemaker();
 	void init_phi_terms();
 	void read_phi_terms();
+	void read_ep_terms();
 	void calc_phi_terms(string particle_type, int cent_bin, int eta_bin, int run_key, float phi);
 	void calc_ep_terms(string ep_type, int cent_bin, int run_key, float psi);
 	void write_phi();

@@ -38,6 +38,7 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
 }
 
 TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
@@ -219,6 +220,8 @@ Int_t TreeMaker::Init() {
 
 	de_dx_pq_hist = new TH2F("dedx_pq_pid", "Dedx PID", 1000, -3, 3, 1000, 0, 0.5e-4);
 	beta_pq_hist = new TH2F("beta_pq_pid", "Beta PID", 1000, -3, 3, 1000, 0, 5);
+
+	flatten.init_treemaker();
 
 	return kStOK;
 }

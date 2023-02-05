@@ -432,7 +432,9 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta_bin, run_bin_key, phi);
 				}
 				else if (run_type == "EpDist") {
+					cout << "Shifting phi " << phi << endl;
 					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta_bin, run_bin_key);
+					cout << "phi " << phi << " shifted -> " << phi_shifted << endl;
 					if (eta < -0.2) {
 						qx_west += cos(2 * phi_shifted);
 						qy_west += sin(2 * phi_shifted);
@@ -447,12 +449,14 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		}
 	}
 	// After track loop
+	cout << "Calculating event planes..." << endl;
 	TVector2 q_east(qx_east, qy_east);
 	TVector2 q_west(qx_west, qy_west);
 	float psi_east = 0.5 * q_east.Phi();
 	float psi_west = 0.5 * q_west.Phi();
 	flatten.calc_ep_terms("east", cent9_corr, run_bin_key, psi_east);
 	flatten.calc_ep_terms("west", cent9_corr, run_bin_key, psi_west);
+	cout << "Event planes calculated" << endl;
 }
 
 

@@ -71,7 +71,9 @@ void Flattener::init_ep_flattener() {
 	phi_file = new TFile(phi_file_name.data(), "READ");
 	ep_file = new TFile(ep_file_name.data(), "UPDATE");
 	init_phi_terms();
+	cout << "Reading phi Fourier coefficients from file..." << endl;
 	read_phi_terms();
+	cout << "Read phi Fourier coefficients from file" << endl;
 }
 
 // Initialize input phi and event plane coefficient files
@@ -79,7 +81,12 @@ void Flattener::init_treemaker() {
 	phi_file = new TFile(phi_file_name.data(), "READ");
 	ep_file = new TFile(ep_file_name.data(), "READ");
 	init_phi_terms();
+	cout << "Reading phi Fourier coefficients from file..." << endl;
 	read_phi_terms();
+	cout << "Read phi Fourier coefficients from file." << endl;
+	cout << "Reading event plane Fourier coefficients from file..." << endl;
+	read_ep_terms();
+	cout << "Reading event plane Fourier coefficients from file." << endl;
 }
 
 // Initialize phi_sin/cos_terms
@@ -115,6 +122,33 @@ void Flattener::read_phi_terms() {
 		}
 		else if (in_string(sin_cos, "cosine")) {
 			phi_cos_terms[phi_type][cent_bin][eta_bin][run_key] = (TProfile*)key->ReadObj();
+		}
+		else {
+			cout << "Bad sine/cosine read of phi file! " << sin_cos.size() << " " << sin_cos << "  " << file_name << endl;
+		}
+	}
+}
+
+// Read event plane Fourier coefficient TProfiles from file to memory
+void Flattener::read_ep_terms() {
+	TKey* key;
+	TIter key_list(ep_file->GetListOfKeys());
+	while ((key = (TKey*)key_list())) {
+		string file_name = (string)key->GetName();
+		vector<string> file_name_split = split(file_name, '_');
+		if (file_name_split.size() != 7) {
+			cout << "Bad phi coef object name read, skipping! " << file_name << endl;
+			continue;
+		}
+		string sin_cos = file_name_split[0];
+		string ep_type = file_name_split[2];
+		int cent_bin = stoi(file_name_split[4]);
+		int run_key = stoi(file_name_split[7]);
+		if (in_string(sin_cos, "sine")) {
+			ep_sin_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
+		}
+		else if (in_string(sin_cos, "cosine")) {
+			ep_cos_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
 		}
 		else {
 			cout << "Bad sine/cosine read of phi file! " << sin_cos.size() << " " << sin_cos << "  " << file_name << endl;
@@ -160,6 +194,9 @@ float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, int
 
 	TProfile* sin_terms = phi_sin_terms[particle_type][cent_bin][eta_bin][run_key];
 	TProfile* cos_terms = phi_cos_terms[particle_type][cent_bin][eta_bin][run_key];
+
+	cout << "Debug sin " << sin_terms << " cos " << cos_terms << endl;
+	cout << " sin entries " << sin_terms->GetEntries() << " cos entries " << cos_terms << endl << endl;
 
 	float dphi = 0.;
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
