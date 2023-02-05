@@ -163,8 +163,8 @@ Int_t TreeMaker::Init() {
 	tree->Branch("vx", &event.vx, "vx/F");
 	tree->Branch("vy", &event.vy, "vy/F");
 	tree->Branch("vz", &event.vz, "vz/F");
-	tree->Branch("qx", &event.qx, "qx/F");
-	tree->Branch("qy", &event.qy, "qy/F");
+	tree->Branch("psi_east", &event.psi_east, "psi_east/F");
+	tree->Branch("psi_west", &event.psi_west, "psi_west/F");
 	tree->Branch("dca_xy_avg", &event.dca_xy_avg, "dca_xy_avg/F");
 	tree->Branch("dca_xy_err", &event.dca_xy_err, "dca_xy_err/F");
 
