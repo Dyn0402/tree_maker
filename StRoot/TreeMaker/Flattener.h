@@ -8,6 +8,7 @@
 
 #include "TFile.h"
 #include "TProfile.h"
+#include "TH1I.h"
 #include "TObject.h"
 #include "TKey.h"
 
@@ -68,7 +69,7 @@ private:
 
 	// QA
 	map<string, map<int, vector<map<int, TH1D*>>>> phi_sin_dists;  // Distribution of particles after flattening [particle_type][centrality][eta_bin][run_key]
-	map<string, map<int, TH1I* track_count_hist>>; 
+	map<string, map<int, TH1I*>> track_count_hist;
 };
 
 
