@@ -55,12 +55,11 @@ void Flattener::set_qa(string name) {
 	for (string phi_type : phi_types) {
 		for (int cent_bin : cent_bins) {
 			for (int eta_bin = 0; eta_bin < eta_bins; eta_bin++) {
-				phi_sin_dists[phi_type][cent_bin].push_back({});
-				phi_cos_dists[phi_type][cent_bin].push_back({});
+				phi_original_dists[phi_type][cent_bin].push_back({});
+				phi_flat_dists[phi_type][cent_bin].push_back({});
 			}
 		}
 	}
-
 }
 
 // Getters
@@ -217,20 +216,37 @@ float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, flo
 		cout << "Using run " << run_key << " instead" << endl;
 	}
 
-	cout << particle_type << " cent " << cent_bin << " eta_bin " << eta_bin << " runkey " << run_key << endl;
+	//cout << particle_type << " cent " << cent_bin << " eta_bin " << eta_bin << " runkey " << run_key << endl;
 
 	TProfile* sin_terms = phi_sin_terms[particle_type][cent_bin][eta_bin][run_key];
 	TProfile* cos_terms = phi_cos_terms[particle_type][cent_bin][eta_bin][run_key];
 
-	cout << "Debug sin " << sin_terms << " cos " << cos_terms << endl;
-	cout << " sin entries " << sin_terms->GetEntries() << " cos entries " << cos_terms << endl << endl;
+	//cout << "Debug sin " << sin_terms << " cos " << cos_terms << endl;
+	//cout << " sin entries " << sin_terms->GetEntries() << " cos entries " << cos_terms->GetEntries() << endl << endl;
 
 	float dphi = 0.;
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
 		dphi += 2 / n * (cos_terms->GetBinContent(n) * sin(n * phi) - sin_terms->GetBinContent(n) * cos(n * phi));
 	}
 
-	return phi + dphi;
+	float shifted_phi = phi + dphi;
+	while (shifted_phi >= 2 * M_PI) { shifted_phi -= 2 * M_PI; }
+	while (shifted_phi < 0) { shifted_phi += 2 * M_PI; }
+	
+
+	if (qa_file) {
+		if (phi_original_dists[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
+			qa_file->cd();
+			string original_name = "original_phi_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
+			phi_original_dists[particle_type][cent_bin][eta_bin][run_key] = new TH1I(original_name.data(), "Original Phi Distribution", 200, 0, 2 * M_PI);
+			string flat_name = "flat_phi_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
+			phi_flat_dists[particle_type][cent_bin][eta_bin][run_key] = new TProfile(flat_name.data(), "Flattened Phi Distribution", 200, 0, 2 * M_PI);
+		}
+		phi_original_dists[particle_type][cent_bin][eta_bin][run_key]->Fill(phi);
+		phi_flat_dists[particle_type][cent_bin][eta_bin][run_key]->Fill(shifted_phi);
+	}
+
+	return shifted_phi;
 }
 
 

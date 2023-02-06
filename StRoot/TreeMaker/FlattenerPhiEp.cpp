@@ -54,7 +54,10 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 
 	pars.set_energy_bes(energy, bes_phase);
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
-	else if(run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else if(run_type == "EpDist") { 
+		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
+		flatten.set_qa("qa_" + name);  // Hard coded QA to on;
+	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 
@@ -100,7 +103,10 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 
 	pars.set_energy_bes(energy, bes_phase);
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
-	else if (run_type == "EpDist") { flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name); }
+	else if (run_type == "EpDist") {
+		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
+		flatten.set_qa("qa_" + name);  // Hard coded QA to on;
+	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
 

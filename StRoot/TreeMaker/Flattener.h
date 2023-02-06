@@ -67,8 +67,8 @@ private:
 	map<string, map<int, map<int, TProfile*>>> ep_cos_terms;  // Cosine values of event planes [ep_type][centrality][run_key]
 
 	// QA
-	map<string, map<int, vector<map<int, TH1D*>>>> phi_sin_dists;  // Distribution of particles after flattening [particle_type][centrality][eta_bin][run_key]
-	map<string, map<int, TH1I* track_count_hist>>; 
+	map<string, map<int, vector<map<int, TH1I*>>>> phi_original_dists;  // Distribution of particles before flattening [particle_type][centrality][eta_bin][run_key]
+	map<string, map<int, vector<map<int, TH1I*>>>> phi_flat_dists;  // Distribution of particles after flattening [particle_type][centrality][eta_bin][run_key]
 };
 
 
