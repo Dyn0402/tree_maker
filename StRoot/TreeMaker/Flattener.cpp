@@ -216,13 +216,8 @@ float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, flo
 		cout << "Using run " << run_key << " instead" << endl;
 	}
 
-	//cout << particle_type << " cent " << cent_bin << " eta_bin " << eta_bin << " runkey " << run_key << endl;
-
 	TProfile* sin_terms = phi_sin_terms[particle_type][cent_bin][eta_bin][run_key];
 	TProfile* cos_terms = phi_cos_terms[particle_type][cent_bin][eta_bin][run_key];
-
-	//cout << "Debug sin " << sin_terms << " cos " << cos_terms << endl;
-	//cout << " sin entries " << sin_terms->GetEntries() << " cos entries " << cos_terms->GetEntries() << endl << endl;
 
 	float dphi = 0.;
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {

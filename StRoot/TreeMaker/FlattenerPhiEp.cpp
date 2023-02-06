@@ -56,7 +56,7 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
 	else if(run_type == "EpDist") { 
 		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
-		flatten.set_qa("qa_" + name);  // Hard coded QA to on;
+		flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
@@ -105,7 +105,7 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
 	else if (run_type == "EpDist") {
 		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
-		flatten.set_qa("qa_" + name);  // Hard coded QA to on;
+		flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
@@ -434,9 +434,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
 				else if (run_type == "EpDist") {
-					cout << "Shifting phi " << phi << endl;
 					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
-					cout << "phi " << phi << " shifted -> " << phi_shifted << endl;
 					if (eta < -0.2) {
 						qx_west += cos(2 * phi_shifted);
 						qy_west += sin(2 * phi_shifted);
