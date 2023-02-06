@@ -429,7 +429,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
 			}
-			else {
+			else {  // Non-proton track
 				if (run_type == "PhiDist") {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
@@ -451,14 +451,16 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		}
 	}
 	// After track loop
-	cout << "Calculating event planes..." << endl;
-	TVector2 q_east(qx_east, qy_east);
-	TVector2 q_west(qx_west, qy_west);
-	float psi_east = 0.5 * q_east.Phi();
-	float psi_west = 0.5 * q_west.Phi();
-	flatten.calc_ep_terms("east", cent9_corr, event.run_num, psi_east);
-	flatten.calc_ep_terms("west", cent9_corr, event.run_num, psi_west);
-	cout << "Event planes calculated" << endl;
+	if (run_type == "EpDist") {
+		cout << "Calculating event planes..." << endl;
+		TVector2 q_east(qx_east, qy_east);
+		TVector2 q_west(qx_west, qy_west);
+		float psi_east = 0.5 * q_east.Phi();
+		float psi_west = 0.5 * q_west.Phi();
+		flatten.calc_ep_terms("east", cent9_corr, event.run_num, psi_east);
+		flatten.calc_ep_terms("west", cent9_corr, event.run_num, psi_west);
+		cout << "Event planes calculated" << endl;
+	}
 }
 
 

@@ -30,7 +30,7 @@
     <output fromScratch="*.root" toURL="file:&out_path;output/&energy;GeV/" />
  
   <Generator>
-    <Location>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/log/</Location>
+    <Location>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/log/27GeV/</Location>
     <ScriptLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/script/27GeV/</ScriptLocation>
     <ListLocation>/gpfs01/star/pwg/dneff/data/BES1/flow_dists/list/27GeV/</ListLocation>
   </Generator>

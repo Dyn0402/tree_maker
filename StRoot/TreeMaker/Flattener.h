@@ -8,6 +8,7 @@
 
 #include "TFile.h"
 #include "TProfile.h"
+#include "TH1I.h"
 #include "TObject.h"
 #include "TKey.h"
 
