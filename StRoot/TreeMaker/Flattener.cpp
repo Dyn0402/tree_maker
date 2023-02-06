@@ -246,7 +246,6 @@ float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, flo
 
 // Get shifted phi given original phi based on Fourier coefficients for specific event/track
 float Flattener::get_flat_ep(float psi, string ep_type, int cent_bin, int run) {
-	int eta_bin = get_eta_bin(eta);
 	int run_key = get_run_bin_key(run);
 	if (!ep_sin_terms[ep_type][cent_bin][run_key]) {  // Hopefully just means specific run doesn't exist
 		cout << "No run info " << run_key << endl;
@@ -258,28 +257,28 @@ float Flattener::get_flat_ep(float psi, string ep_type, int cent_bin, int run) {
 	TProfile* cos_terms = ep_cos_terms[ep_type][cent_bin][run_key];
 
 	float dpsi = 0.;
-	//for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-	//	dpsi += 2 / n * (cos_terms->GetBinContent(n) * sin(n * phi) - sin_terms->GetBinContent(n) * cos(n * phi));
-	//}
+	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
+		dpsi += 2 / n * (cos_terms->GetBinContent(n) * sin(n * psi) - sin_terms->GetBinContent(n) * cos(n * psi));
+	}
 
-	//float shifted_phi = phi + dphi;
-	//while (shifted_phi >= 2 * M_PI) { shifted_phi -= 2 * M_PI; }
-	//while (shifted_phi < 0) { shifted_phi += 2 * M_PI; }
+	float shifted_psi = psi + dpsi;
+	while (shifted_psi >= M_PI) { shifted_psi -= M_PI; }
+	while (shifted_psi < 0) { shifted_psi += M_PI; }
 
 
-	//if (qa_file) {
-	//	if (phi_original_dists[particle_type][cent_bin][eta_bin].count(run_key) < 1) {
-	//		qa_file->cd();
-	//		string original_name = "original_phi_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
-	//		phi_original_dists[particle_type][cent_bin][eta_bin][run_key] = new TH1I(original_name.data(), "Original Phi Distribution", 200, 0, 2 * M_PI);
-	//		string flat_name = "flat_phi_" + particle_type + "_cent_" + to_string(cent_bin) + "_eta_bin_" + to_string(eta_bin) + "_runkey_" + to_string(run_key);
-	//		phi_flat_dists[particle_type][cent_bin][eta_bin][run_key] = new TH1I(flat_name.data(), "Flattened Phi Distribution", 200, 0, 2 * M_PI);
-	//	}
-	//	phi_original_dists[particle_type][cent_bin][eta_bin][run_key]->Fill(phi);
-	//	phi_flat_dists[particle_type][cent_bin][eta_bin][run_key]->Fill(shifted_phi);
-	//}
+	if (qa_file) {
+		if (psi_original_dists[ep_type][cent_bin].count(run_key) < 1) {
+			qa_file->cd();
+			string original_name = "original_psi_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
+			psi_original_dists[ep_type][cent_bin][run_key] = new TH1I(original_name.data(), "Original Psi Distribution", 200, 0, M_PI);
+			string flat_name = "flat_psi_" + particle_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
+			psi_flat_dists[ep_type][cent_bin][run_key] = new TH1I(flat_name.data(), "Flattened Phi Distribution", 200, 0, M_PI);
+		}
+		psi_original_dists[ep_type][cent_bin][run_key]->Fill(psi);
+		psi_flat_dists[ep_type][cent_bin][run_key]->Fill(shifted_psi);
+	}
 
-	//return shifted_phi;
+	return shifted_psi;
 }
 
 

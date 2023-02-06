@@ -71,6 +71,8 @@ private:
 	// QA
 	map<string, map<int, vector<map<int, TH1I*>>>> phi_original_dists;  // Distribution of particles before flattening [particle_type][centrality][eta_bin][run_key]
 	map<string, map<int, vector<map<int, TH1I*>>>> phi_flat_dists;  // Distribution of particles after flattening [particle_type][centrality][eta_bin][run_key]
+	map<string, map<int, vector<map<int, TH1I*>>>> psi_original_dists;  // Distribution of event planes before flattening [particle_type][centrality][eta_bin][run_key]
+	map<string, map<int, vector<map<int, TH1I*>>>> psi_flat_dists;  // Distribution of event planes after flattening [particle_type][centrality][eta_bin][run_key]
 };
 
 
