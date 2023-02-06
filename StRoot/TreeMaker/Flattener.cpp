@@ -271,7 +271,7 @@ float Flattener::get_flat_ep(float psi, string ep_type, int cent_bin, int run) {
 			qa_file->cd();
 			string original_name = "original_psi_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
 			psi_original_dists[ep_type][cent_bin][run_key] = new TH1I(original_name.data(), "Original Psi Distribution", 200, 0, M_PI);
-			string flat_name = "flat_psi_" + particle_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
+			string flat_name = "flat_psi_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
 			psi_flat_dists[ep_type][cent_bin][run_key] = new TH1I(flat_name.data(), "Flattened Phi Distribution", 200, 0, M_PI);
 		}
 		psi_original_dists[ep_type][cent_bin][run_key]->Fill(psi);
