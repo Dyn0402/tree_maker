@@ -39,7 +39,6 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 
 	pars.set_energy_bes(energy, bes_phase);
 	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
-	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
@@ -103,7 +102,6 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 
 	pars.set_energy_bes(energy, bes_phase);
 	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
-	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
@@ -640,9 +638,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	TVector2 q_west(qx_west, qy_west);
 	float psi_east = 0.5 * q_east.Phi();
 	float psi_west = 0.5 * q_west.Phi();
-	event.psi_east = flatten.get_flat_ep("east", cent9_corr, event.run_num, psi_east);
-	event.psi_west = flatten.get_flat_ep("west", cent9_corr, event.run_num, psi_west);
-
+	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
+	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }
 
 
