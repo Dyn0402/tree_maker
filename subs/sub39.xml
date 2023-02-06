@@ -20,6 +20,8 @@
     <Package>
       <File>file:/star/u/dneff/git/tree_maker/.sl73_gcc485</File>
       <File>file:/star/u/dneff/git/tree_maker/Make_Trees.cpp</File>
+		<File>file:/star/u/dneff/gpfs/data/BES1/flow_flat_coefs/phi_coefs_&energy;GeV.root</File>
+		<File>file:/star/u/dneff/gpfs/data/BES1/flow_flat_coefs/ep_coefs_&energy;GeV.root</File>
     </Package>
   </SandBox>
 
@@ -30,7 +32,7 @@
     <output fromScratch="*.root" toURL="file:&out_path;output/&energy;GeV/" />
  
   <Generator>
-    <Location>/gpfs01/star/pwg/dneff/data/BES1/trees/log/</Location>
+    <Location>/gpfs01/star/pwg/dneff/data/BES1/trees/log/39GeV/</Location>
     <ScriptLocation>/gpfs01/star/pwg/dneff/data/BES1/trees/script/39GeV/</ScriptLocation>
     <ListLocation>/gpfs01/star/pwg/dneff/data/BES1/trees/list/39GeV/</ListLocation>
   </Generator>

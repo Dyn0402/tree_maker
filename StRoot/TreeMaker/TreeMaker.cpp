@@ -595,6 +595,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
+				flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
 				track_cut_hist->Fill("m_proton", 1);
 				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
 			}
@@ -611,7 +612,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		else is_poi = false;
 
 		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
-			float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 			if (eta < -0.2) {
 				qx_west += cos(2 * phi_shifted);
 				qy_west += sin(2 * phi_shifted);
@@ -632,8 +633,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	// Calculate event planes
 	TVector2 q_east(qx_east, qy_east);
 	TVector2 q_west(qx_west, qy_west);
-	float psi_east = 0.5 * q_east.Phi();
-	float psi_west = 0.5 * q_west.Phi();
+	float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
+	float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
 	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
 	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }
@@ -664,7 +665,6 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		track = (StPicoTrack*) picoDst->track(track_index);
 
 		// Initial track cuts
-
 		if(!track) continue;  // Check that track not NULL
 		track_cut_hist->Fill("Is Track", 1);
 
@@ -676,7 +676,6 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		track_cut_hist->Fill("Charge", 1);
 
 		// Get main track variables
-
 		p = track->pMom().Mag();
 		pt = track->pMom().Perp();
 		eta = track->pMom().PseudoRapidity();
@@ -741,6 +740,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
+				flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
 				track_cut_hist->Fill("m_proton", 1);
 				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
 			}
@@ -756,7 +756,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		else is_poi = false;
 
 		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
-			float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 			if (eta < -0.2) {
 				qx_west += cos(2 * phi_shifted);
 				qy_west += sin(2 * phi_shifted);
@@ -775,8 +775,8 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	// Calculate event planes
 	TVector2 q_east(qx_east, qy_east);
 	TVector2 q_west(qx_west, qy_west);
-	float psi_east = 0.5 * q_east.Phi();
-	float psi_west = 0.5 * q_west.Phi();
+	float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
+	float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
 	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
 	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }

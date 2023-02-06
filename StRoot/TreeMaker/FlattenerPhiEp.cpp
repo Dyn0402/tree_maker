@@ -452,8 +452,8 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 	if (run_type == "EpDist") {
 		TVector2 q_east(qx_east, qy_east);
 		TVector2 q_west(qx_west, qy_west);
-		float psi_east = 0.5 * q_east.Phi();
-		float psi_west = 0.5 * q_west.Phi();
+		float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
+		float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
 		flatten.calc_ep_terms("east", cent9_corr, event.run_num, psi_east);
 		flatten.calc_ep_terms("west", cent9_corr, event.run_num, psi_west);
 	}
@@ -531,7 +531,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
 				else if (run_type == "EpDist") {
-					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+					float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 					if (eta < -0.2) {
 						qx_west += cos(2 * phi_shifted);
 						qy_west += sin(2 * phi_shifted);
@@ -549,8 +549,8 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	if (run_type == "EpDist") {
 		TVector2 q_east(qx_east, qy_east);
 		TVector2 q_west(qx_west, qy_west);
-		float psi_east = 0.5 * q_east.Phi();
-		float psi_west = 0.5 * q_west.Phi();
+		float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
+		float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
 		flatten.calc_ep_terms("east", cent9_corr, event.run_num, psi_east);
 		flatten.calc_ep_terms("west", cent9_corr, event.run_num, psi_west);
 	}
