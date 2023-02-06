@@ -559,11 +559,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("nHitsRatio Max", 1);
 
-		//// Event Plane calculations
-		//if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-		//	//event.qx += cos(2*phi); event.qy += sin(2*phi);
-		//}
-
 		// Fill PID plots
 		de_dx_pq_hist->Fill(charge*p, track->dEdx());
 		if(beta > 1.e-5) {
@@ -605,12 +600,13 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			}
 			else is_poi = false;
 		}
-		else if (fabs(nsigmapi) <= 1.0 && read_pions) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
+		else if (fabs(nsigmapi) <= 1.0 && read_pions && is_poi) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
 			track_cut_hist->Fill("nsigma_pion", 1);
 			if (((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
 				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
+			else is_poi = false;
 		}
 		else is_poi = false;
 
@@ -660,6 +656,9 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	double beta, p, m;
 	short charge;
 
+	bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
+	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
+
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StPicoTrack*) picoDst->track(track_index);
@@ -698,29 +697,12 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 			m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
 		}
 
-		// Event track counters
-
-//		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
-//			tofmatched++;
-//			if(beta > 0.1) tofmatchedbeta++;
-//		}
-
-//		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
-
-//		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) refmult2++;
-//		if(fabs(eta) < 1. && nHitsFit > 10 && dca_prim < 3. && nsigmapr < -3. && m < 0.4) refmult3++;
-
 		// Cut on ratio of nHitsFit to nHitsPossible
 		ratio = (double) nHitsFit / (double) track->nHitsMax();
 		if(ratio < 0.52) continue;
 		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("nHitsRatio Max", 1);
-
-		// Event Plane Q vector
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			//event.qx += cos(2*phi); event.qy += sin(2*phi);
-		}
 
 		// Fill PID plots
 		de_dx_pq_hist->Fill(charge*p, track->dEdx());
@@ -740,40 +722,61 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 
 		if(nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
-		if(track->nHitsDedx() <= 5) continue;
-		track_cut_hist->Fill("nHitsDedx", 1);
+		if(track->nHitsDedx() <= 5) is_poi = false;
+		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
 
 		if(dca < 0 || dca > 3.0) continue;
 		track_cut_hist->Fill("dca", 1);
 
-		if(pt < 0.3) continue;
-		track_cut_hist->Fill("pt_low", 1);
+		if(pt < 0.3) is_poi = false;
+		if (is_poi) track_cut_hist->Fill("pt_low", 1);
 		if(pt > 2.2) continue;
-		track_cut_hist->Fill("pt_high", 1);
+		if (is_poi) track_cut_hist->Fill("pt_high", 1);
 
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->gDCAz(event.vz);
 
 
-		if(fabs(nsigmapr_eff) < 2.5) {
+		if(fabs(nsigmapr_eff) < 2.5 && is_poi) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
-				}
-		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
+			if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
+				track_cut_hist->Fill("m_proton", 1);
+				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
+			}
+			else is_poi = false;
+		} else if(fabs(nsigmapi) <= 1.0 && read_pions && is_poi) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
 			track_cut_hist->Fill("nsigma_pion", 1);
 			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
 				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
+			else is_poi = false;
 		}
+		else is_poi = false;
 
+		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
+			float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+			if (eta < -0.2) {
+				qx_west += cos(2 * phi_shifted);
+				qy_west += sin(2 * phi_shifted);
+			}
+			else if (eta > 0.2) {
+				qx_east += cos(2 * phi_shifted);
+				qy_east += sin(2 * phi_shifted);
+			}
+		}
 	}
 
 	// Calculate and set dca_xy variables in event
 	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
+	// Calculate event planes
+	TVector2 q_east(qx_east, qy_east);
+	TVector2 q_west(qx_west, qy_west);
+	float psi_east = 0.5 * q_east.Phi();
+	float psi_west = 0.5 * q_west.Phi();
+	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
+	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }
