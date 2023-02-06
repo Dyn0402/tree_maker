@@ -39,6 +39,7 @@ TreeMaker::TreeMaker(StMuDstMaker *maker) : StMaker("TreeMaker") {
 
 	pars.set_energy_bes(energy, bes_phase);
 	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
+	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
@@ -68,6 +69,8 @@ TreeMaker::TreeMaker(StMuDstMaker *maker, string name, int energy_in, int bes_ph
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 	
 	pars.set_energy_bes(energy, bes_phase);
+	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
+	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 
@@ -99,6 +102,8 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker) : StMaker("TreeMaker") {
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
+	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_phase, bool read_pions=true) : StMaker("TreeMaker") {
@@ -128,6 +133,8 @@ TreeMaker::TreeMaker(StPicoDstMaker *maker, string name, int energy_in, int bes_
 	refmultCorrUtil = new StRefMultCorr(("refmult" + to_string(ref_num)).data());
 
 	pars.set_energy_bes(energy, bes_phase);
+	flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", "ep_coefs_" + to_string(energy) + "GeV.root");
+	flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 }
 
 TreeMaker::~TreeMaker() {
@@ -487,6 +494,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
+	bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
+	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 
 	for(int track_index = 0; track_index < num_primary; track_index++) {
 		track_cut_hist->Fill("Tracks Read", 1);
@@ -552,10 +561,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("nHitsRatio Max", 1);
 
-		// Event Plane Q vector
-		if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
-			//event.qx += cos(2*phi); event.qy += sin(2*phi);
-		}
+		//// Event Plane calculations
+		//if(nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+		//	//event.qx += cos(2*phi); event.qy += sin(2*phi);
+		//}
 
 		// Fill PID plots
 		de_dx_pq_hist->Fill(charge*p, track->dEdx());
@@ -570,40 +579,54 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			dca_xy_count++;
 		}
 
-		if(fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
+		if (fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
 
-		if(nHitsFit <= 15) continue;
+		if (nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
-		if(track->nHitsDedx() <= 5) continue;
-		track_cut_hist->Fill("nHitsDedx", 1);
+		if (track->nHitsDedx() <= 5) is_poi = false;
+		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
 
-		if(dca < 0 || dca > 3.0) continue;
+		if (dca < 0 || dca > 3.0) continue;
 		track_cut_hist->Fill("dca", 1);
 
-		if(pt < 0.3) continue;
-		track_cut_hist->Fill("pt_low", 1);
-		if(pt > 2.2) continue;
-		track_cut_hist->Fill("pt_high", 1);
+		if (pt < 0.3) is_poi = false;
+		if (is_poi) track_cut_hist->Fill("pt_low", 1);
+		if (pt > 2.2) continue;
+		if (is_poi) track_cut_hist->Fill("pt_high", 1);
 
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->dcaZ();
 
-		if(fabs(nsigmapr_eff) < 2.5) {
+		if (fabs(nsigmapr_eff) < 2.5 && is_poi) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
-				if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
-					track_cut_hist->Fill("m_proton", 1);
-					protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
-				}
-		} if(fabs(nsigmapi) <= 1.0 && read_pions) {
+			if (((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
+				track_cut_hist->Fill("m_proton", 1);
+				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
+			}
+			else is_poi = false;
+		}
+		else if (fabs(nsigmapi) <= 1.0 && read_pions) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
 			track_cut_hist->Fill("nsigma_pion", 1);
-			if( ((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
+			if (((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
 				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
 		}
+		else is_poi = false;
 
+		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
+			float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+			if (eta < -0.2) {
+				qx_west += cos(2 * phi_shifted);
+				qy_west += sin(2 * phi_shifted);
+			}
+			else if (eta > 0.2) {
+				qx_east += cos(2 * phi_shifted);
+				qy_east += sin(2 * phi_shifted);
+			}
+		}
 	}
 
 	// Calculate and set dca_xy variables in event
@@ -611,6 +634,14 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
 	event.btof_match = tofmatched;
+
+	// Calculate event planes
+	TVector2 q_east(qx_east, qy_east);
+	TVector2 q_west(qx_west, qy_west);
+	float psi_east = 0.5 * q_east.Phi();
+	float psi_west = 0.5 * q_west.Phi();
+	event.psi_east = flatten.get_flat_ep("east", cent9_corr, event.run_num, psi_east);
+	event.psi_west = flatten.get_flat_ep("west", cent9_corr, event.run_num, psi_west);
 
 }
 

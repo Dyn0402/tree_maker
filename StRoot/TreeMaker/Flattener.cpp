@@ -154,21 +154,21 @@ void Flattener::read_ep_terms() {
 		string file_name = (string)key->GetName();
 		vector<string> file_name_split = split(file_name, '_');
 		if (file_name_split.size() != 7) {
-			cout << "Bad phi coef object name read, skipping! " << file_name << endl;
+			cout << "Bad event plane coef object name read, skipping! " << file_name << endl;
 			continue;
 		}
 		string sin_cos = file_name_split[0];
 		string ep_type = file_name_split[2];
 		int cent_bin = stoi(file_name_split[4]);
 		int run_key = stoi(file_name_split[7]);
-		if (in_string(sin_cos, "sine")) {
-			ep_sin_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
-		}
-		else if (in_string(sin_cos, "cosine")) {
+		if (in_string(sin_cos, "cosine")) {
 			ep_cos_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
 		}
+		else if (in_string(sin_cos, "sine")) {
+			ep_sin_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
+		}
 		else {
-			cout << "Bad sine/cosine read of phi file! " << sin_cos.size() << " " << sin_cos << "  " << file_name << endl;
+			cout << "Bad sine/cosine read of event plane file! " << sin_cos.size() << " " << sin_cos << "  " << file_name << endl;
 		}
 	}
 }

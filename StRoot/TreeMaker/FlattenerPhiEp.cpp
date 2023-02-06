@@ -434,7 +434,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 					flatten.calc_phi_terms("non-protons", cent9_corr, eta, event.run_num, phi);
 				}
 				else if (run_type == "EpDist") {
-					float phi_shifted = flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);
+					float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 					if (eta < -0.2) {
 						qx_west += cos(2 * phi_shifted);
 						qy_west += sin(2 * phi_shifted);
