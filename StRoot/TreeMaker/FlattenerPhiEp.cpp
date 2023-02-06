@@ -477,7 +477,7 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 	double beta, p, m;
 	short charge;
 
-	int eta_bin, run_bin_key;
+	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
 		track = (StPicoTrack*) picoDst->track(track_index);
