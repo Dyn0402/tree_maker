@@ -40,6 +40,7 @@ public:
 	void write_ep();
 	void close_phi_ep();
 	float get_flat_phi(float phi, string particle_type, int cent_bin, float eta, int run);
+	float get_flat_ep(float psi, string ep_type, int cent_bin, int run);
 	int get_eta_bin(float eta);
 	int get_run_bin_key(int run_num);
 
@@ -48,7 +49,7 @@ private:
 	TFile* phi_file;  // Root file to be written for phi coefficients
 	string ep_file_name;  // Name of output root file for event plane coefficients
 	TFile* ep_file;  // Root file to be written for event plane coefficients
-	TFile* qa_file;
+	TFile* qa_file;  // Root file to be written for phi original/flat distributions on EpDist run
 
 	float eta_min = -1.0;
 	float eta_max = 1.0;
