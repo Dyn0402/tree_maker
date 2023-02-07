@@ -160,7 +160,7 @@ void Flattener::read_ep_terms() {
 		string sin_cos = file_name_split[0];
 		string ep_type = file_name_split[2];
 		int cent_bin = stoi(file_name_split[4]);
-		int run_key = stoi(file_name_split[7]);
+		int run_key = stoi(file_name_split[6]);
 		if (in_string(sin_cos, "cosine")) {
 			ep_cos_terms[ep_type][cent_bin][run_key] = (TProfile*)key->ReadObj();
 		}
