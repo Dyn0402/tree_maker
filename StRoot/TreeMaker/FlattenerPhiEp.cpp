@@ -56,7 +56,7 @@ FlattenerPhiEp::FlattenerPhiEp(StMuDstMaker *maker, string name, int energy_in, 
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
 	else if(run_type == "EpDist") { 
 		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
-		flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
+		//flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
@@ -105,7 +105,7 @@ FlattenerPhiEp::FlattenerPhiEp(StPicoDstMaker *maker, string name, int energy_in
 	if (run_type == "PhiDist") { flatten = Flattener(name); }
 	else if (run_type == "EpDist") {
 		flatten = Flattener("phi_coefs_" + to_string(energy) + "GeV.root", name);
-		flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
+		//flatten.set_qa(name.substr(0, name.size() - 5) + "_qa.root");  // Hard coded QA to on;
 	}
 	else { cout << "Don't recognize run_type, not setting Flattener" << endl; }
 }
@@ -418,7 +418,7 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 		if (ratio > 1.05) continue;
 
 		// Fill Fourier coefficient profiles
-		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {
+		if (nHitsFit > 15 && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Should remove eta restriction for protons if I ever have to rerun
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (track->nHitsDedx() > 5 && dca < 1.0 && pt >= 0.3 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {
 				if (run_type == "PhiDist") {
@@ -436,12 +436,12 @@ void FlattenerPhiEp::track_loop(StMuEvent *mu_event) {
 				else if (run_type == "EpDist") {
 					float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 					if (eta < -0.2) {
-						qx_west += cos(2 * phi_shifted);
-						qy_west += sin(2 * phi_shifted);
+						qx_west += pt * cos(2 * phi_shifted);
+						qy_west += pt * sin(2 * phi_shifted);
 					}
 					else if (eta > 0.2) {
-						qx_east += cos(2 * phi_shifted);
-						qy_east += sin(2 * phi_shifted);
+						qx_east += pt * cos(2 * phi_shifted);
+						qy_east += pt * sin(2 * phi_shifted);
 					}
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }
@@ -533,12 +533,12 @@ void FlattenerPhiEp::track_loop(StPicoEvent *pico_event) {
 				else if (run_type == "EpDist") {
 					float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 					if (eta < -0.2) {
-						qx_west += cos(2 * phi_shifted);
-						qy_west += sin(2 * phi_shifted);
+						qx_west += pt * cos(2 * phi_shifted);
+						qy_west += pt * sin(2 * phi_shifted);
 					}
 					else if (eta > 0.2) {
-						qx_east += cos(2 * phi_shifted);
-						qy_east += sin(2 * phi_shifted);
+						qx_east += pt * cos(2 * phi_shifted);
+						qy_east += pt * sin(2 * phi_shifted);
 					}
 				}
 				else { cout << "Don't recognize run_type, doing nothing! " << run_type << endl; }

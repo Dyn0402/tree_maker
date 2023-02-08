@@ -201,26 +201,22 @@ void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run, float psi) 
 		ep_cos_terms[ep_type][cent_bin][run_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
 	}
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-		ep_sin_terms[ep_type][cent_bin][run_key]->Fill(n, sin(n * psi));
-		ep_cos_terms[ep_type][cent_bin][run_key]->Fill(n, cos(n * psi));
+		ep_sin_terms[ep_type][cent_bin][run_key]->Fill(n, 2 * sin(n * psi));
+		ep_cos_terms[ep_type][cent_bin][run_key]->Fill(n, 2 * cos(n * psi));
 	}
 }
 
 // Get shifted phi given original phi based on Fourier coefficients for specific event/track
 float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, float eta, int run) {
-	cout << "get_flat_phi" << endl;
 	int eta_bin = get_eta_bin(eta);
 	int run_key = get_run_bin_key(run);
-	cout << "get_flat_phi check if run exists " << particle_type << " " << cent_bin << " " << eta << " " << eta_bin << " " << run_key << endl;
 	if (!phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]) {  // Hopefully just means specific run doesn't exist
 		cout << "No run info " << run_key << endl;
 		run_key = phi_sin_terms[particle_type][cent_bin][eta_bin].begin()->first;  // Just use any run
 		cout << "Using run " << run_key << " instead" << endl;
 	}
-	cout << "get_flat_phi get phi terms" << endl;
 	TProfile* sin_terms = phi_sin_terms[particle_type][cent_bin][eta_bin][run_key];
 	TProfile* cos_terms = phi_cos_terms[particle_type][cent_bin][eta_bin][run_key];
-	cout << "get_flat_phi got phi terms" << endl;
 
 	float dphi = 0.;
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
@@ -261,7 +257,7 @@ float Flattener::get_flat_ep(float psi, string ep_type, int cent_bin, int run) {
 
 	float dpsi = 0.;
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-		dpsi += 2 / n * (cos_terms->GetBinContent(n) * sin(n * psi) - sin_terms->GetBinContent(n) * cos(n * psi));
+		dpsi += 1. / n * (cos_terms->GetBinContent(n) * sin(n * 2 * psi) - sin_terms->GetBinContent(n) * cos(n * 2 * psi));
 	}
 
 	float shifted_psi = psi + dpsi;
@@ -275,7 +271,7 @@ float Flattener::get_flat_ep(float psi, string ep_type, int cent_bin, int run) {
 			string original_name = "original_psi_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
 			psi_original_dists[ep_type][cent_bin][run_key] = new TH1I(original_name.data(), "Original Psi Distribution", 200, 0, M_PI);
 			string flat_name = "flat_psi_" + ep_type + "_cent_" + to_string(cent_bin) + "_runkey_" + to_string(run_key);
-			psi_flat_dists[ep_type][cent_bin][run_key] = new TH1I(flat_name.data(), "Flattened Phi Distribution", 200, 0, M_PI);
+			psi_flat_dists[ep_type][cent_bin][run_key] = new TH1I(flat_name.data(), "Flattened Psi Distribution", 200, 0, M_PI);
 		}
 		psi_original_dists[ep_type][cent_bin][run_key]->Fill(psi);
 		psi_flat_dists[ep_type][cent_bin][run_key]->Fill(shifted_psi);

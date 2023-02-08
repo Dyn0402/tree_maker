@@ -498,8 +498,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
-		cout << "here 1" << endl;
-
 		// Initial track cuts
 		if(!track) continue;  // Check that track not NULL
 		track_cut_hist->Fill("Is Track", 1);
@@ -521,8 +519,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
 		track_cut_hist->Fill("Charge", 1);
 
-		cout << "here 2" << endl;
-
 
 		// Get main track variables
 		p = track->p().mag();
@@ -540,7 +536,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		btofMatch = track->btofPidTraits().matchFlag();
 		beta = track->btofPidTraits().beta();
 		m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
-		cout << "here 3" << endl;
 
 
 		// Event track counters
@@ -560,7 +555,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		track_cut_hist->Fill("nHitsRatio Min", 1);
 		if(ratio > 1.05) continue;
 		track_cut_hist->Fill("nHitsRatio Max", 1);
-		cout << "here 4" << endl;
 
 		// Fill PID plots
 		de_dx_pq_hist->Fill(charge*p, track->dEdx());
@@ -574,32 +568,25 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
 			dca_xy_count++;
 		}
-		cout << "here 5" << endl;
 
 		if (fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
 		track_cut_hist->Fill("eta", 1);
-		cout << "here 6" << endl;
 
 		if (nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
 		if (track->nHitsDedx() <= 5) is_poi = false;
 		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
-		cout << "here 7" << endl;
 
 		if (dca < 0 || dca > 3.0) continue;
 		if (is_poi) track_cut_hist->Fill("dca", 1);
-		cout << "here 8" << endl;
 
 		if (pt < 0.3) is_poi = false;
 		if (is_poi) track_cut_hist->Fill("pt_low", 1);
 		if (pt > 2.2) continue;
 		if (is_poi) track_cut_hist->Fill("pt_high", 1);
-		cout << "here 9" << endl;
 
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->dcaZ();
-
-		cout << "here 10" << endl;
 
 		if (fabs(nsigmapr_eff) < 2.5 && is_poi) {
 			track_cut_hist->Fill("nsigma_proton", 1);
@@ -624,17 +611,16 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			else is_poi = false;
 		}
 		else is_poi = false;
-		cout << "here 11" << endl;
 
 		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
 			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 			if (eta < -0.2) {
-				qx_west += cos(2 * phi_shifted);
-				qy_west += sin(2 * phi_shifted);
+				qx_west += pt * cos(2 * phi_shifted);
+				qy_west += pt * sin(2 * phi_shifted);
 			}
 			else if (eta > 0.2) {
-				qx_east += cos(2 * phi_shifted);
-				qy_east += sin(2 * phi_shifted);
+				qx_east += pt * cos(2 * phi_shifted);
+				qy_east += pt * sin(2 * phi_shifted);
 			}
 		}
 	}
@@ -778,12 +764,12 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
 			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
 			if (eta < -0.2) {
-				qx_west += cos(2 * phi_shifted);
-				qy_west += sin(2 * phi_shifted);
+				qx_west += pt * cos(2 * phi_shifted);
+				qy_west += pt * sin(2 * phi_shifted);
 			}
 			else if (eta > 0.2) {
-				qx_east += cos(2 * phi_shifted);
-				qy_east += sin(2 * phi_shifted);
+				qx_east += pt * cos(2 * phi_shifted);
+				qy_east += pt * sin(2 * phi_shifted);
 			}
 		}
 	}
