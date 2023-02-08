@@ -606,7 +606,9 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
 				if (dca < 1.0 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {  // Actual analysis default cuts
-					flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+					if (fabs(eta) < 1.0) {  // I shouldn't have cut on this when flattening but I did so going with it. Shouldn't be that big of a deal, just don't flatten these protons (bad practice)
+						flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+					}
 				}
 				track_cut_hist->Fill("m_proton", 1);
 				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
@@ -755,7 +757,9 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if( ((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
 				if (dca < 1.0 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {  // Actual analysis default cuts
-					flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+					if (fabs(eta) < 1.0) {  // I shouldn't have cut on this when flattening but I did so going with it. Shouldn't be that big of a deal, just don't flatten these protons (bad practice)
+						flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+					}
 				}
 				track_cut_hist->Fill("m_proton", 1);
 				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
