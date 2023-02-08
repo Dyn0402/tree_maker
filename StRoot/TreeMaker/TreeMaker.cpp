@@ -444,8 +444,6 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	double beta, p, m;
 	short charge;
 
-	flatten.test();
-
 	for (int track_index = 0; track_index < num_primary; track_index++) {  // Do refmult counting to get centrality
 		track = (StMuTrack*)muDst->primaryTracks(track_index);
 
@@ -492,10 +490,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	int cent9_corr = refmultCorrUtil->getCentralityBin9();
 
 	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
-	bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 
 	for(int track_index = 0; track_index < num_primary; track_index++) {
+		bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
@@ -581,7 +579,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
 
 		if (dca < 0 || dca > 3.0) continue;
-		track_cut_hist->Fill("dca", 1);
+		if (is_poi) track_cut_hist->Fill("dca", 1);
 
 		if (pt < 0.3) is_poi = false;
 		if (is_poi) track_cut_hist->Fill("pt_low", 1);
@@ -657,10 +655,10 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	double beta, p, m;
 	short charge;
 
-	bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
+		bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StPicoTrack*) picoDst->track(track_index);
 
@@ -725,7 +723,7 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
 
 		if(dca < 0 || dca > 3.0) continue;
-		track_cut_hist->Fill("dca", 1);
+		if (is_poi) track_cut_hist->Fill("dca", 1);
 
 		if(pt < 0.3) is_poi = false;
 		if (is_poi) track_cut_hist->Fill("pt_low", 1);
