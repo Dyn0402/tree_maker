@@ -201,8 +201,8 @@ void Flattener::calc_ep_terms(string ep_type, int cent_bin, int run, float psi) 
 		ep_cos_terms[ep_type][cent_bin][run_key] = new TProfile(cos_name.data(), "Cosine Terms", n_harmonic_high - n_harmonic_low + 1, n_harmonic_low - 0.5, n_harmonic_high + 0.5);
 	}
 	for (int n = n_harmonic_low; n <= n_harmonic_high; n++) {
-		ep_sin_terms[ep_type][cent_bin][run_key]->Fill(n, 2 * sin(n * psi));
-		ep_cos_terms[ep_type][cent_bin][run_key]->Fill(n, 2 * cos(n * psi));
+		ep_sin_terms[ep_type][cent_bin][run_key]->Fill(n, sin(n * 2 * psi));
+		ep_cos_terms[ep_type][cent_bin][run_key]->Fill(n, cos(n * 2 * psi));
 	}
 }
 
