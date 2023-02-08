@@ -211,6 +211,7 @@ float Flattener::get_flat_phi(float phi, string particle_type, int cent_bin, flo
 	cout << "get_flat_phi" << endl;
 	int eta_bin = get_eta_bin(eta);
 	int run_key = get_run_bin_key(run);
+	cout << "get_flat_phi check if run exists " << particle_type << " " << cent_bin << " " << eta_bin << " " << run_key << endl;
 	if (!phi_sin_terms[particle_type][cent_bin][eta_bin][run_key]) {  // Hopefully just means specific run doesn't exist
 		cout << "No run info " << run_key << endl;
 		run_key = phi_sin_terms[particle_type][cent_bin][eta_bin].begin()->first;  // Just use any run
