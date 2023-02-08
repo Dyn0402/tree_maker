@@ -634,8 +634,8 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	// Calculate event planes
 	TVector2 q_east(qx_east, qy_east);
 	TVector2 q_west(qx_west, qy_west);
-	float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
-	float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
+	float psi_east = 0.5 * q_east.Phi();  // if (psi_east < 0) { psi_east += M_PI; }
+	float psi_west = 0.5 * q_west.Phi();  // if (psi_west < 0) { psi_west += M_PI; }
 	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
 	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }
