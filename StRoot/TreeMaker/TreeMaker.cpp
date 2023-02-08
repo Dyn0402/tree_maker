@@ -491,9 +491,10 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
+	bool is_poi;  // If not particle of interest need to keep going to use particle in event plane
 
 	for(int track_index = 0; track_index < num_primary; track_index++) {
-		bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
+		is_poi = true;
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StMuTrack*) muDst->primaryTracks(track_index);
 
@@ -656,9 +657,10 @@ void TreeMaker::track_loop(StPicoEvent *pico_event) {
 	short charge;
 
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
+	bool is_poi;  // If not particle of interest need to keep going to use particle in event plane
 
 	for(int track_index = 0; track_index < num_tracks; track_index++) {
-		bool is_poi = true;  // If not particle of interest need to keep going to use particle in event plane
+		is_poi = true;
 		track_cut_hist->Fill("Tracks Read", 1);
 		track = (StPicoTrack*) picoDst->track(track_index);
 
