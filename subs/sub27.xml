@@ -8,7 +8,7 @@
 <!ENTITY pions "false">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/trees/">
 ]>
-<job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
+<job simulateSubmission ="false" maxFilesPerProcess="20" fileListSyntax="xrootd">
   
   <command>
       starver pro
