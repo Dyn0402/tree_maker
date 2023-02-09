@@ -8,7 +8,7 @@
 <!ENTITY run_type "EpDist">
 <!ENTITY out_path "/gpfs01/star/pwg/dneff/data/BES1/flow_dists/">
 ]>
-<job simulateSubmission ="false" maxFilesPerProcess="10" fileListSyntax="xrootd">
+<job simulateSubmission ="false" maxFilesPerProcess="100" fileListSyntax="xrootd">
   
   <command>
 	  starver pro
