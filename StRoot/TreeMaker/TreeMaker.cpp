@@ -433,9 +433,9 @@ bool TreeMaker::is_bad_event(StPicoEvent *pico_event) {
 }
 
 
-void TreeMaker::track_loop(StMuEvent *mu_event) {
+void TreeMaker::track_loop(StMuEvent* mu_event) {
 	int num_primary = muDst->primaryTracks()->GetEntries();
-	StMuTrack *track, *track_glob;
+	StMuTrack* track, * track_glob;
 
 	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
 	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
@@ -493,30 +493,30 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 	bool is_poi;  // If not particle of interest need to keep going to use particle in event plane
 
-	for(int track_index = 0; track_index < num_primary; track_index++) {
-		is_poi = true;
+	for (int track_index = 0; track_index < num_primary; track_index++) {
+		is_poi = false;
 		track_cut_hist->Fill("Tracks Read", 1);
-		track = (StMuTrack*) muDst->primaryTracks(track_index);
+		track = (StMuTrack*)muDst->primaryTracks(track_index);
 
 		// Initial track cuts
-		if(!track) continue;  // Check that track not NULL
+		if (!track) continue;  // Check that track not NULL
 		track_cut_hist->Fill("Is Track", 1);
 
-		if(track->vertexIndex() != 0) continue;  // Check that vertex index is zero
+		if (track->vertexIndex() != 0) continue;  // Check that vertex index is zero
 
 		index_2g = track->index2Global();
-		if(index_2g < 0) continue;  // Check that global index non negative
+		if (index_2g < 0) continue;  // Check that global index non negative
 
-		track_glob = (StMuTrack*) muDst->globalTracks(index_2g);
+		track_glob = (StMuTrack*)muDst->globalTracks(index_2g);
 
-		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
+		if (track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
 
-		if(track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
+		if (track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
 
 		track_cut_hist->Fill("Primary Track/Flags", 1);
 
 		charge = track->charge();
-		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
+		if (fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
 		track_cut_hist->Fill("Charge", 1);
 
 
@@ -524,46 +524,46 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 		p = track->p().mag();
 		pt = track->pt();
 		eta = track->eta();
-		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
+		phi = track->phi();  if (phi < 0) { phi += 2 * M_PI; }
 		dca = track->dcaGlobal().mag();
 		dca_prim = track->dca().mag();
 		nsigmapr = track->nSigmaProton();
 		nsigmapr_eff = nsigmapr;
-		if(energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
+		if (energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
 
 		nHitsFit = track_glob->nHitsFit();
 
 		btofMatch = track->btofPidTraits().matchFlag();
 		beta = track->btofPidTraits().beta();
-		m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
+		m = (beta > 1.e-5) ? p * p * (1. / beta / beta - 1.) : -999;
 
 
 		// Event track counters
-		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
+		if (btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
 			tofmatched++;
-			if(beta > 0.1) tofmatchedbeta++;
+			if (beta > 0.1) tofmatchedbeta++;
 		}
 
-//		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
+		//		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
 
-		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
-		if(fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
+		if (fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
+		if (fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
 
 		// Cut on ratio of nHitsFit to nHitsPossible
-		ratio = (double) nHitsFit / (double) track_glob->nHitsPoss();
-		if(ratio < 0.52) continue;
+		ratio = (double)nHitsFit / (double)track_glob->nHitsPoss();
+		if (ratio < 0.52) continue;
 		track_cut_hist->Fill("nHitsRatio Min", 1);
-		if(ratio > 1.05) continue;
+		if (ratio > 1.05) continue;
 		track_cut_hist->Fill("nHitsRatio Max", 1);
 
 		// Fill PID plots
-		de_dx_pq_hist->Fill(charge*p, track->dEdx());
-		if(beta > 1.e-5) {
-			beta_pq_hist->Fill(charge*p, 1 / beta);
+		de_dx_pq_hist->Fill(charge * p, track->dEdx());
+		if (beta > 1.e-5) {
+			beta_pq_hist->Fill(charge * p, 1 / beta);
 		}
 
 		// Calculate dca_xy variables
-		if(track->dcaD() < 4 && track->dcaD() >= -4) {
+		if (track->dcaD() < 4 && track->dcaD() >= -4) {
 			dca_xy_avg += track->dcaD();
 			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
 			dca_xy_count++;
@@ -574,43 +574,40 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 
 		if (nHitsFit <= 15) continue;
 		track_cut_hist->Fill("nHitsFit", 1);
-		if (track->nHitsDedx() <= 5) is_poi = false;
-		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
+		if (track->nHitsDedx() > 5) track_cut_hist->Fill("nHitsDedx", 1);
 
 		if (dca < 0 || dca > 3.0) continue;
-		if (is_poi) track_cut_hist->Fill("dca", 1);
+		if (track->nHitsDedx() > 5) track_cut_hist->Fill("dca", 1);
 
-		if (pt < 0.3) is_poi = false;
-		if (is_poi) track_cut_hist->Fill("pt_low", 1);
+		if (pt <= 0.2) continue;;
+		if (track->nHitsDedx() > 5 && pt >= 0.3) track_cut_hist->Fill("pt_low", 1);
 		if (pt > 2.2) continue;
-		if (is_poi) track_cut_hist->Fill("pt_high", 1);
+		if (track->nHitsDedx() > 5 && pt >= 0.3) track_cut_hist->Fill("pt_high", 1);
 
 		nsigmapi = track->nSigmaPion();
 		dca_z = track->dcaZ();
 
-		if (fabs(nsigmapr_eff) < 2.5 && is_poi) {
+		if (fabs(nsigmapr_eff) < 2.5 && track->nHitsDedx() > 5 && pt >= 0.3) {
 			track_cut_hist->Fill("nsigma_proton", 1);
 			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
 			if (((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
 				if (dca < 1.0 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {  // Actual analysis default cuts
 					if (fabs(eta) < 1.0) {  // I shouldn't have cut on this when flattening but I did so going with it. Shouldn't be that big of a deal, just don't flatten these protons (bad practice)
 						flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+						is_poi = true;
 					}
 				}
 				track_cut_hist->Fill("m_proton", 1);
 				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
 			}
-			else is_poi = false;
 		}
-		else if (fabs(nsigmapi) <= 1.0 && read_pions && is_poi) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
+		else if (fabs(nsigmapi) <= 1.0 && read_pions && track->nHitsDedx() > 5 && pt >= 0.3) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
 			track_cut_hist->Fill("nsigma_pion", 1);
 			if (((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				track_cut_hist->Fill("m_pion", 1);
 				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
 			}
-			else is_poi = false;
 		}
-		else is_poi = false;
 
 		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
 			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
@@ -626,7 +623,7 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	}
 
 	// Calculate and set dca_xy variables in event
-	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
+	if (dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
 	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
 
 	event.btof_match = tofmatched;
@@ -639,6 +636,213 @@ void TreeMaker::track_loop(StMuEvent *mu_event) {
 	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
 	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
 }
+
+//void TreeMaker::track_loop(StMuEvent *mu_event) {
+//	int num_primary = muDst->primaryTracks()->GetEntries();
+//	StMuTrack *track, *track_glob;
+//
+//	int index_2g, nHitsFit, btofMatch, tofmatched = 0, tofmatchedbeta = 0, dca_xy_count = 0;
+//	float dca, dca_z, dca_prim, eta, rapidity, pt, nsigmapr, nsigmapi, phi, dca_xy_avg = 0, dca_xy_err = 0.;
+//	float nsigmapr_eff;
+//	double ratio; // Important that this is double, 13/25 = 0.52 = cut!!!
+//	double beta, p, m;
+//	short charge;
+//
+//	for (int track_index = 0; track_index < num_primary; track_index++) {  // Do refmult counting to get centrality
+//		track = (StMuTrack*)muDst->primaryTracks(track_index);
+//
+//		// Initial track cuts
+//		if (!track) continue;  // Check that track not NULL
+//
+//		if (track->vertexIndex() != 0) continue;  // Check that vertex index is zero
+//
+//		index_2g = track->index2Global();
+//		if (index_2g < 0) continue;  // Check that global index non negative
+//
+//		track_glob = (StMuTrack*)muDst->globalTracks(index_2g);
+//
+//		if (track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
+//
+//		if (track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
+//
+//		charge = track->charge();
+//		if (fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
+//
+//		// Get main track variables
+//		p = track->p().mag();
+//		pt = track->pt();
+//		eta = track->eta();
+//		phi = track->phi();  if (phi < 0) { phi += 2 * M_PI; }
+//		dca_prim = track->dca().mag();
+//		nsigmapr = track->nSigmaProton();
+//		nsigmapr_eff = nsigmapr;
+//		if (energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
+//
+//		nHitsFit = track_glob->nHitsFit();
+//
+//		beta = track->btofPidTraits().beta();
+//		m = (beta > 1.e-5) ? p * p * (1. / beta / beta - 1.) : -999;
+//
+//		if (fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
+//		if (fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
+//	}
+//
+//	// Get centrality bin for event from ref_multn value
+//	refmultCorrUtil->init(event.run_num);
+//	int refn = ref_num == 2 ? (int)event.refmult2 : (int)event.refmult3;
+//	refmultCorrUtil->initEvent(refn, (double)event.vz);
+//	int cent9_corr = refmultCorrUtil->getCentralityBin9();
+//
+//	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
+//	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
+//	bool is_poi;  // If not particle of interest need to keep going to use particle in event plane
+//
+//	for(int track_index = 0; track_index < num_primary; track_index++) {
+//		is_poi = true;
+//		track_cut_hist->Fill("Tracks Read", 1);
+//		track = (StMuTrack*) muDst->primaryTracks(track_index);
+//
+//		// Initial track cuts
+//		if(!track) continue;  // Check that track not NULL
+//		track_cut_hist->Fill("Is Track", 1);
+//
+//		if(track->vertexIndex() != 0) continue;  // Check that vertex index is zero
+//
+//		index_2g = track->index2Global();
+//		if(index_2g < 0) continue;  // Check that global index non negative
+//
+//		track_glob = (StMuTrack*) muDst->globalTracks(index_2g);
+//
+//		if(track->flag() < 0) continue;  // Check primary track flag, still unsure what it is
+//
+//		if(track_glob->flag() < 0) continue;  // Check global track flag, still unsure what it is
+//
+//		track_cut_hist->Fill("Primary Track/Flags", 1);
+//
+//		charge = track->charge();
+//		if(fabs(charge) != 1) continue;  // Eliminates neutral/exotic particles
+//		track_cut_hist->Fill("Charge", 1);
+//
+//
+//		// Get main track variables
+//		p = track->p().mag();
+//		pt = track->pt();
+//		eta = track->eta();
+//		phi = track->phi();  if(phi < 0) { phi += 2*M_PI; }
+//		dca = track->dcaGlobal().mag();
+//		dca_prim = track->dca().mag();
+//		nsigmapr = track->nSigmaProton();
+//		nsigmapr_eff = nsigmapr;
+//		if(energy == 27) { nsigmapr_eff *= 2; }  // BES I 27GeV calibration issue, have to scale nsigmapr by 2
+//
+//		nHitsFit = track_glob->nHitsFit();
+//
+//		btofMatch = track->btofPidTraits().matchFlag();
+//		beta = track->btofPidTraits().beta();
+//		m = (beta > 1.e-5) ? p*p*(1./beta/beta - 1.) : -999;
+//
+//
+//		// Event track counters
+//		if(btofMatch > 0 && fabs(eta) < 0.5 && dca_prim < 3.0 && nHitsFit > 10) {
+//			tofmatched++;
+//			if(beta > 0.1) tofmatchedbeta++;
+//		}
+//
+////		if(beta > 0.1 && fabs(eta) < 1. && dca_prim < 3. && nHitsFit > 10) { } //betamatch
+//
+//		if(fabs(eta) > 0.5 && fabs(eta) < 1. && dca_prim <= 3. && nHitsFit >= 10 && p >= 1.e-10) event.refmult2++;
+//		if(fabs(eta) < 1. && nHitsFit >= 10 && dca_prim <= 3. && nsigmapr_eff < -3. && m < 0.4 && p >= 1.e-10) event.refmult3++;
+//
+//		// Cut on ratio of nHitsFit to nHitsPossible
+//		ratio = (double) nHitsFit / (double) track_glob->nHitsPoss();
+//		if(ratio < 0.52) continue;
+//		track_cut_hist->Fill("nHitsRatio Min", 1);
+//		if(ratio > 1.05) continue;
+//		track_cut_hist->Fill("nHitsRatio Max", 1);
+//
+//		// Fill PID plots
+//		de_dx_pq_hist->Fill(charge*p, track->dEdx());
+//		if(beta > 1.e-5) {
+//			beta_pq_hist->Fill(charge*p, 1 / beta);
+//		}
+//
+//		// Calculate dca_xy variables
+//		if(track->dcaD() < 4 && track->dcaD() >= -4) {
+//			dca_xy_avg += track->dcaD();
+//			dca_xy_err += pow(track->dcaD(), 2);  // Calculate second raw moment first
+//			dca_xy_count++;
+//		}
+//
+//		if (fabs(eta) > 2.1) continue;  // Includes protons up to rapidity 1 at pt of 0.3
+//		track_cut_hist->Fill("eta", 1);
+//
+//		if (nHitsFit <= 15) continue;
+//		track_cut_hist->Fill("nHitsFit", 1);
+//		if (track->nHitsDedx() <= 5) is_poi = false;
+//		if (is_poi) track_cut_hist->Fill("nHitsDedx", 1);
+//
+//		if (dca < 0 || dca > 3.0) continue;
+//		if (is_poi) track_cut_hist->Fill("dca", 1);
+//
+//		if (pt < 0.3) is_poi = false;
+//		if (is_poi) track_cut_hist->Fill("pt_low", 1);
+//		if (pt > 2.2) continue;
+//		if (is_poi) track_cut_hist->Fill("pt_high", 1);
+//
+//		nsigmapi = track->nSigmaPion();
+//		dca_z = track->dcaZ();
+//
+//		if (fabs(nsigmapr_eff) < 2.5 && is_poi) {
+//			track_cut_hist->Fill("nsigma_proton", 1);
+//			rapidity = log((sqrt(pow(pars.m_proton, 2) + pow(pt, 2) * pow(cosh(eta), 2)) + pt * sinh(eta)) / sqrt(pow(pars.m_proton, 2) + pow(pt, 2)));
+//			if (((m > 0.5 && m < 1.5) || m == -999) && fabs(rapidity) <= 1) {
+//				if (dca < 1.0 && fabs(nsigmapr_eff) < 2.0 && ((m > 0.6 && m < 1.2) || m == -999) && fabs(rapidity) <= 0.5) {  // Actual analysis default cuts
+//					if (fabs(eta) < 1.0) {  // I shouldn't have cut on this when flattening but I did so going with it. Shouldn't be that big of a deal, just don't flatten these protons (bad practice)
+//						flatten.get_flat_phi(phi, "protons", cent9_corr, eta, event.run_num);  // Just to get QA plot
+//					}
+//				}
+//				track_cut_hist->Fill("m_proton", 1);
+//				protons.add_event(pt, phi, eta, dca, dca_z, nsigmapr, beta, charge, nHitsFit);
+//			}
+//			else is_poi = false;
+//		}
+//		else if (fabs(nsigmapi) <= 1.0 && read_pions && is_poi) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
+//			track_cut_hist->Fill("nsigma_pion", 1);
+//			if (((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
+//				track_cut_hist->Fill("m_pion", 1);
+//				pions.add_event(pt, phi, eta, dca, dca_z, nsigmapi, beta, charge, nHitsFit);
+//			}
+//			else is_poi = false;
+//		}
+//		else is_poi = false;
+//
+//		if (!is_poi && dca < 2.0 && fabs(eta) < 1.0 && pt > 0.2 && pt < 2.) {  // Use particle for event plane
+//			float phi_shifted = flatten.get_flat_phi(phi, "non-protons", cent9_corr, eta, event.run_num);
+//			if (eta < -0.2) {
+//				qx_west += pt * cos(2 * phi_shifted);
+//				qy_west += pt * sin(2 * phi_shifted);
+//			}
+//			else if (eta > 0.2) {
+//				qx_east += pt * cos(2 * phi_shifted);
+//				qy_east += pt * sin(2 * phi_shifted);
+//			}
+//		}
+//	}
+//
+//	// Calculate and set dca_xy variables in event
+//	if(dca_xy_count > 0) { event.dca_xy_avg = dca_xy_avg / dca_xy_count; event.dca_xy_err = pow((dca_xy_err / dca_xy_count - pow(event.dca_xy_avg, 2)) / dca_xy_count, 0.5); }
+//	else { event.dca_xy_avg = -899; event.dca_xy_err = -899; }
+//
+//	event.btof_match = tofmatched;
+//
+//	// Calculate event planes
+//	TVector2 q_east(qx_east, qy_east);
+//	TVector2 q_west(qx_west, qy_west);
+//	float psi_east = 0.5 * q_east.Phi(); if (psi_east < 0) { psi_east += M_PI; }
+//	float psi_west = 0.5 * q_west.Phi(); if (psi_west < 0) { psi_west += M_PI; }
+//	event.psi_east = flatten.get_flat_ep(psi_east, "east", cent9_corr, event.run_num);
+//	event.psi_west = flatten.get_flat_ep(psi_west, "west", cent9_corr, event.run_num);
+//}
 
 
 void TreeMaker::track_loop(StPicoEvent *pico_event) {
