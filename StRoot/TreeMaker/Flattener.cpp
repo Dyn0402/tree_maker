@@ -102,7 +102,7 @@ void Flattener::init_treemaker() {
 	cout << "Read phi Fourier coefficients from file." << endl;
 	cout << "Reading event plane Fourier coefficients from file..." << endl;
 	read_ep_terms();
-	cout << "Reading event plane Fourier coefficients from file." << endl;
+	cout << "Read event plane Fourier coefficients from file." << endl;
 }
 
 // Initialize phi_sin/cos_terms
