@@ -519,6 +519,7 @@ void FlattenerPhiEp::track_loop(StMuEvent* mu_event) {
 	event.refmult2 = 0; event.refmult3 = 0;  // Need to reset after previous loop for getting centrality. Clunky
 	float qx_east = 0., qx_west = 0., qy_east = 0., qy_west = 0.;
 	bool is_poi;  // If not particle of interest need to keep going to use particle in event plane
+	bool read_pions = false;  // Read pions hardcoded false
 
 	for (int track_index = 0; track_index < num_primary; track_index++) {
 		is_poi = true;
@@ -612,7 +613,6 @@ void FlattenerPhiEp::track_loop(StMuEvent* mu_event) {
 			}
 			else is_poi = false;
 		}
-		bool read_pions = false;  // Read pions hardcoded false
 		else if (fabs(nsigmapi) <= 1.0 && read_pions && is_poi) {  // Without else/if can lead to single track being IDed as both proton and pion, with else pion candidates are robbed as protons
 			if (((m > -0.15 && m < 0.15) || m == -999) && fabs(eta) <= 1) {
 				// Do Nothing
