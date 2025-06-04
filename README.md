@@ -7,6 +7,14 @@ Once flow calculations were added to this analysis, the running was split into t
 2. Event Plan Flattening: This step produces histograms of the uncorrected event plane distributions. Particle phi distributions are corrected with coefficients from the previous step. These histograms are then used to calculate the flow coefficients to flatten the event plane.
 3. Tree Making: This step produces the final output trees of proton (pion) candidates. In addition, corrected event plane angles are included in the tree for each event.
 
+### Clone and Compile
+On a STAR RCF node:
+```
+git clone https://github.com/Dyn0402/tree_maker.git
+cd tree_maker
+cons
+```
+
 ### How to Run
 
 To submit all jobs for a particular energy to the condor queue, edit the appropriate .xml file in the subs/ directory.
