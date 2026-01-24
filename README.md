@@ -56,3 +56,9 @@ The order of running is as follows:
 ### Output
 
 The output root trees along with QA root files should be found in the output directory specified in the submission xml file.
+
+### Moving Output to Match Expected Directory Structure
+
+Output will end up in something like /gpfs01/star/pwg/dneff/data/BES1/trees/output/11GeV
+Will want the final structure to look like /gpfs01/star/pwg/dneff/data/BES1_Trees/11GeV
+The next steps of the code will expect this structure.
